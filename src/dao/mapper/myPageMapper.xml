@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="dao.IMyPageDao">
+
+    <sql id="mjob">
+		<choose>
+			<when test="mjob !=null">
+				#{mjob}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="marea1">
+		<choose>
+			<when test="marea1 !=null">
+				#{marea1}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="marea2">
+		<choose>
+			<when test="marea2 !=null">
+				#{marea2}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="mimage">
+		<choose>
+			<when test="mimage !=null">
+				#{mimage}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+    
+	<select id="selectMember" parameterType="String" resultType="member">
+		SELECT 
+			 MID
+			 ,MPW
+			 ,MPHONE
+			 ,MADDRESS
+			 ,MADDRESS_D
+			 ,MGENDER
+			 ,MJOB
+			 ,MAREA1
+			 ,MAREA2
+			 ,MIMAGE
+		FROM 
+			MEMBERS 
+		WHERE
+			MID = #{mid}
+	</select>
+
+	<update id="updateMemberOne" parameterType="member">
+	update members set mpw=#{mpw}, mphone=#{mphone}, maddress=#{maddress}, mgender=#{mgender},mjob=<include refid="mjob"/>,
+	marea1=<include refid="marea1"/>, marea2=<include refid="marea2"/>, mimage=<include refid="mimage"/> where mid=#{mid}
+	</update> 
+	
+	<select id="selectMtag" parameterType="String" resultType="mtag">
+	select*from mtag where mid=#{mid}
+	</select>
+	<select id="selectAvalue" parameterType="int" resultType="admin">
+	select*from admins where anum=#{anum}
+	</select>
+	<delete id="deleteMtag" parameterType="int">
+	delete from mtag where mtnum=#{mtnum}
+	</delete>
+	<select id="countMtag" parameterType="String" resultType="int">
+	select count(*) from mtag where mid = #{mid}
+	</select>
+	<update id="updateMtag" parameterType="mtag">
+	update mtag set anum=#{anum} where mtnum=#{mtnum}
+	</update>
+	<delete id="deleteMemberOne" parameterType="String">
+	delete from members where mid = #{mid}
+	</delete>
+	<select id="selectGlikeList" parameterType="String" resultType="grade">
+	select * from grades where mid=#{mid} and gcurrent='yes' and glike = 1
+	</select>
+	<select id="selectStoreBySnum" parameterType="int" resultType="store">
+	select * from stores where snum = #{snum}
+	</select>
+	<select id="recentlyVisited" parameterType="int" resultType="details">
+	select * from details where gnum = #{gnum} and dcheck ='yes' order by ddate desc
+	</select>
+	<update id="deleteLikes" parameterType="java.util.HashMap">
+	update  grades set glike=0 where mid = #{mid} and snum =#{snum} and gcurrent='yes'
+	</update>
+	<select id="selectHistoryAll" parameterType="String" resultType="grade">
+	select * from grades where mid = #{mid} and gcurrent like 'yes'	
+	</select>
+	<update id="insertLikes" parameterType="java.util.HashMap">
+	update  grades set glike=1 where mid = #{mid} and snum =#{snum} and gcurrent='yes'
+	</update>
+	<select id="selectHistoryOne" parameterType="java.util.HashMap" resultType="details">
+	 select * from details where gnum in (select gnum from grades where mid = #{mid} and snum =#{snum}) and dcheck ='yes' order by ddate desc
+	</select>
+	<select id="selectcomments" parameterType="int" resultType="comment">
+	select * from comments  where dnum=#{dnum}
+	</select>
+	<select id="selectReserveState" parameterType="String" resultType="details">
+	select * from details where gnum in (select gnum from grades where mid = #{mid}) and dtype = 'yes' and dcheck ='no' order by ddate
+	</select>
+	<select id="selectgradeByGnum" parameterType="int" resultType="grade">
+	select* from grades where gnum=#{gnum}
+	</select>
+	<delete id="deleteReserve" parameterType="int">
+	delete from details where dnum=#{dnum}
+	</delete>
+	<select id="selectDetailsByDnum" parameterType="int" resultType="details">
+	select*from details where dnum =#{dnum}
+	</select>
+	<insert id="insertComment" parameterType="comment">
+	insert into comments values(comments_seq.nextval,#{dnum},#{ctotal},#{ctaste},#{cservice},#{cprice},sysdate,#{creview})
+	</insert>
+	<select id="selectdetailslist" parameterType="java.util.HashMap" resultType="details">
+	select * from details where gnum in (select gnum from grades where mid = #{mid} and snum=#{snum} and gcurrent='yes') order by dcount desc
+	</select>
+	<update id="updateDcount" parameterType="java.util.HashMap">
+	update details set dcount =#{dcount}+1  where dnum=#{dnum}
+	</update>
+	<update id="updategrade" parameterType="int">
+	update grades set gcurrent ='no' where gnum=#{gnum}
+	</update>
+	<insert id="updateNewGrade" parameterType="grade">
+	insert into grades values(grades_seq.nextval, #{mid},#{snum},#{glevel}+1,'yes',#{glike})
+	</insert>
+	<select id="selectdcount" parameterType="java.util.HashMap" resultType="details">
+	select * from details where gnum in (select gnum from grades where mid = #{mid} and snum=#{snum}) and dcheck='yes' order by dcount desc
+	</select>
+	<select id="selectgrade" parameterType="java.util.HashMap" resultType="grade">
+	select * from grades where mid=#{mid} and snum=#{snum} and gcurrent='yes'
+	</select>
+	<select id="selectddate" parameterType="int" resultType="details">
+	select * from details where ddate like sysdate and dnum=#{dnum}
+	</select>
+	<update id="updatedetails" parameterType="details">
+	update details set dcount=#{dcount} where dnum=#{dnum}
+	</update>
+	<update id="deletegrade" parameterType="int">
+	update grades set glevel=glevel-1 where gnum=#{gnum} and gcurrent='yes'
+	</update>
+	<select id="selectDetailsByGnum" parameterType="int" resultType="details">
+	select* from details where gnum=#{gnum}
+	</select>
+    </mapper> 

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IEventDao">
+	<!-- 조건에 따라 이벤트 검색 -->
+  	<!-- 전체 이벤트 목록 출력 -->
+  	<select id="selectAllEvents" resultType="event" >
+		SELECT ALL * FROM EVENTS ORDER BY ESTARTDATE DESC		
+	</select>
+  	<!-- 진행중인 이벤트 목록 출력 -->
+  	<select id="selectIngEvents" resultType="event" >
+		SELECT ALL * FROM EVENTS WHERE EENDDATE <![CDATA[>]]> SYSDATE ORDER BY ESTARTDATE DESC		
+	</select>
+  	<!-- 과거 이벤트 목록 출력 -->
+  	<select id="selectEdEvents" resultType="event" >
+		SELECT ALL * FROM EVENTS WHERE EENDDATE <![CDATA[<]]> SYSDATE ORDER BY ESTARTDATE DESC		
+	</select>
+	
+	<select id="selectEventList" parameterType="event" resultType="event">
+		SELECT
+			EID AS eid
+			,SNUM AS snum
+			,(SELECT SNAME FROM STORES A WHERE A.SNUM = B.SNUM) AS sname
+			,ETITLE AS etitle
+			,ESTARTDATE AS estartdate
+			,EENDDATE AS eenddate
+			,ETARGET1 AS etarget1
+			,ETARGET2 AS etarget2
+			,EIMAGE AS eimage
+		FROM 
+			EVENTS B
+		<if test="status == 'all'">ORDER BY ESTARTDATE DESC</if>
+		<if test="status == 'ing'">WHERE EENDDATE <![CDATA[>]]> SYSDATE ORDER BY ESTARTDATE DESC</if>
+		<if test="status == 'ed'">WHERE EENDDATE <![CDATA[<]]> SYSDATE ORDER BY ESTARTDATE DESC</if>
+	</select>
+	
+	<!-- 가게번호로 이벤트 검색 -->
+  	<!-- 전체 이벤트 목록 출력 -->
+  	<select id="selectAllEventsBySnums" resultType="event" parameterType="java.util.HashMap">
+		SELECT ALL * FROM EVENTS WHERE SNUM IN
+			<foreach collection="snums" item="snum" index="index" separator="," open="(" close=")">
+				#{snum} 
+			</foreach>
+		ORDER BY ESTARTDATE DESC		
+	</select>
+	
+  	<!-- 진행중인 이벤트 목록 출력 -->
+  	<select id="selectIngEventsBySnums" resultType="event" parameterType="java.util.HashMap">
+		SELECT ALL * FROM EVENTS WHERE SNUM IN
+			<foreach collection="snums" item="snum" index="index" separator="," open="(" close=")">
+				#{snum} 
+			</foreach>
+		AND EENDDATE &gt; SYSDATE ORDER BY ESTARTDATE DESC		
+	</select>
+	
+  	<!-- 종료된 이벤트 목록 출력 -->
+  	<select id="selectEdEventsBySnums" resultType="event" parameterType="java.util.HashMap">
+		SELECT ALL * FROM EVENTS WHERE SNUM IN
+			<foreach collection="snums" item="snum" index="index" separator="," open="(" close=")">
+				#{snum} 
+			</foreach>
+		AND EENDDATE &lt; SYSDATE ORDER BY ESTARTDATE DESC	
+	</select>
+	
+	<!-- 전체 이벤트 중 하나의 이벤트 상세내용 보기-->
+  	<select id="selectOneEvent" parameterType="event" resultType="event">
+		SELECT 
+			 EID AS eid
+			,SNUM AS snum
+			,(SELECT SNAME FROM STORES A WHERE A.SNUM = B.SNUM) AS sname
+			,ETITLE AS etitle
+			,ESTARTDATE AS estartdate
+			,EENDDATE AS eenddate
+			,ETARGET1 AS etarget1
+			,ETARGET2 AS etarget2
+			,EIMAGE AS eimage
+		FROM 
+			EVENTS B
+		where 
+			EID = #{eid}
+	</select>
+	
+   	<!-- (사장님)가게 목록 드롭다운-->
+  	<select id="selectStoresByBid" resultType="store" parameterType="boss">
+		SELECT 
+			* 
+		FROM 
+			STORES 
+		WHERE 
+			BID = #{bid}
+	</select>
+	
+   	<!-- 일반 사용자의 이벤트 보기-->
+  	<select id="selectStoreBySnum" resultType="store" parameterType="int">
+		select * from stores where snum = #{snum}
+	</select>
+	
+	<select id="selectStoresBySnums" resultType="store" parameterType="java.util.HashMap">
+		select * from stores where snum in
+		<foreach collection="snums" item="snum" index="index" separator="," open="(" close=")">
+			#{snum}
+		</foreach>
+	</select>
+	
+	<!-- (사장님) 이벤트 내 추가-->
+	<insert id="insertEvent" parameterType="event">
+		INSERT INTO EVENTS(
+			EID
+			,SNUM
+			,ETITLE
+			,ESTARTDATE
+			,EENDDATE
+			,ETARGET1
+			,ETARGET2
+			,EIMAGE
+		) VALUES (
+			EVENTS_SEQ.NEXTVAL
+			, #{snum}
+			, #{etitle}
+			, #{estartdate}
+			, #{eenddate}
+			, #{etarget1}
+			, #{etarget2}
+			, #{eimage}
+		)
+	</insert>
+	
+	<!-- (사장님) 이벤트 상세보기 내 삭제-->
+  	<delete id="deleteEvent" parameterType="int">
+		DELETE FROM EVENTS 
+		WHERE EID = #{eid}
+	</delete>
+	
+	<!-- (사장님) 이벤트 수정-->
+	<update id="updateEvent" parameterType="event">
+		UPDATE 
+			EVENTS
+		SET 
+			ETITLE = #{etitle}
+			, ESTARTDATE = #{estartdate}
+			, EENDDATE = #{eenddate}
+			, ETARGET1 = #{etarget1}
+			, ETARGET2 = #{etarget2}
+			, EIMAGE = #{eimage} 
+		WHERE 
+			EID = #{eid}
+	</update>
+  
+</mapper>

@@ -1,0 +1,60 @@
+package dao;
+
+import java.util.HashMap;
+import java.util.List;
+
+import model.Admin;
+import model.Comment;
+import model.Details;
+import model.Grade;
+import model.Mtag;
+import model.Order;
+import model.Stag;
+import model.Store;
+import model.Storedb;
+
+public interface ICategoryDao {
+	public List<Admin> selectAdminAllByFood();
+	public List<Admin> selectAdminAllByTheme();
+	public List<Store> selectStoreAllByStype(HashMap<String, Object> params);
+	public List<Store> selectStoreNew(HashMap<String, Object> params);
+	public List<Store> selectStoreAllByAnum(HashMap<String, Object> params);
+	public List<Store> selectStoreAllByArea(HashMap<String, Object> params);
+	public int selectGradeCountBySnum(int snum);
+	public List<Grade> selectGradeBySnum(int snum);
+	public List<Details> selectDetailAllByGnum(int gnum);
+	public Comment selectCommentOneByDnum(int dnum);
+	public List<Stag> selectStagBySnum(int snum);
+	public List<Stag> selectStagByAnum(int anum);
+	public Admin selectAdminOne(int anum);
+	public List<Mtag> selectMtagByMid(String mid);
+	public Store selectStoreOneByRecommend(HashMap<String, Object> rMap);
+	public Store selectStoreOneByRecommendPre(HashMap<String, Object> rMap);
+	public List<Order> selectOrderAllBySnum(int snum);
+	public Order selectOrderOneByOnum(int onum);
+	public Grade selectGradeBySnumAndMid(Grade grade);
+	public List<HashMap<String, Object>> selectGlevelBySnum(int snum);
+	public List<Comment> selectCommentListBySnum(int snum);
+	public List<Comment> selectMyCommentListByGrade(HashMap<String, Object> gMap);
+	public List<Details> selectDetailReserveByDdate(HashMap<String, Object> dMap);
+	public int insertGradeBegin(Grade grade);
+	public int insertReserveDetail(Details detail);
+	public void deleteCommentOneByCnum(int cnum);
+	public Comment selectCommentByCnum(int cnum);
+	public Grade selectGradeByDnum(int dnum);
+	public void updateDetailByDnum(int dnum);
+	public List<Details> selectDetailByMidSnum(HashMap<String, Object> dMap);
+	public void updateDcountMinusByDnum(int dnum);
+	public int selectDetailMaxDcount(Grade grade);
+	public Details selectDetailByDnum(int dnum);
+	public List<Admin> selectAdminTasteTag();
+	public void updateCommentOne(Comment comment);
+	public Comment selectCommentByDnum(int dnum);
+	public List<Storedb> selectStoreDB();
+	public int getStoreNewCount();
+	public int getStoreAllByStypeCount(String foodName);
+	public int getStoreAllByAnumCount(int anum);
+	public int getStoreAllByAreaCount(HashMap<String, Object> params);
+	public int insertStores(Store store);
+	public List<Store> selectKeywordStore(HashMap<String, Object> params);
+}

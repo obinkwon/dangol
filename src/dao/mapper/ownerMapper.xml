@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IOwnerDao">
+	<sql id="bpw">
+		<choose>
+			<when test="bpw !=null">
+				#{bpw}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+<!-- 내 정보 -->
+	<delete id="deleteOwner" parameterType="String">
+		delete from boss where bid=#{bid}
+	</delete>
+	
+	<update id="updateOwner" parameterType="boss">
+		UPDATE BOSS SET BPW=<include refid="bpw"/>, BPHONE=#{bphone} WHERE BID=#{bid} 
+	</update> 
+
+<!-- 예약현황 -->	
+	<select id="selectStores" parameterType="String" resultType="store">
+		SELECT * FROM STORES WHERE BID=#{bid} ORDER BY SDATE DESC
+	</select>
+	
+	<select id="selectMembersByKeyword" parameterType="String" resultType="member">
+		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
+	</select>
+	
+	<select id="selectGradesCurrentYBySnum" parameterType="int" resultType="grade">
+		SELECT * FROM GRADES WHERE SNUM=#{snum} AND GCURRENT = 'yes'
+	</select>
+	
+	<select id="selectGradesCurrentYBysnums" parameterType="java.util.HashMap" resultType="grade">
+		SELECT * FROM GRADES WHERE SNUM IN 
+			<foreach collection="snums" item="snum" index="index" separator="," open="(" close=")">
+				#{snum} 
+			</foreach>
+		AND GCURRENT = 'yes'
+	</select>
+	
+	<select id="selectDetailsByGnums" parameterType="java.util.HashMap" resultType="details">
+		SELECT * FROM DETAILS WHERE GNUM IN
+			<foreach collection="gnums" item="gnum" index="index" separator="," open="(" close=")">
+				#{gnum}
+			</foreach>
+		 AND DTYPE = 'yes' AND DCHECK = 'no' ORDER BY DDATE
+	</select>
+	
+	<select id="selectDetailsByGnumsDdate" parameterType="java.util.HashMap" resultType="details">
+		SELECT * FROM DETAILS WHERE GNUM IN
+			<foreach collection="Gnums" item="gnum" index="index" separator="," open="(" close=")">
+				#{gnum}
+			</foreach>
+			AND DDATE LIKE #{Ddate} AND DTYPE = 'yes' AND DCHECK = 'no'
+	</select>
+	
+	<select id="selectGradesCurrentYByMids" parameterType="java.util.HashMap" resultType="grade">
+		SELECT * FROM GRADES WHERE MID IN
+			<foreach collection="mids" item="mid" index="index" separator="," open="(" close=")">
+				#{mid}
+			</foreach>
+			 AND GCURRENT = 'yes'
+	</select>
+	
+	<select id="selectStoresByGnums" parameterType="java.util.HashMap" resultType="store">
+		SELECT * FROM STORE WHERE GNUM IN
+			<foreach collection="gnums" item="gnum" index="index" separator="," open="(" close=")">
+				#{gnum}
+			</foreach>
+	</select>
+	
+	<insert id="insertStore" parameterType="store">
+		INSERT INTO STORES VALUES (snum_seq.nextval, #{sintro}, #{sname}, #{saddress}, #{sdetailaddr}, #{sphone}, #{sparking},
+#{slimit}, #{stime}, #{sholiday}, #{sintro}, #{sratelv0}, #{sratelv1}, #{sratelv2}, #{sratelv3}, #{simage}, #{stype}, #{bid})
+	</insert>
+	
+	<select id="selectStore" parameterType="int" resultType="store">
+		SELECT * FROM STORES WHERE SNUM=#{snum}
+	</select>
+	
+	<update id="updateStore" parameterType="store">
+		UPDATE STORES SET SINTRO=#{sintro}, SNAME=#{sname}, SADDRESS=#{saddress}, SDETAILADDR=#{sdetailaddr}, SPHONE=#{sphone}, STIME=#{stime},  SPARKING=#{sparking}, SIMAGE=#{simage}, STYPE=#{stype}, SHOLIDAY=#{sholiday},
+ SDATE=#{sdate}, SRLATE0=#{srlate0}, SRLATE1=#{srlate1},SRLATE2=#{srlate2}, SRLATE3=#{srlate3}, SLIMIT=#{slimit} 
+WHERE SNUM=#{snum}
+	</update>
+	
+	<delete id="deleteStore" parameterType="int">
+		DELETE FROM STORES WHERE SNUM=#{snum}
+	</delete>
+
+<!-- 	<select id="selectMembersByMphone" parameterType="String" resultType="Member">
+		SELECT * FROM MEMBERS WHERE MPHONE LIKE %#{mphone}%
+	</select> -->
+
+</mapper>

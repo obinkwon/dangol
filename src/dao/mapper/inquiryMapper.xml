@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.IinquiryDao">
+<sql id="mid">
+		<choose>
+			<when test="mid!=null">
+				#{mid}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="bid">
+		<choose>
+			<when test="bid!=null">
+				#{bid}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="ianswer">
+		<choose>
+			<when test="ianswer!=null">
+				#{ianswer}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	
+
+<select id="selectInquiryByMid" parameterType="String" resultType="inquiry">
+select * from inquirys where mid = #{mid} order by inum
+</select>
+<select id="selectInquiryByBid" parameterType="String" resultType="inquiry">
+select *from inquirys where bid=#{bid} order by inum
+</select>
+<delete id="deleteInquiryOne" parameterType="int">
+delete from inquirys where inum=#{inum}
+</delete>
+<insert id="insertInquiry" parameterType="inquiry">
+insert into inquirys values(inquirys_seq.nextval,<include refid="mid"/>,<include refid="bid"/>,#{itype},#{ititle},#{icontent},sysdate,'no',<include refid="ianswer"/>)
+</insert>
+<select id="selectInquiryOne" parameterType="int" resultType="inquiry">
+select * from inquirys where inum = #{inum}
+</select>
+<select id="searchInquiryListByMid" parameterType="java.util.HashMap" resultType="inquiry">
+select * from inquirys where mid = #{mid} and ititle like '%${keyword}%'
+</select>
+<select id="searchInquiryListByBid" parameterType="java.util.HashMap" resultType="inquiry">
+select * from inquirys where bid = #{bid} and ititle like '%${keyword}%'
+</select>
+</mapper>

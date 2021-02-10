@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="dao.IAdminDao">
+	<select id="showMain1" resultType="admin">
+		SELECT * FROM ADMINS WHERE ATYPE = 'main1'
+	</select>
+	
+	<select id="showMain2" resultType="admin">
+		SELECT * FROM ADMINS WHERE ATYPE = 'main2'  
+	</select>
+	
+	<update id="updateMain1" parameterType="String">
+		UPDATE ADMINS SET AVALUE=#{main1} WHERE ATYPE='main1'
+	</update>
+	
+	<update id="updateMain2" parameterType="String">
+		UPDATE ADMINS SET AVALUE=#{main2} WHERE ATYPE='main2'
+	</update>
+	
+	<select id="showThemeTags" resultType="admin">
+		SELECT 
+			ANUM
+			,ATYPE
+			,AVALUE
+			,AIMAGE
+		FROM 
+			ADMINS 
+		WHERE 
+			ATYPE = 'theme'
+	</select>
+	
+	<insert id="insertThemeTag" parameterType="String">
+		INSERT INTO ADMINS VALUES (admins_seq.nextval, 'theme', #{keyword}, NULL)
+	</insert>
+
+	<select id="showTasteTags" resultType="admin">
+		SELECT * FROM ADMINS WHERE ATYPE = 'taste'  
+	</select>
+	
+	<insert id="insertTasteTag" parameterType="String">
+		INSERT INTO ADMINS VALUES (admins_seq.nextval, 'taste', #{keyword}, NULL)
+	</insert>
+	
+	<select id="showFoodTags" resultType="admin">
+		SELECT * FROM ADMINS WHERE ATYPE = 'food'  
+	</select>
+	
+	<insert id="insertFoodTag" parameterType="admin">
+		INSERT INTO ADMINS VALUES (admins_seq.nextval, #{atype}, #{avalue}, #{aimage})
+	</insert>
+	
+	<delete id="deleteTag" parameterType="int">
+		DELETE FROM ADMINS WHERE ANUM=#{anum}
+	</delete>
+	
+  	<select id="selectOneAdmin" resultType="Admin" parameterType="int">
+		SELECT * FROM ADMINS WHERE ANUM=#{anum}
+	</select>
+	
+	
+	<!-- 1:1문의 -->
+	<select id="selectAllInquirys" resultType="inquiry">
+		SELECT * FROM INQUIRYS ORDER BY IDATE DESC
+	</select>
+
+	<select id="countAllInquirys" resultType="int">
+		SELECT COUNT (*) FROM INQUIRYS
+	</select>
+	
+	<select id="selectYesInquirys" resultType="inquiry">
+		SELECT * FROM INQUIRYS WHERE ISTATE='yes' ORDER BY IDATE DESC
+	</select>
+	
+	<select id="countYesInquirys" resultType="int">
+		SELECT COUNT (*) FROM INQUIRYS WHERE ISTATE='yes' ORDER BY IDATE DESC
+	</select>
+	
+	<select id="selectNoInquirys" resultType="inquiry">
+		SELECT * FROM INQUIRYS WHERE ISTATE='no' ORDER BY IDATE DESC
+	</select>
+	
+	<select id="countNoInquirys" resultType="int">
+		SELECT COUNT (*) FROM INQUIRYS WHERE ISTATE='no'
+	</select>
+		
+	<!-- 글 선택하기 -->
+	<select id="selectOneInquiry" resultType="inquiry" parameterType="int">
+		SELECT * FROM INQUIRYS WHERE INUM=#{inum}
+	</select>
+		
+	<update id="insertInquiryAnswer" parameterType="Inquiry">
+		UPDATE INQUIRYS SET IANSWER=#{ianswer}, ISTATE = 'yes' WHERE INUM=#{inum}
+	</update>
+	
+	<!-- 글 검색하기 -->
+	<!-- 제목검색 -->
+	<select id="selectInquirysByTitle" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ITITLE LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>
+	<select id="selectYesInquirysByTitle" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ISTATE='yes' AND ITITLE LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>
+	<select id="selectNoInquirysByTitle" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ISTATE='no' AND ITITLE LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>
+	
+	<!-- 내용검색 -->
+	<select id="selectInquirysByContent" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ICONTENT LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>
+	<select id="selectYesInquirysByContent" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ISTATE='yes' AND ICONTENT LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>
+	<select id="selectNoInquirysByContent" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ISTATE='no' AND ICONTENT LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>
+	
+	<!-- id검색 -->
+	<select id="selectInquirysByMid" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE MID LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>		
+	<select id="selectYesInquirysByMid" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ISTATE='yes' AND MID LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>		
+	<select id="selectNoInquirysByMid" resultType="inquiry" parameterType="String">
+		SELECT * FROM INQUIRYS WHERE ISTATE='no' AND MID LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
+	</select>		
+</mapper>
+    

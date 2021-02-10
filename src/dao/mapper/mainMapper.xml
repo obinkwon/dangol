@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IMainDao">
+	<select id="selectTotalStores" resultType="int">
+		select count(*) from stores
+	</select>
+	<select id="selectTotalMembers" resultType="int">
+		select count(*) from members where mtype='user'
+	</select>
+	<select id="selectTotalComments" resultType="int">
+		select count(*) from comments
+	</select>
+	<select id="selectStoreByArea" parameterType="java.util.HashMap" resultType="store">
+		select * from
+		(select rownum as rn ,e.* from (select * from stores where saddress like '${address}%' order by snum) e) 
+		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
+	</select>
+	<select id="selectStoreMembers" parameterType="int" resultType="int">
+		select count(*) from grades where snum = #{snum} and gcurrent like 'yes' and glevel != 0
+	</select>
+	<select id="selectStoreMemberBySnum" resultType="int">
+		select snum from 
+		(select rownum as rn ,e.* from (select snum from grades where gcurrent = 'yes' and glevel != 0 group by snum order by count(snum) desc) e) 
+		where rn = 1 
+	</select>
+	<select id="selectStoreOne" parameterType="int" resultType="store">
+		select * from stores where snum = #{snum}
+	</select>
+	<!-- 내용검색 -->
+	<select id="selectSearchStoreAll" parameterType="java.util.HashMap" resultType="store">
+		select * from
+		(select rownum as rn ,e.* from (select * from stores where sname like '%${keyword}%' order by sdate desc) e) 
+		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
+	</select>
+	<select id="selectCommentMonth" resultType="int">
+		select gnum from comments where dnum in (select dnum from details where gnum in (select gnum from grades where gcurrent='yes') and dcount > 0) 
+	</select>
+	<select id="selectStoreAll" resultType="store">
+		select * from 
+		(select rownum as rn ,e.* from (select * from Stores) e) 
+		where rn=1
+	</select>
+	<select id="selectGradeBySnum" parameterType="int" resultType="grade">
+		select * from grades where snum = #{snum} and gcurrent = 'yes'
+	</select>
+	<select id="selectDetailAllByGnum" parameterType="int" resultType="details">
+		select * from details where gnum = #{gnum} and dcount > 0
+	</select>
+	<select id="selectCommentMonthByDnum" parameterType="int" resultType="comment">
+		select * from comments where dnum = #{dnum} and extract(month from cdate) like extract(month from sysdate)
+	</select>
+	<select id="selectCommentYearByDnum" parameterType="int" resultType="comment">
+		select * from comments where dnum = #{dnum} and extract(year from cdate) like extract(year from sysdate)
+	</select>
+	<select id="selectEventAll" resultType="event">
+		select * from events order by eid desc
+	</select>
+	<select id="selectAdminMainTag" resultType="admin">
+		select * from admins where atype='main1' or atype='main2' order by atype
+	</select>
+	<select id="selectAdminByAvlaue" parameterType="String" resultType="admin">
+		select * from admins where atype='theme' and avalue=#{avalue}
+	</select>
+	<select id="getSearchStoreAllCount" parameterType="java.util.HashMap" resultType="int"> 
+		select count(*) from stores where sname like '%${keyword}%'
+	</select>
+	<select id="getStoreByAreaCount" parameterType="java.util.HashMap" resultType="int"> 
+		select count(*) from stores where saddress like '${address}%' order by snum
+	</select>
+</mapper>

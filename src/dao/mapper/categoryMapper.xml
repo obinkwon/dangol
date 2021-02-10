@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ICategoryDao">
+	<sql id="dask">
+		<choose>
+			<when test="dask !=null">
+				#{dask}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="simage">
+		<choose>
+			<when test="simage !=null">
+				#{simage}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<select id="selectAdminAllByFood" resultType="admin">
+		select * from admins where atype = 'food' order by anum
+	</select>
+	<select id="selectAdminAllByTheme" resultType="admin">
+		select * from admins where atype = 'theme' order by anum
+	</select>
+	<select id="selectStoreAllByStype" parameterType="java.util.HashMap" resultType="store">
+		select * from
+		(select rownum as rn ,e.* from (select * from stores where stype = #{foodName} order by sdate desc) e) 
+		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
+	</select>
+	<select id="selectGradeCountBySnum" parameterType="int" resultType="int">
+		select count(*) from grades where snum = #{snum} and gcurrent = 'yes' and glevel != 0
+	</select>
+	<select id="selectGradeBySnum" parameterType="int" resultType="grade">
+		select * from grades where snum = #{snum} and gcurrent = 'yes'
+	</select>
+	<select id="selectDetailAllByGnum" parameterType="int" resultType="details">
+		select * from details where gnum = #{gnum} and dcount != 0
+	</select>
+	<select id="selectCommentOneByDnum" parameterType="int" resultType="comment">
+		select * from comments where dnum = #{dnum}
+	</select>
+	<select id="selectStagBySnum" parameterType="int" resultType="stag">
+		select * from stag where snum = #{snum}
+	</select>
+	<select id="selectAdminOne" parameterType="int" resultType="admin">
+		select * from admins where anum = #{anum} 
+	</select>
+	<select id="selectStoreAllByAnum" parameterType="java.util.HashMap" resultType="store">
+		select * from
+		(select rownum as rn ,e.* from (select * from stores where snum in (select snum from stag where anum = #{anum}) order by sdate desc) e) 
+		where rn between #{offset} and (#{offset}+#{storesPerPage}-1) 
+	</select>
+	<select id="selectStoreNew" parameterType="java.util.HashMap" resultType="store">
+		select * from
+		(select rownum as rn ,e.* from (select * from stores where sdate between (sysdate-10) and sysdate order by sdate desc) e) 
+		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
+	</select>
+	<select id="selectStoreAllByArea" parameterType="java.util.HashMap" resultType="store">
+		select * from
+		(select rownum as rn ,e.* from (select * from stores where saddress like '${areaName}%' order by sdate desc) e) 
+		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
+	</select>
+	<select id="selectMtagByMid" parameterType="String" resultType="mtag">
+		select * from mtag where mid = #{mid}
+	</select>
+	<select id="selectStagByAnum" parameterType="int" resultType="stag">
+		select * from stag where anum = #{anum}
+	</select>
+	<select id="selectStoreOneByRecommend" parameterType="java.util.HashMap" resultType="store">
+		select * from stores where snum = #{snum} and saddress = #{maddress} 
+	</select>
+	<select id="selectStoreOneByRecommendPre" parameterType="java.util.HashMap" resultType="store">
+		select * from stores where snum = #{snum} and (saddress = #{marea1} or saddress = #{marea2})
+	</select>
+	<select id="selectOrderAllBySnum" parameterType="int" resultType="order">
+		select * from orders where snum = #{snum}
+	</select>
+	<select id="selectOrderOneByOnum" parameterType="int" resultType="order">
+		select * from orders where onum = #{onum}
+	</select>
+	<select id="selectGradeBySnumAndMid" parameterType="grade" resultType="grade">
+		select * from grades where snum = #{snum} and mid = #{mid} and gcurrent like 'yes'
+	</select>
+	<select id="selectGlevelBySnum" parameterType="int" resultType="java.util.HashMap">
+		select glevel,count(*) as dangol from grades where snum = #{snum} and gcurrent like 'yes' group by glevel order by glevel
+	</select>
+	<select id="selectCommentListBySnum" parameterType="int" resultType="comment">
+		select * from comments where dnum in (select dnum from details where gnum in (select gnum from grades where snum = #{snum})) order by cdate desc
+	</select>
+	<select id="selectMyCommentListByGrade" parameterType="java.util.HashMap" resultType="comment">
+		select * from comments where dnum in (select dnum from details where gnum in (select gnum from grades where mid = #{mid} and snum = #{snum}) and dcount &gt; 0) order by cdate desc
+	</select>
+	<select id="selectGradeByDnum" parameterType="int" resultType="grade">
+		select * from grades where gnum = (select gnum from Details where dnum = #{dnum})
+	</select>
+	<select id="selectDetailReserveByDdate" parameterType="java.util.HashMap" resultType="details">
+		select * from details where gnum in (select gnum from grades where snum = #{snum}) and ddate = #{ddate} and dtype='yes'
+	</select>
+	<insert id="insertGradeBegin" parameterType="grade" keyProperty="gnum" useGeneratedKeys="true">
+		<selectKey keyProperty="gnum" order="BEFORE" resultType="int">select grades_seq.nextval from dual</selectKey>
+		insert into grades values(#{gnum},#{mid},#{snum},0,'yes',0)
+	</insert>
+	<insert id="insertReserveDetail" parameterType="details">
+		insert into details values(details_seq.nextval,#{gnum},#{ddate},#{dperson},#{dmenu},'yes',<include refid="dask"/>,'no',#{dtime},0,#{dlimit})
+	</insert>
+	<delete id="deleteCommentOneByCnum" parameterType="int">
+		delete from comments where cnum = #{cnum}
+	</delete>
+	<select id="selectCommentByCnum" parameterType="int" resultType="comment">
+		select * from comments where cnum = #{cnum}
+	</select>
+	<update id="updateDetailByDnum" parameterType="int">
+		update details set dcount = 0 where dnum = #{dnum}
+	</update>
+	<select id="selectDetailByMidSnum" parameterType="java.util.HashMap" resultType="details">
+		select * from details where gnum in (select gnum from grades where mid = #{mid} and snum =#{snum}) and dcount = #{dcount} order by dcount desc
+	</select>
+	<select id="selectDetailMaxDcount" parameterType="grade" resultType="int">
+		select max(dcount) from details where gnum in (select gnum from grades where mid = #{mid} and snum =#{snum})
+	</select>
+	<update id="updateDcountMinusByDnum" parameterType="int">
+		update details set dcount = dcount - 1 where dnum = #{dnum} 
+	</update>
+	<select id="selectDetailByDnum" parameterType="int" resultType="details">
+		select * from details where dnum = #{dnum}
+	</select>
+	<select id="selectAdminTasteTag" resultType="admin">
+		select * from admins where atype= 'taste'
+	</select>
+	<update id="updateCommentOne" parameterType="comment">
+		update comments set ctotal=#{ctotal}, cservice=#{cservice}, cprice=#{cprice}, ctaste = #{ctaste}, creview = #{creview} where cnum = #{cnum}
+	</update>
+	<select id="selectCommentByDnum" parameterType="int" resultType="comment">
+		select * from comments where dnum = #{dnum}
+	</select>
+	<select id="selectStoreDB" resultType="storedb">
+		select * from storedb
+	</select>
+	<select id="getStoreNewCount" resultType="int"> 
+		select count(*) from stores where sdate between (sysdate-10) and sysdate
+	</select>
+	<select id="getStoreAllByStypeCount" parameterType="String" resultType="int"> 
+		select count(*) from stores where stype = #{foodName}
+	</select>
+	<select id="getStoreAllByAnumCount" parameterType="int" resultType="int"> 
+		select count(*) from stores where snum in (select snum from stag where anum = #{anum})
+	</select>
+	<select id="getStoreAllByAreaCount" parameterType="java.util.HashMap" resultType="int"> 
+		select count(*) from stores where saddress like '${areaName}%'
+	</select>
+	<insert id="insertStores" parameterType="store">
+		insert into stores values(stores_seq.nextval,#{bid},#{sintro},#{sname}, #{saddress}, #{sdetailaddr}, #{sphone},#{stime}, #{sparking},
+	<include refid="simage"/>,#{stype},#{sholiday},sysdate,#{sratelv0}, #{sratelv1}, #{sratelv2}, #{sratelv3},#{slimit},#{slatitude},#{slongitude})
+	</insert>
+	<select id="selectKeywordStore" parameterType="java.util.HashMap" resultType="store">
+		select * from stores where sname like '${keyword}%'
+	</select>
+</mapper>
