@@ -41,3 +41,4 @@ local.properties
 .springBeans
 .recommenders/
 .properties
+/target/
