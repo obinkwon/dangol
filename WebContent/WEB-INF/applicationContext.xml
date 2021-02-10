@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<context:component-scan base-package="service"/>
+	
+	<!-- datasource 설정 -->
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"></property>
+		<property name="username" value="dangol"></property>
+		<property name="password" value="dangol1234"></property>
+		<property name="maxActive" value="8"></property>
+		<property name="maxIdle" value="8"></property>
+		<property name="minIdle" value="0"></property>
+		<property name="initialSize" value="0"></property>
+	</bean>
+	
+	<!-- sqlSessionFactory 설정 -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		<property name="mapperLocations" value="classpath*:dao/mapper/**/*.xml"></property>
+		<property name="typeAliasesPackage" value="model"></property>
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 이벤트 DAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IEventDao">
+		<property name="mapperInterface" value="dao.IEventDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- MemberDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IMemberDao">
+		<property name="mapperInterface" value="dao.IMemberDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- BossDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IBossDao">
+		<property name="mapperInterface" value="dao.IBossDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- OwnerDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IOwnerDao">
+		<property name="mapperInterface" value="dao.IOwnerDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- MainDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IMainDao">
+		<property name="mapperInterface" value="dao.IMainDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- CategoryDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="ICategoryDao">
+		<property name="mapperInterface" value="dao.ICategoryDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+		
+	<!-- AdminDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IAdminDao">
+		<property name="mapperInterface" value="dao.IAdminDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- mypageDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IMyPageDao">
+		<property name="mapperInterface" value="dao.IMyPageDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	
+	<!-- inquiryDAO -->
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IinquiryDao">
+		<property name="mapperInterface" value="dao.IinquiryDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+
+</beans>
