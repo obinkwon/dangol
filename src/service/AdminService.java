@@ -32,44 +32,31 @@ public class AdminService {
 	@Autowired
 	private IBossDao bdao;
 	
-	//main1 출력
-	public Admin showMain1(){
-		if(aDao.showMain1()!=null) {
-			return aDao.showMain1();
-		}else {
-			return null;
-		}
+	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
+	
+	//메인 태그 검색
+	public Admin showMain(Admin admin){
+		return aDao.showMain(admin);
 	}
 	
-	//main2 출력
-	public Admin showMain2(){
-		if(aDao.showMain2()!=null) {
-			return aDao.showMain2();
-		}else {
-			return null;
-		}
+	//메인 태그 수정
+	public int updateMain(Admin admin) {
+		return aDao.updateMain(admin);
 	}
 	
-	//메인태그 적용하기
-	public void updateMains(String type, String keyword) {
-		switch (type) {
-		case "main1":
-			aDao.updateMain1(keyword);
-			break;
-
-		default:
-			aDao.updateMain2(keyword);
-			break;
-		}
+	//태그 추가
+	public int insertTag(Admin admin) {
+		return aDao.insertTag(admin);
 	}
 	
-	//테마태그
+	//태그 삭제
+	public int deleteTag(Admin admin) {
+		return aDao.deleteTag(admin);
+	}
+	
+	//테마 태그 리스트
 	public List<Admin> showThemeTags() {
 		return aDao.showThemeTags();
-	}
-	
-	public void insertThemeTag(String keyword) {
-		aDao.insertThemeTag(keyword);
 	}
 
 	//음식 태그
@@ -77,46 +64,19 @@ public class AdminService {
 		return aDao.showFoodTags();
 	}
 
-	public void insertFoodTag(String keyword, MultipartFile afile) {
-		String path = "C:\\Users\\obin0\\git\\FinalProject\\FinalProject\\WebContent\\images\\admin\\";
-		File dir = new File(path);
-		if(!dir.exists()) dir.mkdirs();
+	//태그 추가(파일)
+	public int insertTagFile(Admin admin, MultipartFile afile) throws Exception{
+		File attachFile = insertFile(afile);
 		String aimage = afile.getOriginalFilename();
-		File attachFile = new File(path+aimage);
-		
-		Admin admin = new Admin();
-		admin.setAvalue(keyword);
-		admin.setAtype("food");
-		
-		try {
-			afile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
-			admin.setAimage(aimage); //db에 파일 정보 저장을 하기위해 모델객체에 setting하기
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		aDao.insertFoodTag(admin);
+		afile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
+		admin.setAimage(aimage); //db에 파일 정보 저장을 하기위해 모델객체에 setting하기
+		return aDao.insertTag(admin);
 	}
 	
 	//맛 태그
 	public List<Admin> showTasteTags() {
 		return aDao.showTasteTags();
 	}
-
-	public void insertTasteTag(String keyword) {
-		aDao.insertTasteTag(keyword);
-	}
-	
-	//태그 삭제
-	public void deleteTag(int anum) {
-		aDao.deleteTag(anum);
-	}
-
-	
 	
 	//1:1문의 
 	//전체 글 로드
@@ -244,12 +204,21 @@ public class AdminService {
 
 	}
 
-	//ed 파일 경로 생성
+	//파일 경로 생성
 	public File getAttachedFile(int anum) {
 		Admin admin= aDao.selectOneAdmin(anum);
 		String fileName = admin.getAimage();
-		String path = "C:\\Users\\obin0\\git\\FinalProject\\FinalProject\\WebContent\\images\\admin\\";
+		String path = imagePath+"admin\\";
 		return new File(path+fileName);
+	}
+	
+	public File insertFile(MultipartFile afile) {
+		String path = imagePath+"admin\\";
+		File dir = new File(path);
+		if(!dir.exists()) dir.mkdirs();
+		String aimage = afile.getOriginalFilename();
+		File attachFile = new File(path+aimage);
+		return attachFile;
 	}
 
 

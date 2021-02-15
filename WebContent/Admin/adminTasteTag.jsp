@@ -44,21 +44,51 @@
 		font-size: 14px;
 		color: #000000;
 	}
+	.btn-view {
+	    width: 200px;
+	    font-size: 1.4rem;
+	    background-color: #fff;
+	    color: #000000;
+	    height: 4rem;
+	    line-height: 3.9rem;
+	    font-weight: 600;
+	    letter-spacing: 0.5px;
+	    transition-duration: .5s;
+	    border: 0.1rem solid #66ccff;
+	    margin-left : 30px;
+	}
+	.inputText {
+	    height: 40px;
+	    line-height: 40px;
+	    color: #7b6e66;
+	    padding: 0 7px;
+	    border: 1px solid #7b6e66;
+	    background-color: transparent;
+	    vertical-align: middle;
+	    float: left;
+	}
+	.w300 {
+	    width: 300px;
+	}
+	.table {
+		margin-bottom : 10px;
+		border-bottom : 1px solid #ddd;
+	}
 </style>
 	<script type="text/javascript">
-		$(document).on("click","input.btn_del_TasteTag", function(){
-			if (confirm("정말로 삭제하시겠습니까?")) {
-				location.href="deleteTasteTag.do?anum="+$(this).siblings("input.del_TasteTag").val();			
-			}
-		});
-		
-		$(document).on("click","input.add_TasteTag", function(){
-			if($("input.tasteTagText").val() == ''){
-				alert("추가할 태그를 입력하세요");
+		function addTasteTag(){ //태그 추가
+			if($('#tasteTagText').val() == ''){
+				alert('추가할 태그를 입력하세요');
 			}else{
-				location.href="insertTasteTag.do?keyword="+$("input.tasteTagText").val();		
+				location.href="insertTag.do?atype=taste&returnUrl=adminTasteTag.do&avalue="+$('#tasteTagText').val();
 			}
-		});
+		}
+		
+		function deleteTag(anum){ //태그 삭제
+			if (confirm("정말로 삭제하시겠습니까?")) {
+				location.href="deleteTag.do?returnUrl=adminTasteTag.do&anum="+anum;			
+			}
+		}
 	</script>
 </head>
 <body>
@@ -91,16 +121,14 @@
 					<tr>
 						<td>${tasteTag.avalue}</td>
 						<td>
-							<input type="button" class="btn_del_TasteTag" value="x">
-							<input type="hidden" class="del_TasteTag" value="${tasteTag.anum}">
+							<input type="button" onclick="deleteTag('${tasteTag.anum}');" class="btn_del_TasteTag" value="x">
 						</td>
 					</tr>
 				</c:forEach>
 		</table>
-		<hr></hr>
-		<form action="insertTasteTag.do" method="get">
-			<input type="text" name="keyword" class="tasteTagText" placeholder="추가할 태그를 입력하세요">
-			<input type="button" value="추가하기" class="add_TasteTag">
+		<form id="frmList" action="insertTasteTag.do" method="get">
+			<input class="inputText w300" type="text" name="keyword" id="tasteTagText" placeholder="추가할 태그를 입력하세요">
+			<button class="btn-view" type="button" onclick="addTasteTag(); return false;">추가하기</button>
 		</form>
 	</div>
 </div>

@@ -35,8 +35,13 @@ public class AdminController {
 	public ModelAndView adminRecommandTag() {
 		ModelAndView mav = new ModelAndView();
 		// 현재 설정된 메인추천 1, 2
-		mav.addObject("main1", aService.showMain1());
-		mav.addObject("main2", aService.showMain2());
+		Admin admin = new Admin();
+		admin.setAtype("main1");
+		Admin main1 = aService.showMain(admin);
+		admin.setAtype("main2");
+		Admin main2 = aService.showMain(admin);
+		mav.addObject("main1", main1);
+		mav.addObject("main2", main2);
 		// 드롭다운에 들어갈 themetags 출력
 		List<Admin> themeList =  aService.showThemeTags();
 		mav.addObject("themes", themeList);
@@ -45,23 +50,36 @@ public class AdminController {
 		return mav;
 	}
 
-	// ed 관리자가 메인추천 태그 적용
-	@RequestMapping("selectMain1.do")
-	public String selectMain1(String type, String keyword) {
-		// 업데이트하기
-		aService.updateMains(type, keyword);
+	//관리자가 메인추천 태그 적용
+	@RequestMapping("selectMain.do")
+	public String selectMain(Admin admin) {
+		if(admin.getAtype() != null) {
+			Admin tag = aService.showMain(admin);
+			if(tag == null) { //insert
+				System.out.println(admin);
+				aService.insertTag(admin);
+			}else { //update
+				aService.updateMain(admin);
+			}
+		}
 		return "redirect:adminRecommandTag.do";
 	}
 	
-	// ed 관리자가 메인추천 태그 적용
-	@RequestMapping("selectMain2.do")
-	public String selectMain2(String type, String keyword) {
-		// 업데이트하기
-		aService.updateMains(type, keyword);
-		return "redirect:adminRecommandTag.do";
+	//관리자 태그 삭제
+	@RequestMapping("deleteTag.do")
+	public String deleteTag(Admin admin, String returnUrl) {
+		aService.deleteTag(admin);
+		return "redirect:"+returnUrl;
+	}
+	
+	//관리자 태그 추가
+	@RequestMapping("insertTag.do")
+	public String insertTag(Admin admin, String returnUrl) {
+		aService.insertTag(admin);
+		return "redirect:"+returnUrl;
 	}
 
-	// ed 관리자 테마 페이지 로드
+	//관리자 테마 페이지 로드
 	@RequestMapping("adminThemeTag.do")
 	public ModelAndView adminThemeTag() {
 		ModelAndView mav = new ModelAndView();
@@ -70,15 +88,8 @@ public class AdminController {
 		mav.setViewName("Admin/adminThemeTag");
 		return mav;
 	}
-
-	// ed 관리자 테마 페이지 테마태그 추가
-	@RequestMapping("insertThemeTag.do")
-	public String insertThemeTag(String keyword) {
-		aService.insertThemeTag(keyword);
-		return "redirect:adminThemeTag.do";
-	}
-
-	// ed 관리자 음식 페이지 로드
+	
+	//관리자 음식 페이지 로드
 	@RequestMapping("adminFoodTag.do")
 	public ModelAndView adminFoodTag() {
 		ModelAndView mav = new ModelAndView();
@@ -88,11 +99,11 @@ public class AdminController {
 		return mav;
 	}
 
-	// ed 관리자 음식 페이지 테마태그 추가
-	@RequestMapping("insertFoodTag.do")
-	public String insertFoodTag(String keyword,
-			@RequestParam(value="afile") MultipartFile afile) {
-		aService.insertFoodTag(keyword, afile);
+	//관리자 태그 추가(파일)
+	@RequestMapping("insertTagFile.do")
+	public String insertTagFile(Admin admin,
+			@RequestParam(value="afile") MultipartFile afile) throws Exception{
+		aService.insertTagFile(admin, afile);
 		return "redirect:adminFoodTag.do";
 	}
 
@@ -106,43 +117,8 @@ public class AdminController {
 		return mav;
 	}
 
-	// ed 관리자 맛 페이지 테마태그 추가
-	@RequestMapping("insertTasteTag.do")
-	public String insertTasteTag(String keyword) {
-		aService.insertTasteTag(keyword);
-		return "redirect:adminTasteTag.do";
-	}
-
-	// ed 태그삭제
-	@RequestMapping("deleteTag.do")
-	public String deleteTag(int anum) {
-		aService.deleteTag(anum);
-		return "redirect:adminRecommandTag.do";
-	}
-	
-	// 맛 태그삭제
-	@RequestMapping("deleteTasteTag.do")
-	public String deleteTasteTag(int anum) {
-		aService.deleteTag(anum);
-		return "redirect:adminTasteTag.do";
-	}
-	
-	// 테마 태그삭제
-	@RequestMapping("deleteThemeTag.do")
-	public String deleteThemeTag(int anum) {
-		aService.deleteTag(anum);
-		return "redirect:adminThemeTag.do";
-	}
-	
-	// 음식 태그삭제
-	@RequestMapping("deleteFoodTag.do")
-	public String deleteFoodTag(int anum) {
-		aService.deleteTag(anum);
-		return "redirect:adminFoodTag.do";
-	}
-
 	// 1:1문의
-	// ed 1:1문의 전체 글 불러오기
+	//1:1문의 전체 글 불러오기
 	@RequestMapping("selectAllInquirys.do")
 	public ModelAndView selectAllInquirys() throws Exception{
 		ModelAndView mav = new ModelAndView();

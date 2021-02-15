@@ -4,20 +4,45 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="dao.IAdminDao">
-	<select id="showMain1" resultType="admin">
-		SELECT * FROM ADMINS WHERE ATYPE = 'main1'
+	<select id="showMain" parameterType="admin" resultType="admin">
+		SELECT 
+			ANUM AS anum
+			,ATYPE AS atype
+			,AVALUE AS avalue
+		FROM 
+			ADMINS 
+		WHERE 
+			ATYPE = #{atype} 
 	</select>
 	
-	<select id="showMain2" resultType="admin">
-		SELECT * FROM ADMINS WHERE ATYPE = 'main2'  
-	</select>
+	<insert id="insertTag" parameterType="admin">
+		INSERT INTO ADMINS(
+			ANUM
+			,ATYPE
+			,AVALUE
+			,AIMAGE
+		)VALUES(
+			ADMINS_SEQ.NEXTVAL
+			,#{atype}
+			,#{avalue}
+			,#{aimage,jdbcType=VARCHAR}
+		)
+	</insert>
 	
-	<update id="updateMain1" parameterType="String">
-		UPDATE ADMINS SET AVALUE=#{main1} WHERE ATYPE='main1'
-	</update>
+	<delete id="deleteTag" parameterType="admin">
+		DELETE FROM 
+			ADMINS 
+		WHERE 
+			ANUM = #{anum}
+	</delete>
 	
-	<update id="updateMain2" parameterType="String">
-		UPDATE ADMINS SET AVALUE=#{main2} WHERE ATYPE='main2'
+	<update id="updateMain" parameterType="admin">
+		UPDATE 
+			ADMINS 
+		SET 
+			AVALUE=#{avalue} 
+		WHERE 
+			ATYPE = #{atype}
 	</update>
 	
 	<select id="showThemeTags" resultType="admin">
@@ -32,17 +57,9 @@
 			ATYPE = 'theme'
 	</select>
 	
-	<insert id="insertThemeTag" parameterType="String">
-		INSERT INTO ADMINS VALUES (admins_seq.nextval, 'theme', #{keyword}, NULL)
-	</insert>
-
 	<select id="showTasteTags" resultType="admin">
 		SELECT * FROM ADMINS WHERE ATYPE = 'taste'  
 	</select>
-	
-	<insert id="insertTasteTag" parameterType="String">
-		INSERT INTO ADMINS VALUES (admins_seq.nextval, 'taste', #{keyword}, NULL)
-	</insert>
 	
 	<select id="showFoodTags" resultType="admin">
 		SELECT * FROM ADMINS WHERE ATYPE = 'food'  
@@ -51,10 +68,6 @@
 	<insert id="insertFoodTag" parameterType="admin">
 		INSERT INTO ADMINS VALUES (admins_seq.nextval, #{atype}, #{avalue}, #{aimage})
 	</insert>
-	
-	<delete id="deleteTag" parameterType="int">
-		DELETE FROM ADMINS WHERE ANUM=#{anum}
-	</delete>
 	
   	<select id="selectOneAdmin" resultType="Admin" parameterType="int">
 		SELECT * FROM ADMINS WHERE ANUM=#{anum}

@@ -8,27 +8,25 @@ import model.Inquiry;
 public interface IAdminDao {
 	
 	//태그
-	//adminRecommand 페이지
-	public Admin showMain1();
-	public Admin showMain2();
-//	public List<Admin> showThemeTags(); 드롭다운 구현할 때
-	public void updateMain1(String main1);
-	public void updateMain2(String main2);
+	//메인 태그
+	public Admin showMain(Admin admin);
+	public int updateMain(Admin admin);
+	
+	//태그 추가
+	public int insertTag(Admin admin);
 
-	//adminThemeTag 페이지 로드
+	//태그 삭제
+	public int deleteTag(Admin admin);
+	
+	//테마 태그
 	public List<Admin> showThemeTags();
-	public void insertThemeTag(String keyword);
 	
 	//adminTasteTag 페이지
 	public List<Admin> showTasteTags();
-	public void insertTasteTag(String keyword);
 	
 	//adminFoodTag 페이지
 	public List<Admin> showFoodTags();
-	public void insertFoodTag(Admin admin);
 	
-	//태그 삭제할 때
-	public void deleteTag(int anum);
 	
 	//사진추가 관련
 	public Admin selectOneAdmin(int anum);
@@ -48,7 +46,7 @@ public interface IAdminDao {
 	//답변등록하기
 	public void insertInquiryAnswer(Inquiry inquiry);
 	
-//	글 검색하기
+	//	글 검색하기
 	//제목으로 글 검색하기
 	public List<Inquiry> selectInquirysByTitle(String keyword);
 	public List<Inquiry> selectYesInquirysByTitle(String keyword);

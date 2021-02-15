@@ -44,21 +44,51 @@
 		font-size: 14px;
 		color: #000000;
 	}
+	.btn-view {
+	    width: 200px;
+	    font-size: 1.4rem;
+	    background-color: #fff;
+	    color: #000000;
+	    height: 4rem;
+	    line-height: 3.9rem;
+	    font-weight: 600;
+	    letter-spacing: 0.5px;
+	    transition-duration: .5s;
+	    border: 0.1rem solid #66ccff;
+	    margin-left : 30px;
+	}
+	.inputText {
+	    height: 40px;
+	    line-height: 40px;
+	    color: #7b6e66;
+	    padding: 0 7px;
+	    border: 1px solid #7b6e66;
+	    background-color: transparent;
+	    vertical-align: middle;
+	    float: left;
+	}
+	.w300 {
+	    width: 300px;
+	}
+	.table {
+		margin-bottom : 10px;
+		border-bottom : 1px solid #ddd;
+	}
 </style>
 	<script type="text/javascript">
-		$(document).on("click","input.btn_del_ThemeTag", function(){
-			if (confirm("정말로 삭제하시겠습니까?")) {
-				location.href="deleteThemeTag.do?anum="+$(this).siblings("input.del_ThemeTag").val();		
-			}			
-		});
-		
-		$(document).on("click","input.add_ThemeTag", function(){
-			if($("input.themeTagText").val() == ''){
-				alert("추가할 태그를 입력하세요");
+		function addThemeTag(){ //태그 추가
+			if($('#themeTagText').val() == ''){
+				alert('추가할 태그를 입력하세요');
 			}else{
-				location.href="insertThemeTag.do?keyword="+$("input.themeTagText").val();		
+				location.href="insertTag.do?atype=theme&returnUrl=adminThemeTag.do&avalue="+$('#themeTagText').val();
 			}
-		});
+		}
+		
+		function deleteTag(anum){ //태그 삭제
+			if (confirm("정말로 삭제하시겠습니까?")) {
+				location.href="deleteTag.do?returnUrl=adminThemeTag.do&anum="+anum;			
+			}
+		}
 	</script>
 </head>
 <body>
@@ -90,18 +120,14 @@
 					<tr>
 						<td>${themeTag.avalue}</td>
 						<td>
-							<input type="button" class="btn_del_ThemeTag" value="x">
-							<input type="hidden" class="del_ThemeTag" value="${themeTag.anum}">
+							<input type="button" onclick="deleteTag('${themeTag.anum}');" class="btn_del_ThemeTag" value="x">
 						</td>
 					</tr>
 				</c:forEach>
 		</table>
-		
-		<hr></hr>
-		
-		<form action="insertThemeTag.do" method="get">
-			<input type="text" name="keyword" class="themeTagText" placeholder="추가할 태그를 입력하세요">
-			<input type="button" value="추가하기" class="add_ThemeTag">
+		<form id="frmList" action="insertThemeTag.do" method="get">
+			<input class="inputText w300" type="text" name="keyword" id="themeTagText" placeholder="추가할 태그를 입력하세요">
+			<button class="btn-view" type="button" onclick="addThemeTag(); return false;">추가하기</button>
 		</form>
 	</div>
 </div>

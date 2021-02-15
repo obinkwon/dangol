@@ -44,19 +44,114 @@
 		font-size: 14px;
 		color: #000000;
 	}
+	.inputText {
+	    height: 40px;
+	    line-height: 40px;
+	    color: #7b6e66;
+	    padding: 0 7px;
+	    border: 1px solid #7b6e66;
+	    background-color: transparent;
+	    vertical-align: middle;
+	    float: left;
+	}
+	.w300 {
+	    width: 300px;
+	}
+	.filebox label {
+	    display: inline-block;
+	    vertical-align: middle;
+	    padding: .5em .75em;
+	    color: #000000;
+	    line-height: 25px;
+	    cursor: pointer;
+	    border: 1px solid #000000;
+	    height: 40px;
+	}
+	.filebox input[type="file"] {
+	    position: absolute;
+	    width: 1px;
+	    height: 1px;
+	    padding: 0;
+	    margin: -1px;
+	    overflow: hidden;
+	    clip: rect(0,0,0,0);
+	    border: 0;
+	}
+	.foodImg {
+	    display: block;
+	    margin: 0 auto;
+	    width: 100px;
+	    height: 100px;
+	    float: left;
+	}
+	.btn-view {
+	    width: 200px;
+	    font-size: 1.4rem;
+	    background-color: #fff;
+	    color: #000000;
+	    height: 4rem;
+	    line-height: 3.9rem;
+	    font-weight: 600;
+	    letter-spacing: 0.5px;
+	    transition-duration: .5s;
+	    border: 0.1rem solid #66ccff;
+	}
+	.left-form {
+	    width: 330px;
+	    float: left;
+	    line-height: 62px;
+	    padding-left: 10px;
+	    color: #555;
+	    text-align: left;
+	    font-size: 14px;
+	}
+	.middle-form {
+	    float: left;
+	    width: 30%;
+	    color: #7b6e66;
+	    text-align: left;
+	}
+	.right-form {
+	    float: left;
+	    width: 20%;
+	    color: #7b6e66;
+	    text-align: left;
+	}
+	.table {
+		margin-bottom : 10px;
+		border-bottom : 1px solid #ddd;
+	}
 </style>
 	<script type="text/javascript">
-		$(document).on("click","input.btn_del_FoodTag", function(){
-			if (confirm("정말로 삭제하시겠습니까?")) {
-				location.href="deleteFoodTag.do?anum="+$(this).siblings("input.del_FoodTag").val();			
-			}
+		$(document).ready(function(){
+			$("#afile").on("change",SelectImg);
 		});
-		function check(){
-			if($('.foodTagText').val() == '' || $('.foodTagFile').val() == ''){
+		
+		function addFoodTag(){ //태그 추가
+			if($('#foodTagText').val() == '' || $('#afile').val() == ''){
 				alert('추가할 태그명과 이미지 파일을 입력해주세요');
-				return false;
 			}else{
-				return true;
+			    $('#frmList').submit();
+			}
+		}
+		
+		function SelectImg(e){//이미지 미리보기
+			var files=e.target.files;
+			var filesArr = Array.prototype.slice.call(files);
+			
+			filesArr.forEach(function(f){
+				sel_file = f;
+				var reader = new FileReader();
+				reader.onload = function(e){
+					$("#img").attr("src",e.target.result);
+				}
+				reader.readAsDataURL(f);
+			});
+		}
+		
+		function deleteTag(anum){ //태그 삭제
+			if (confirm("정말로 삭제하시겠습니까?")) {
+				location.href="deleteTag.do?returnUrl=adminFoodTag.do&anum="+anum;			
 			}
 		}
 	</script>
@@ -84,7 +179,7 @@
 		</div>
 		<table class="table">
 			<tr>
-				<th>그림</th>
+				<th>이미지</th>
 				<th>테마</th>
 				<th>삭제</th>
 			</tr>
@@ -93,17 +188,26 @@
 						<td><img src="downloadAimage.do?anum=${foodTag.anum}" alt="사진 파일을 준비중입니다." width="100px" height="100px"></td>
 						<td>${foodTag.avalue}</td>
 						<td>
-							<input type="button" class="btn_del_FoodTag" value="x">
-							<input type="hidden" class="del_FoodTag" value="${foodTag.anum}">
+							<input type="button" onclick="deleteTag('${foodTag.anum}');" class="btn_del_FoodTag" value="x">
 						</td>
 					</tr>
 				</c:forEach>
 		</table>
-		<hr></hr>
-		<form action="insertFoodTag.do" enctype="multipart/form-data" method="post" onsubmit="return check()">
-			<input type="text" name="keyword" class="foodTagText" placeholder="추가할 태그를 입력하세요">
-			<input type="file" name="afile" class="foodTagFile">
-			<input type="submit" class="add_FoodTag" value="추가하기">
+		<form id="frmList" action="insertTagFile.do" enctype="multipart/form-data" method="post">
+			<div class="left-form">
+				<input type="hidden" name="atype" value="food">
+				<input class="inputText w300" type="text" name="avalue" id="foodTagText" placeholder="추가할 태그를 입력하세요">
+			</div>
+			<div class="middle-form">
+				<div class="filebox">
+					<img id="img" class="foodImg" src="menu_ready.png">
+					<label for="afile">이미지 업로드</label>
+					<input type="file" name="afile" id="afile">
+				</div>
+			</div>
+			<div class="right-form">
+				<button class="btn-view" type="button" onclick="addFoodTag(); return false;">추가하기</button>
+			</div>
 		</form>
 	</div>
 </div>
