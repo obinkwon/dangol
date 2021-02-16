@@ -33,6 +33,9 @@ public interface IAdminDao {
 	
 	//1:1문의
 	//전체 글, 답변완료, 미완료 글 조회
+	public List<Inquiry> selectInquiryList(Inquiry inquiry);
+	public List<Inquiry> inquiryListCount();
+	
 	public List<Inquiry> selectAllInquirys();
 	public int countAllInquirys();
 	public List<Inquiry> selectYesInquirys();
@@ -41,10 +44,11 @@ public interface IAdminDao {
 	public int countNoInquirys();
 	
 	//글 상세보기
+	public Inquiry selectInquiry(Inquiry inquiry);
 	public Inquiry selectOneInquiry(int inum);
 	
 	//답변등록하기
-	public void insertInquiryAnswer(Inquiry inquiry);
+	public int insertInquiryAnswer(Inquiry inquiry);
 	
 	//	글 검색하기
 	//제목으로 글 검색하기

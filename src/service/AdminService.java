@@ -80,6 +80,14 @@ public class AdminService {
 	
 	//1:1문의 
 	//전체 글 로드
+	public List<Inquiry> selectInquiryList(Inquiry inquiry) {
+		return aDao.selectInquiryList(inquiry);
+	}
+	
+	public List<Inquiry> inquiryListCount() {
+		return aDao.inquiryListCount();
+	}
+	
 	public List<Inquiry> selectAllInquirys() {
 		return aDao.selectAllInquirys();
 	}
@@ -99,12 +107,14 @@ public class AdminService {
 		return aDao.selectOneInquiry(inum);
 	}
 	
-	//ed 답변 등록하기
-	public void insertInquiryAnswer(int inum, String ianswer) {
-		Inquiry inquiry = new Inquiry();
-		inquiry.setInum(inum);
-		inquiry.setIanswer(ianswer);
-		aDao.insertInquiryAnswer(inquiry);
+	//ed 글 상세보기
+	public Inquiry selectInquiry(Inquiry inquiry) {
+		return aDao.selectInquiry(inquiry);
+	}
+	
+	//답변 등록하기
+	public int insertInquiryAnswer(Inquiry inquiry) {
+		return aDao.insertInquiryAnswer(inquiry);
 	}
 	
 	//ed 글 등록 회원의 정보 불러오기

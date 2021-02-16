@@ -65,22 +65,109 @@
 		SELECT * FROM ADMINS WHERE ATYPE = 'food'  
 	</select>
 	
-	<insert id="insertFoodTag" parameterType="admin">
-		INSERT INTO ADMINS VALUES (admins_seq.nextval, #{atype}, #{avalue}, #{aimage})
-	</insert>
-	
   	<select id="selectOneAdmin" resultType="Admin" parameterType="int">
 		SELECT * FROM ADMINS WHERE ANUM=#{anum}
 	</select>
 	
 	
 	<!-- 1:1문의 -->
-	<select id="selectAllInquirys" resultType="inquiry">
-		SELECT * FROM INQUIRYS ORDER BY IDATE DESC
+	<select id="selectInquiryList" parameterType="inquiry" resultType="inquiry">
+		SELECT 
+			ROWNUM
+			,INUM AS inum
+			,ITYPE AS itype
+			,ITITLE AS ititle
+			,ICONTENT AS icontent
+			,IDATE AS idate
+			,ISTATE AS istate
+			,IANSWER AS ianswer
+		FROM 
+			INQUIRYS
+		WHERE 1=1
+		<if test="istate != null and istate != ''">
+			AND ISTATE = #{istate}
+		</if>
+		ORDER BY IDATE DESC
+	</select>
+	
+	<select id="inquiryListCount" resultType="inquiry">
+		SELECT 
+			'전체' AS ititle 
+			,'all' AS itype
+			,count(*) AS cnt
+		FROM 
+			INQUIRYS
+		UNION ALL 
+		SELECT 
+			'답변완료' AS ititle
+			,'yes' AS itype
+			, count(*) AS cnt
+		FROM 
+			INQUIRYS 
+		WHERE ISTATE = 'yes'
+		UNION ALL 
+		SELECT 
+			'미답변' AS ititle
+			,'no' AS itype
+			, count(*) AS cnt
+		FROM 
+			INQUIRYS 
+		WHERE 
+			ISTATE = 'no'
+	</select>
+	
+	<!-- 문의 상세보기 -->
+	<select id="selectInquiry" parameterType="inquiry" resultType="inquiry">
+		SELECT
+			INUM AS inum
+			,MID AS mid
+			,BID AS bid
+			,ITYPE AS itype
+			,ITITLE AS ititle
+			,ICONTENT AS icontent
+			,IDATE AS idate
+			,ISTATE AS istate
+			,IANSWER AS ianswer
+			,(SELECT MPHONE FROM MEMBERS WHERE MID = A.MID) AS MPHONE
+			,(SELECT BPHONE FROM BOSS WHERE BID = A.BID) AS BPHONE
+		FROM 
+			INQUIRYS A 
+		WHERE 
+			INUM = #{inum}
+	</select>
+	
+	<!-- 답변 등록하기 -->	
+	<update id="insertInquiryAnswer" parameterType="Inquiry">
+		UPDATE 
+			INQUIRYS 
+		SET 
+			IANSWER = #{ianswer}
+			, ISTATE = 'yes' 
+		WHERE 
+			INUM = #{inum}
+	</update>
+	
+	<select id="selectAllInquirys"  resultType="inquiry">
+		SELECT 
+			INUM AS inum
+			,MID AS mid
+			,BID AS bid
+			,ITYPE AS itype
+			,ITITLE AS ititle
+			,ICONTENT AS icontent
+			,IDATE AS idate
+			,ISTATE AS istate
+			,IANSWER AS ianswer
+		FROM 
+			INQUIRYS 
+		ORDER BY IDATE DESC
 	</select>
 
 	<select id="countAllInquirys" resultType="int">
-		SELECT COUNT (*) FROM INQUIRYS
+		SELECT 
+			COUNT (*) 
+		FROM 
+			INQUIRYS
 	</select>
 	
 	<select id="selectYesInquirys" resultType="inquiry">
@@ -103,10 +190,6 @@
 	<select id="selectOneInquiry" resultType="inquiry" parameterType="int">
 		SELECT * FROM INQUIRYS WHERE INUM=#{inum}
 	</select>
-		
-	<update id="insertInquiryAnswer" parameterType="Inquiry">
-		UPDATE INQUIRYS SET IANSWER=#{ianswer}, ISTATE = 'yes' WHERE INUM=#{inum}
-	</update>
 	
 	<!-- 글 검색하기 -->
 	<!-- 제목검색 -->

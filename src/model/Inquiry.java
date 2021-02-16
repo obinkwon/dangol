@@ -12,6 +12,10 @@ public class Inquiry {
 	private Date idate;
 	private String istate;
 	private String ianswer;
+	private int cnt;
+	private String mphone;
+	private String bphone;
+	private int rownum;
 	public int getInum() {
 		return inum;
 	}
@@ -66,9 +70,33 @@ public class Inquiry {
 	public void setIanswer(String ianswer) {
 		this.ianswer = ianswer;
 	}
+	public int getCnt() {
+		return cnt;
+	}
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
+	}
+	public String getMphone() {
+		return mphone;
+	}
+	public void setMphone(String mphone) {
+		this.mphone = mphone;
+	}
+	public String getBphone() {
+		return bphone;
+	}
+	public void setBphone(String bphone) {
+		this.bphone = bphone;
+	}
+	public int getRownum() {
+		return rownum;
+	}
+	public void setRownum(int rownum) {
+		this.rownum = rownum;
+	}
 	public Inquiry() {}
 	public Inquiry(int inum, String mid, String bid, String itype, String ititle, String icontent, Date idate,
-			String istate, String ianswer) {
+			String istate, String ianswer, int cnt, String mphone, String bphone) {
 		this.inum = inum;
 		this.mid = mid;
 		this.bid = bid;
@@ -78,11 +106,15 @@ public class Inquiry {
 		this.idate = idate;
 		this.istate = istate;
 		this.ianswer = ianswer;
+		this.cnt = cnt;
+		this.mphone = mphone;
+		this.bphone = bphone;
 	}
 	@Override
 	public String toString() {
 		return "Inquiry [inum=" + inum + ", mid=" + mid + ", bid=" + bid + ", itype=" + itype + ", ititle=" + ititle
-				+ ", icontent=" + icontent + ", idate=" + idate + ", istate=" + istate + ", ianswer=" + ianswer + "]";
+				+ ", icontent=" + icontent + ", idate=" + idate + ", istate=" + istate + ", ianswer=" + ianswer
+				+ ", cnt=" + cnt + ", mphone="+ mphone +", bphone="+ bphone +"]";
 	}
 	
 }
