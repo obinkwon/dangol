@@ -10,9 +10,6 @@
 <title>1:1문의_관리자화면</title>
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script type="text/javascript" async>
-
-</script>
 <style type="text/css">
 	div.notice{
 		border : 1px solid #000000;
@@ -29,8 +26,8 @@
 		width: 13%;
 		margin-left: 50px;
 	}
-	div.section{
-		margin-top : 50px;
+	.section{
+		margin-top : 30px;
 		float : right;
 		width : 60%;
 		margin-right : 200px;
@@ -49,179 +46,70 @@
 		font-size: 14px;
 		color: #000000;
 	}
+	.inputText {
+	    height: 40px;
+	    line-height: 40px;
+	    color: #7b6e66;
+	    padding: 0 7px;
+	    border: 1px solid #7b6e66;
+	    background-color: transparent;
+	    vertical-align: middle;
+	    float: left;
+	}
+	.w300 {
+	    width: 300px;
+	}
+	.btn-view {
+	    width: 200px;
+	    font-size: 1.4rem;
+	    background-color: #fff;
+	    color: #000000;
+	    height: 4rem;
+	    line-height: 3.9rem;
+	    font-weight: 600;
+	    letter-spacing: 0.5px;
+	    transition-duration: .5s;
+	    border: 0.1rem solid #66ccff;
+	}
+	.ml10{
+		margin-left:10px;
+	}
+	.mt10{
+		margin-top:10px;
+	}
+	.w100{
+		width: 100px;
+	}
+	.selected{
+		background-color : #66ccff;
+	}
 </style>
-
-	<script type="text/javascript">
-	$(document).on("click","#tr_inqurys",function(){
-		$("#div_inquiry").hide();
-		$("#div_ianswer").hide();
+<script>
+	function searchInquiry(){ //글 검색하기
+		var state = $('#selState').val();
+		var type = $('#selType').val();
+		var keyword = $('#selKeyword').val();
+		if(state == 'all'){
+			location.href="selectAllInquirys.do?type="+type+"&keyword="+keyword;
+		}else{
+			location.href="selectAllInquirys.do?istate="+state+"&type="+type+"&keyword="+keyword;
+		}
+	}
 		
-		/*상세보기 창 로드 */
-		$("#div_inquiry").show();
-		
-		/*1:1문의 내용 가져오기*/
-		$.get("selectOneInquiry.do?inum="+$(this).find('td:first').find('input').val(), function(data){
-			var table = "";
-
-			$('#table_inquiry tr:gt(0)').remove();
-			
-			table += '<tr>';
-			table += '<th>구분</th>';
-			table += '<td>' + data.itype + '</td>';
-			table += '</tr>';
-			table += '<tr>';
-			table += '<th>제목</th>';
-			table += '<td>' + data.ititle + '</td>';
-			table += '</tr>';
-			table += '<tr>';
-			table += '<th>내용</th>';
-			table += '<td>' + data.icontent + '</td>';
-			table += '</tr>';
-			table += '<tr>';
-			table += '<th></th>';
-			table += '<td><input type="hidden" id="inum" value=' + data.inum + '></td>';
-			table += '</tr>';
-
-			$('#table_inquiry tr:eq(0)').after(table);
-		});
-
-	});
-	
-	$(function(){
-		/* 상세보기 및 답변등록 창은 숨겨져 있음 */
-		$("#div_inquiry").hide();
-		$("#div_ianswer").hide();
-		
-		/* 상세보기 창에서 창 닫기 버튼 누르면 사라짐 */
-		$("#btn_inquiry_close").on("click", function(){
-			$("#div_inquiry").hide();
-			$("#div_ianswer").hide();
-		})
-		
-		/* 상세보기 창에서 답변등록 버튼 클릭시 */
-		$("#btn_ianswer_open").on("click", function(){
-			/* 답변등록  관련 창 로드 */
-			$("#div_ianswer").show();
-			
-			/* 답변 가져오기 */
-			$.get("selectOneInquiry.do?inum="+$("#inum").val(), function(data){
-				/* 답변이 없을 때 */
-				if (data.ianswer == null) {
-					$("#btn_ianswer_insert").show();
-					
-					var table = "";
-					$('#table_ianswer tr:gt(0)').remove();
-					
-					table += '<tr>';
-					table += '<th>답변</th>';
-					table += '<td><input type="text" id="ianswer" placeholder="답변을 입력해주세요">' + '</td>';
-					table += '</tr>';
-					table += '<tr>';
-					table += '<th></th>';
-					table += '<td><input type="hidden" id="inum" value=' + data.inum + '>' + '</td>';
-					table += '</tr>';
-				}
-				
-				/* 답변이 있을 때 */
-				else {
-					$("#btn_ianswer_insert").hide();
-					
-					var table = "";
-					$('#table_ianswer tr:gt(0)').remove();
-					
-					table += '<tr>';
-					table += '<th>답변</th>';
-					table += '<td><input type="text" disabled id="ianswer" value=' + data.ianswer + '>' + '</td>';
-					table += '</tr>';
-					table += '<tr>';
-					table += '<th></th>';
-					table += '<td><input type="hidden" id="inum" value=' + data.inum + '>' + '</td>';
-					table += '</tr>';
-				}
-				
-				$('#table_ianswer tr:eq(0)').after(table);
-				
-			});
-		})
-		
-		/* 답변등록하기 */
-		$("#btn_ianswer_insert").on("click", function(){
-			if (confirm("답변을 등록하시겠습니까?")) {
-				$.ajax({
-					url : "insertInquiryAnswer.do",
-					data :{
-						inum : $("#inum").val(),
-						ianswer : $("#ianswer").val(),
-					},
-					type : "post",
-					success : function(){
-						alert("답변이 성공적으로 등록되었습니다.");
-						location.href="selectAllInquirys.do";
-					},
-					error :function(){
-						alert("답변 등록이 실패했습니다.\n 관리자에게 문의해주세요");
-					}
-				});
-			}
-		})
-		
-		/* 답변등록 창에서 닫기 버튼 -> 사라짐 */
-		$("#btn_ianswer_close").on("click", function(){
-			$("#div_ianswer").hide();
-		})
-	
-		/* 글 검색하기 */
-		$("#btn_searchInquirys").on("click", function(){
-				$.ajax({
-					url : "searchInquirys.do",
-					data :{
-						type : $("#type").val(),
-						keyword : $("#keyword").val(),
-					},
-					type : "post",
-					success : function(data){
-						$("#countAll").text("전체("+data.allSize+")");
-						$("#countYes").text("답변완료("+data.yesSize+")");
-						$("#countNo").text("미답변("+data.noSize+")");
-						/* 게시글이 없을 때 */
-						if (data == "") {
-							alert("일치하는 게시글이 없습니다.");
-							
-						/* 게시글이 있을 때 */
-						}else{
-							var table = "";
-							
-							$('#table_inqurys tr:gt(0)').remove();
-							
-  							for( var key in data.member){
-  								table += '<tr>';
-								table += '<td>' + data.inquiry[key].itype + '</td>'; 
-								table += '<td>' + data.member[key].mid + '</td>'; 
-								table += '<td>' + data.inquiry[key].iphone + '</td>'; 
-								table += '<td>' + data.inquiry[key].ititle + '</td>'; 
-								table += '<td>' + data.inquiry[key].idate + '</td>'; 
-								table += '<td>' + data.inquiry[key].istate + '</td>'; 
-  								table += '</tr>';
-							}
-  							
-							$('#table_inqurys tr:eq(0)').after(table);
-						}
-					},
-					error :function(){
-						alert("검색오류입니다.");
-					}
-				});
-		})
-
-	});
-	</script>
+	function selInquiry(type){ // 전체 / 답변완료 / 미답변 클릭
+		if(type == 'all'){
+			location.href="selectAllInquirys.do";
+		}else{
+			location.href="selectAllInquirys.do?istate="+type;
+		}
+	}
+</script>
 </head>
 <body>
 <div class="notice">
 	<h1>관리자 페이지입니다.</h1>
 </div>
 <div class="main">
-	<!-- 사장님 네비게이션 -->
 	<div class="nav">
 		<ul class="nav nav-pills nav-stacked">
 			<li class="navTitle"><a class="navTitle">화면이동</a></li>
@@ -234,73 +122,63 @@
 		</ul>
 	</div>
 	<div class="section">
-		<a id="countAll" href="selectAllInquirys.do">전체(${CountAll})</a>
-		<a id="countYes" href="selectYesInquirys.do">답변완료(${CountYes})</a>
-		<a id="countNo" href="selectNoInquirys.do">미답변(${CountNo})</a>
-		
+		<c:forEach var="count" items="${cntList}" varStatus="status">
+			<button class="btn-view w100 <c:if test="${count.itype == state}">selected</c:if>" onclick="selInquiry('${count.itype}');"> ${count.ititle}(${count.cnt})</button>
+		</c:forEach>
+	</div>
+	<div class="section mt10">
 		<!-- 글 검색하기 -->
-		<input type="text" id="keyword" placeholder="검색내용을 입력하세요">
-		<select id="type">
+		<input class="inputText w300" type="text" id="selKeyword" placeholder="검색내용을 입력하세요">
+		<input type="hidden" id="selState" name="state" value="${state}">
+		<select class="inputText w300 ml10" id="selType">
 			<option value="title" selected>제목으로 찾기</option>
 			<option value="content" >내용으로 찾기</option>
 			<option value="mid" >ID로 찾기</option>
 		</select>
-		<input type="submit" id="btn_searchInquirys" value="검색">
-		<hr>
-		<table id="table_inqurys">
-			<tr>
-				<th><input type="hidden"></th>
-				<th>구분</th>
-				<th>ID</th>
-				<th>전화번호</th>
-				<th>제목</th>
-				<th>날짜</th>
-				<th>답변여부</th>
-			</tr>
-				<c:forEach var="inquirys" items="${Inquirys}" varStatus="status">
-				<tr id="tr_inqurys" style="cursor:pointer"
-				 onmouseover="this.style.background='blue'; this.style.color='white'"
-				 onmouseout="this.style.backgroundColor='white'; this.style.color='black'">
-					<td><input type="hidden" value="${inquirys.inum}"></td>
-					<td>${inquirys.itype}</td>
-					<td>${Ids[status.index]}</td>
-					<td>${Phones[status.index]}</td>
-					<td>${inquirys.ititle}</td>
-					<td><fmt:formatDate value="${inquirys.idate}" pattern="yy년 MM월 dd일"/></td>
-					<td>${inquirys.istate}</td>
+		<button class="btn-view ml10" type="button" onclick="searchInquiry();">검색</button>
+		<table class="table mt10">
+			<colgroup>
+				<col width="5%">
+				<col width="10%">
+				<col width="*">
+				<col width="10%">
+				<col width="10%">
+			</colgroup>
+			<thead>
+				<tr>
+					<th scope="col">번호</th>
+					<th scope="col">구분</th>
+					<th scope="col">제목</th>
+					<th scope="col">날짜</th>
+					<th scope="col">답변여부</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="inquiry" items="${iList}" varStatus="status">
+				<tr>
+					<td>${inquiry.rownum}</td>
+					<td>
+						<c:if test="${inquiry.itype == 'service'}">
+							서비스
+						</c:if>
+						<c:if test="${inquiry.itype == 'site'}">
+							사이트
+						</c:if>
+					</td>
+					<td><a href="selectInquiryDetail.do?inum=${inquiry.inum}">${inquiry.ititle}</a></td>
+					<td><fmt:formatDate value="${inquiry.idate}" pattern="yyyy.MM.dd"/></td>
+					<td>
+						<c:if test="${inquiry.istate == 'yes'}">
+							답변완료
+						</c:if>
+						<c:if test="${inquiry.istate == 'no'}">
+							미답변
+						</c:if>
+					</td>
 				</tr>
 				</c:forEach>	
+			</tbody>
 		</table>
-
-		<!-- 게시글 상세보기 부분 -->
-		<div id="div_inquiry">
-			<hr>
-			
-			<h2>상세보기</h2>
-		
-			<table id="table_inquiry">
-				<tr>
-				</tr>
-			</table>
-			
-			<input type="button" id="btn_inquiry_close" value="창 닫기">
-			<input type="button" id="btn_ianswer_open" value="답변등록">
-		</div>
-
-		<!-- 답변등록 부분 -->
-		<div id="div_ianswer">
-			<hr>
-			
-			<h2>답변등록</h2>
-			
-				<table id="table_ianswer">
-					<tr>
-					</tr>
-				</table>
-				
-				<input type="button" id="btn_ianswer_close" value="닫기">
-				<input type="submit" id="btn_ianswer_insert" value="등록">
-		</div>
 	</div>
 </div>
 </body>

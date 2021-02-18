@@ -87,6 +87,18 @@
 		<if test="istate != null and istate != ''">
 			AND ISTATE = #{istate}
 		</if>
+		<if test="keyword != null and keyword != ''" >
+			<if test="type == 'title'">
+				AND ITITLE LIKE '%'||#{keyword}||'%'
+			</if>
+			<if test="type == 'content'">
+				AND ICONTENT LIKE '%'||#{keyword}||'%'
+			</if>
+			<if test="type == 'mid'">
+				AND mid LIKE '%'||#{keyword}||'%'
+				OR bid LIKE '%'||#{keyword}||'%'
+			</if>
+		</if>
 		ORDER BY IDATE DESC
 	</select>
 	

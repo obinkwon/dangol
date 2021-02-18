@@ -1,9 +1,12 @@
 package controller;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -120,93 +123,48 @@ public class AdminController {
 	// 1:1문의
 	//1:1문의 전체 글 불러오기
 	@RequestMapping("selectAllInquirys.do")
-	public ModelAndView selectAllInquirys() throws Exception{
+	public ModelAndView selectAllInquirys(Inquiry inquiry) throws Exception{
 		ModelAndView mav = new ModelAndView();
-		// 모든 1:1문의 글 출력
-		mav.addObject("Inquirys", aService.selectAllInquirys());
-		mav.addObject("CountAll", aService.countAllInquirys());
-		mav.addObject("CountYes", aService.countYesInquirys());
-		mav.addObject("CountNo", aService.countNoInquirys());
-		mav.addObject("Ids", aService.selectIdsAndPhones().get("ids"));
-		mav.addObject("Phones", aService.selectIdsAndPhones().get("Phones"));
-		mav.setViewName("Admin/adminInquirys");
-		return mav;
-	}
-
-	// ed 1:1문의 답변완료 글 불러오기
-	@RequestMapping("selectYesInquirys.do")
-	public ModelAndView selectYesInquirys() throws Exception{
-		ModelAndView mav = new ModelAndView();
-		// 답변완료 1:1문의 글 출력
-		mav.addObject("Inquirys", aService.selectYesInquirys());
-		mav.addObject("CountAll", aService.countAllInquirys());
-		mav.addObject("CountYes", aService.countYesInquirys());
-		mav.addObject("CountNo", aService.countNoInquirys());
-		mav.addObject("Ids", aService.selectIdsAndPhones().get("ids"));
-		mav.addObject("Phones", aService.selectIdsAndPhones().get("Phones"));
-		mav.setViewName("Admin/adminInquirys");
-		return mav;
-	}
-
-	// ed 1:1문의 페이지 로드
-	@RequestMapping("selectNoInquirys.do")
-	public ModelAndView selectNoInquirys() throws Exception{
-		ModelAndView mav = new ModelAndView();
-		// 답변 미완료 1:1문의 글 출력
-		mav.addObject("Inquirys", aService.selectNoInquirys());
-		mav.addObject("CountAll", aService.countAllInquirys());
-		mav.addObject("CountYes", aService.countYesInquirys());
-		mav.addObject("CountNo", aService.countNoInquirys());
-		mav.addObject("Ids", aService.selectIdsAndPhones().get("ids"));
-		mav.addObject("Phones", aService.selectIdsAndPhones().get("Phones"));
-		mav.setViewName("Admin/adminInquirys");
-		return mav;
-	}
-
-	//ed 키워드로 글 검색
-	@RequestMapping("searchInquirys.do")
-	public @ResponseBody HashMap<String, Object> searchInquirys(String type, String keyword) throws Exception{
-		HashMap<String, Object> hm = new HashMap<String, Object>();
-//		검색글 출력
-		hm.put("inquiry", aService.searchInquirys(type, keyword).get("allInquirys"));
-		List<Member> member = new ArrayList<Member>();
-		
-//		회원정보 구하기
-		for (Inquiry inquiry: aService.searchInquirys(type, keyword).get("allInquirys")) {
-			member.add(mService.checkId(inquiry.getMid()));
+		String state = inquiry.getIstate();
+		if(state == null) {
+			state = "all";
 		}
-		
-		hm.put("allSize", aService.searchInquirys(type, keyword).get("allInquirys").size());
-		hm.put("yesSize", aService.searchInquirys(type, keyword).get("yesInquirys").size());
-		hm.put("noSize", aService.searchInquirys(type, keyword).get("noInquirys").size());
-		hm.put("member", member);
-		//검색결과 출력
-		return hm;
+		// 모든 1:1문의 글 출력
+		List<Inquiry> iList = aService.selectInquiryList(inquiry);
+		mav.addObject("iList", iList);
+		mav.addObject("cntList", aService.inquiryListCount());
+		mav.addObject("state", state);
+		mav.setViewName("Admin/adminInquiry");
+		return mav;
 	}
 	
-	/*
-	 * // ed 1:1문의 답변완료 글 불러오기
-	 * 
-	 * @RequestMapping("selectYesInquirys.do") public ModelAndView
-	 * selectYesInquirys() { ModelAndView mav = new ModelAndView(); // 답변완료 1:1문의 글
-	 * 출력 mav.addObject("Inquirys", aService.selectYesInquirys());
-	 * mav.addObject("CountAll", aService.countAllInquirys());
-	 * mav.addObject("CountYes", aService.countYesInquirys());
-	 * mav.addObject("CountNo", aService.countNoInquirys());
-	 * mav.addObject("Members", aService.selectYesMemberInfo());
-	 * mav.setViewName("Admin/adminInquirys"); return mav; }
-	 */
-	
-	//ed 글 상세보기
-	@RequestMapping("selectOneInquiry.do")
-	public @ResponseBody Inquiry selectOneInquiry(int inum) {
-		return aService.selectOneInquiry(inum);
+	//1:1문의 상세 글 불러오기
+	@RequestMapping("selectInquiryDetail.do")
+	public ModelAndView selectInquiryDetail(Inquiry inquiry) throws Exception{
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("inquiry", aService.selectInquiry(inquiry));
+		mav.setViewName("Admin/adminInquiryDetail");
+		return mav;
 	}
 	
-	//ed 답변등록
+	//답변등록
 	@RequestMapping("insertInquiryAnswer.do")
-	public @ResponseBody void insertInquiryAnswer(int inum, String ianswer) {
-		aService.insertInquiryAnswer(inum, ianswer);
+	public String insertInquiryAnswer(Inquiry inquiry
+			, HttpServletResponse response) throws Exception{
+		int result = aService.insertInquiryAnswer(inquiry);
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = response.getWriter();
+		String str = "";
+		str = "<script language='javascript'>";
+		if(result > 0) {
+			str += "alert('답변이 등록되었습니다.');";
+		}else {
+			str += "alert('등록하는데 실패했습니다. 다시 시도해주세요.');";
+		}
+		str += "location.href='selectAllInquirys.do'";
+		str += "</script>";
+		pw.print(str);
+		return null;
 	}
 	
 	//ed 저장된 이미지 불러오기

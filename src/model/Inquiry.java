@@ -16,6 +16,8 @@ public class Inquiry {
 	private String mphone;
 	private String bphone;
 	private int rownum;
+	private String keyword;
+	private String type;
 	public int getInum() {
 		return inum;
 	}
@@ -93,6 +95,18 @@ public class Inquiry {
 	}
 	public void setRownum(int rownum) {
 		this.rownum = rownum;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	public Inquiry() {}
 	public Inquiry(int inum, String mid, String bid, String itype, String ititle, String icontent, Date idate,
