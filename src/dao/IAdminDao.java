@@ -34,36 +34,11 @@ public interface IAdminDao {
 	//1:1문의
 	//전체 글, 답변완료, 미완료 글 조회
 	public List<Inquiry> selectInquiryList(Inquiry inquiry);
+	//전체 글 갯수
 	public List<Inquiry> inquiryListCount();
-	
-	public List<Inquiry> selectAllInquirys();
-	public int countAllInquirys();
-	public List<Inquiry> selectYesInquirys();
-	public int countYesInquirys();
-	public List<Inquiry> selectNoInquirys();
-	public int countNoInquirys();
-	
 	//글 상세보기
 	public Inquiry selectInquiry(Inquiry inquiry);
-	public Inquiry selectOneInquiry(int inum);
-	
 	//답변등록하기
 	public int insertInquiryAnswer(Inquiry inquiry);
-	
-	//	글 검색하기
-	//제목으로 글 검색하기
-	public List<Inquiry> selectInquirysByTitle(String keyword);
-	public List<Inquiry> selectYesInquirysByTitle(String keyword);
-	public List<Inquiry> selectNoInquirysByTitle(String keyword);
-
-	//내용으로 글 검색하기
-	public List<Inquiry> selectInquirysByContent(String keyword);
-	public List<Inquiry> selectYesInquirysByContent(String keyword);
-	public List<Inquiry> selectNoInquirysByContent(String keyword);
-
-	//아이디로 글 검색하기
-	public List<Inquiry> selectInquirysByMid(String keyword);
-	public List<Inquiry> selectYesInquirysByMid(String keyword);
-	public List<Inquiry> selectNoInquirysByMid(String keyword);
 	
 }

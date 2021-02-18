@@ -2,8 +2,6 @@ package controller;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,25 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
 import model.Admin;
 import model.Inquiry;
-import model.Member;
 import service.AdminService;
-import service.MemberService;
 
 @Controller
 public class AdminController {
 
 	@Autowired
 	private AdminService aService;
-	
-	@Autowired
-	private MemberService mService;
 
 	// 태그
 	//메인추천 화면 로딩

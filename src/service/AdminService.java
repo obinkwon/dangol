@@ -94,18 +94,6 @@ public class AdminService {
 		return aDao.insertInquiryAnswer(inquiry);
 	}
 
-	public int countAllInquirys() {
-		return aDao.countAllInquirys();
-	}
-	
-	public int countYesInquirys() {
-		return aDao.countYesInquirys();
-	}
-	
-	public int countNoInquirys() {
-		return aDao.countNoInquirys();
-	}
-
 	//파일 경로 생성
 	public File getAttachedFile(int anum) {
 		Admin admin= aDao.selectOneAdmin(anum);

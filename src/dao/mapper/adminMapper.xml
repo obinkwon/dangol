@@ -70,7 +70,7 @@
 	</select>
 	
 	
-	<!-- 1:1문의 -->
+	<!-- 1:1문의 리스트 조회-->
 	<select id="selectInquiryList" parameterType="inquiry" resultType="inquiry">
 		SELECT 
 			ROWNUM
@@ -102,6 +102,7 @@
 		ORDER BY IDATE DESC
 	</select>
 	
+	<!-- 1:1문의 전체 / 답변 / 미답변 수-->
 	<select id="inquiryListCount" resultType="inquiry">
 		SELECT 
 			'전체' AS ititle 
@@ -159,82 +160,10 @@
 			INUM = #{inum}
 	</update>
 	
-	<select id="selectAllInquirys"  resultType="inquiry">
-		SELECT 
-			INUM AS inum
-			,MID AS mid
-			,BID AS bid
-			,ITYPE AS itype
-			,ITITLE AS ititle
-			,ICONTENT AS icontent
-			,IDATE AS idate
-			,ISTATE AS istate
-			,IANSWER AS ianswer
-		FROM 
-			INQUIRYS 
-		ORDER BY IDATE DESC
-	</select>
-
-	<select id="countAllInquirys" resultType="int">
-		SELECT 
-			COUNT (*) 
-		FROM 
-			INQUIRYS
-	</select>
-	
-	<select id="selectYesInquirys" resultType="inquiry">
-		SELECT * FROM INQUIRYS WHERE ISTATE='yes' ORDER BY IDATE DESC
-	</select>
-	
-	<select id="countYesInquirys" resultType="int">
-		SELECT COUNT (*) FROM INQUIRYS WHERE ISTATE='yes' ORDER BY IDATE DESC
-	</select>
-	
-	<select id="selectNoInquirys" resultType="inquiry">
-		SELECT * FROM INQUIRYS WHERE ISTATE='no' ORDER BY IDATE DESC
-	</select>
-	
-	<select id="countNoInquirys" resultType="int">
-		SELECT COUNT (*) FROM INQUIRYS WHERE ISTATE='no'
-	</select>
-		
 	<!-- 글 선택하기 -->
 	<select id="selectOneInquiry" resultType="inquiry" parameterType="int">
 		SELECT * FROM INQUIRYS WHERE INUM=#{inum}
 	</select>
 	
-	<!-- 글 검색하기 -->
-	<!-- 제목검색 -->
-	<select id="selectInquirysByTitle" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ITITLE LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>
-	<select id="selectYesInquirysByTitle" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ISTATE='yes' AND ITITLE LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>
-	<select id="selectNoInquirysByTitle" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ISTATE='no' AND ITITLE LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>
-	
-	<!-- 내용검색 -->
-	<select id="selectInquirysByContent" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ICONTENT LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>
-	<select id="selectYesInquirysByContent" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ISTATE='yes' AND ICONTENT LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>
-	<select id="selectNoInquirysByContent" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ISTATE='no' AND ICONTENT LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>
-	
-	<!-- id검색 -->
-	<select id="selectInquirysByMid" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE MID LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>		
-	<select id="selectYesInquirysByMid" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ISTATE='yes' AND MID LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>		
-	<select id="selectNoInquirysByMid" resultType="inquiry" parameterType="String">
-		SELECT * FROM INQUIRYS WHERE ISTATE='no' AND MID LIKE '%'||#{keyword}||'%' ORDER BY IDATE DESC
-	</select>		
 </mapper>
     
