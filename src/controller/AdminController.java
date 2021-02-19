@@ -24,7 +24,7 @@ public class AdminController {
 	@Autowired
 	private AdminService aService;
 
-	// 태그
+	//태그 관련
 	//메인추천 화면 로딩
 	@RequestMapping("adminRecommandTag.do")
 	public ModelAndView adminRecommandTag() {
@@ -32,13 +32,14 @@ public class AdminController {
 		// 현재 설정된 메인추천 1, 2
 		Admin admin = new Admin();
 		admin.setAtype("main1");
-		Admin main1 = aService.showMain(admin);
+		Admin main1 = aService.selectAdminTypeOne(admin);
 		admin.setAtype("main2");
-		Admin main2 = aService.showMain(admin);
+		Admin main2 = aService.selectAdminTypeOne(admin);
 		mav.addObject("main1", main1);
 		mav.addObject("main2", main2);
 		// 드롭다운에 들어갈 themetags 출력
-		List<Admin> themeList =  aService.showThemeTags();
+		admin.setAtype("theme");
+		List<Admin> themeList =  aService.selectAdminTypeList(admin);
 		mav.addObject("themes", themeList);
 		mav.addObject("themesCnt", themeList.size());
 		mav.setViewName("Admin/adminRecommandTag");
@@ -49,12 +50,11 @@ public class AdminController {
 	@RequestMapping("selectMain.do")
 	public String selectMain(Admin admin) {
 		if(admin.getAtype() != null) {
-			Admin tag = aService.showMain(admin);
+			Admin tag = aService.selectAdminOne(admin);
 			if(tag == null) { //insert
-				System.out.println(admin);
 				aService.insertTag(admin);
 			}else { //update
-				aService.updateMain(admin);
+				aService.updateAdmin(admin);
 			}
 		}
 		return "redirect:adminRecommandTag.do";
@@ -73,13 +73,23 @@ public class AdminController {
 		aService.insertTag(admin);
 		return "redirect:"+returnUrl;
 	}
+	
+	//관리자 태그 추가(파일)
+	@RequestMapping("insertTagFile.do")
+	public String insertTagFile(Admin admin,
+			@RequestParam(value="afile") MultipartFile afile) throws Exception{
+		aService.insertTagFile(admin, afile);
+		return "redirect:adminFoodTag.do";
+	}
 
 	//관리자 테마 페이지 로드
 	@RequestMapping("adminThemeTag.do")
 	public ModelAndView adminThemeTag() {
 		ModelAndView mav = new ModelAndView();
 		// themeTags 출력
-		mav.addObject("themeTags", aService.showThemeTags());
+		Admin admin = new Admin();
+		admin.setAtype("theme");
+		mav.addObject("themeTags", aService.selectAdminTypeList(admin));
 		mav.setViewName("Admin/adminThemeTag");
 		return mav;
 	}
@@ -89,25 +99,21 @@ public class AdminController {
 	public ModelAndView adminFoodTag() {
 		ModelAndView mav = new ModelAndView();
 		// FoodTags 출력
-		mav.addObject("foodTags", aService.showFoodTags());
+		Admin admin = new Admin();
+		admin.setAtype("food");
+		mav.addObject("foodTags", aService.selectAdminTypeList(admin));
 		mav.setViewName("Admin/adminFoodTag");
 		return mav;
 	}
 
-	//관리자 태그 추가(파일)
-	@RequestMapping("insertTagFile.do")
-	public String insertTagFile(Admin admin,
-			@RequestParam(value="afile") MultipartFile afile) throws Exception{
-		aService.insertTagFile(admin, afile);
-		return "redirect:adminFoodTag.do";
-	}
-
-	// ed 관리자 맛 페이지 로드
+	//관리자 맛 페이지 로드
 	@RequestMapping("adminTasteTag.do")
 	public ModelAndView adminTasteTag() {
 		ModelAndView mav = new ModelAndView();
 		// TasteTags 출력
-		mav.addObject("tasteTags", aService.showTasteTags());
+		Admin admin = new Admin();
+		admin.setAtype("taste");
+		mav.addObject("tasteTags", aService.selectAdminTypeList(admin));
 		mav.setViewName("Admin/adminTasteTag");
 		return mav;
 	}
@@ -159,7 +165,7 @@ public class AdminController {
 		return null;
 	}
 	
-	//ed 저장된 이미지 불러오기
+	//저장된 이미지 불러오기
 	@RequestMapping("downloadAimage.do")
 	public View download(int anum) {
 		File attachFile= aService.getAttachedFile(anum);

@@ -19,25 +19,28 @@ public class AdminService {
 	
 	@Autowired
 	private IAdminDao aDao;
-
-	@Autowired
-	private IMemberDao mdao;
 	
-	@Autowired
-	private IBossDao bdao;
-	
+	//imagePath
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 	
-	private final Logger logger = Logger.getAnonymousLogger();
+	//admin 하나만 검색
+	public Admin selectAdminOne(Admin admin){
+		return aDao.selectAdminOne(admin);
+	}
 	
-	//메인 태그 검색
-	public Admin showMain(Admin admin){
-		return aDao.showMain(admin);
+	//admin 하나만 검색 (타입)
+	public Admin selectAdminTypeOne(Admin admin){
+		return aDao.selectAdminOne(admin);
+	}
+	
+	//admin 여러개 검색 (타입)
+	public List<Admin> selectAdminTypeList(Admin admin){
+		return aDao.selectAdminTypeList(admin);
 	}
 	
 	//메인 태그 수정
-	public int updateMain(Admin admin) {
-		return aDao.updateMain(admin);
+	public int updateAdmin(Admin admin) {
+		return aDao.updateAdmin(admin);
 	}
 	
 	//태그 추가
@@ -49,16 +52,6 @@ public class AdminService {
 	public int deleteTag(Admin admin) {
 		return aDao.deleteTag(admin);
 	}
-	
-	//테마 태그 리스트
-	public List<Admin> showThemeTags() {
-		return aDao.showThemeTags();
-	}
-
-	//음식 태그
-	public List<Admin> showFoodTags() {
-		return aDao.showFoodTags();
-	}
 
 	//태그 추가(파일)
 	public int insertTagFile(Admin admin, MultipartFile afile) throws Exception{
@@ -67,11 +60,6 @@ public class AdminService {
 		afile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
 		admin.setAimage(aimage); //db에 파일 정보 저장을 하기위해 모델객체에 setting하기
 		return aDao.insertTag(admin);
-	}
-	
-	//맛 태그
-	public List<Admin> showTasteTags() {
-		return aDao.showTasteTags();
 	}
 	
 	//1:1문의 
@@ -96,7 +84,9 @@ public class AdminService {
 
 	//파일 경로 생성
 	public File getAttachedFile(int anum) {
-		Admin admin= aDao.selectOneAdmin(anum);
+		Admin vo = new Admin();
+		vo.setAnum(anum);
+		Admin admin= aDao.selectAdminOne(vo);
 		String fileName = admin.getAimage();
 		String path = imagePath+"admin\\";
 		return new File(path+fileName);

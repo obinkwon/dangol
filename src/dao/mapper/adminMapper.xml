@@ -4,11 +4,36 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="dao.IAdminDao">
-	<select id="showMain" parameterType="admin" resultType="admin">
+	<select id="selectAdminTypeOne" parameterType="admin" resultType="admin">
 		SELECT 
 			ANUM AS anum
 			,ATYPE AS atype
 			,AVALUE AS avalue
+			,AIMAGE AS aimage
+		FROM 
+			ADMINS 
+		WHERE 
+			ATYPE = #{atype} 
+	</select>
+	
+	<select id="selectAdminOne" parameterType="admin" resultType="admin">
+		SELECT 
+			ANUM AS anum
+			,ATYPE AS atype
+			,AVALUE AS avalue
+			,AIMAGE AS aimage
+		FROM 
+			ADMINS 
+		WHERE 
+			ANUM = #{anum} 
+	</select>
+	
+	<select id="selectAdminTypeList" parameterType="admin" resultType="admin">
+		SELECT 
+			ANUM AS anum
+			,ATYPE AS atype
+			,AVALUE AS avalue
+			,AIMAGE AS aimage
 		FROM 
 			ADMINS 
 		WHERE 
@@ -36,7 +61,7 @@
 			ANUM = #{anum}
 	</delete>
 	
-	<update id="updateMain" parameterType="admin">
+	<update id="updateAdmin" parameterType="admin">
 		UPDATE 
 			ADMINS 
 		SET 
@@ -44,31 +69,6 @@
 		WHERE 
 			ATYPE = #{atype}
 	</update>
-	
-	<select id="showThemeTags" resultType="admin">
-		SELECT 
-			ANUM
-			,ATYPE
-			,AVALUE
-			,AIMAGE
-		FROM 
-			ADMINS 
-		WHERE 
-			ATYPE = 'theme'
-	</select>
-	
-	<select id="showTasteTags" resultType="admin">
-		SELECT * FROM ADMINS WHERE ATYPE = 'taste'  
-	</select>
-	
-	<select id="showFoodTags" resultType="admin">
-		SELECT * FROM ADMINS WHERE ATYPE = 'food'  
-	</select>
-	
-  	<select id="selectOneAdmin" resultType="Admin" parameterType="int">
-		SELECT * FROM ADMINS WHERE ANUM=#{anum}
-	</select>
-	
 	
 	<!-- 1:1문의 리스트 조회-->
 	<select id="selectInquiryList" parameterType="inquiry" resultType="inquiry">
@@ -159,11 +159,5 @@
 		WHERE 
 			INUM = #{inum}
 	</update>
-	
-	<!-- 글 선택하기 -->
-	<select id="selectOneInquiry" resultType="inquiry" parameterType="int">
-		SELECT * FROM INQUIRYS WHERE INUM=#{inum}
-	</select>
-	
 </mapper>
     
