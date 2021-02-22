@@ -34,8 +34,6 @@ public class BossController {
 	@Autowired
 	private BossService bservice;
 	@Autowired
-	private MemberService mservice;
-	@Autowired
 	private AdminService aService;
 	
 	@RequestMapping("signUpBossForm.do")
@@ -53,8 +51,9 @@ public class BossController {
 	//사장님 회원가입시 id 중복체크
 		@RequestMapping("checkId.do")
 		public @ResponseBody boolean checkId(String id) {
-			//System.out.println(id);
-			if(bservice.checkId(id)==null)
+			Boss boss = new Boss();
+			boss.setBid(id);
+			if(bservice.selectBossOne(boss)==null)
 			return true;
 			else {
 				return false;

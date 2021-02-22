@@ -183,15 +183,15 @@
 				<th>테마</th>
 				<th>삭제</th>
 			</tr>
-				<c:forEach var="foodTag" items="${foodTags}">
-					<tr>
-						<td><img src="downloadAimage.do?anum=${foodTag.anum}" alt="사진 파일을 준비중입니다." width="100px" height="100px"></td>
-						<td>${foodTag.avalue}</td>
-						<td>
-							<input type="button" onclick="deleteTag('${foodTag.anum}');" class="btn_del_FoodTag" value="x">
-						</td>
-					</tr>
-				</c:forEach>
+			<c:forEach var="foodTag" items="${foodTags}">
+			<tr>
+				<td><img src="downloadAimage.do?anum=${foodTag.anum}" alt="사진 파일을 준비중입니다." width="100px" height="100px"></td>
+				<td>${foodTag.avalue}</td>
+				<td>
+					<input type="button" onclick="deleteTag('${foodTag.anum}');" class="btn_del_FoodTag" value="x">
+				</td>
+			</tr>
+			</c:forEach>
 		</table>
 		<form id="frmList" action="insertTagFile.do" enctype="multipart/form-data" method="post">
 			<div class="left-form">

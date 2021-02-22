@@ -4,28 +4,45 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.IOwnerDao">
-	<sql id="bpw">
-		<choose>
-			<when test="bpw !=null">
-				#{bpw}
-			</when>
-			<otherwise>
-				null
-			</otherwise>
-		</choose>
-	</sql>
 <!-- 내 정보 -->
 	<delete id="deleteOwner" parameterType="String">
 		delete from boss where bid=#{bid}
 	</delete>
-	
+	<!-- 정보 수정 -->
 	<update id="updateOwner" parameterType="boss">
-		UPDATE BOSS SET BPW=<include refid="bpw"/>, BPHONE=#{bphone} WHERE BID=#{bid} 
+		UPDATE BOSS SET 
+			BPW = #{bpw}
+			, BPHONE = #{bphone} 
+		WHERE 
+			BID = #{bid} 
 	</update> 
 
 <!-- 예약현황 -->	
-	<select id="selectStores" parameterType="String" resultType="store">
-		SELECT * FROM STORES WHERE BID=#{bid} ORDER BY SDATE DESC
+	<select id="selectStoreList" parameterType="store" resultType="store">
+		SELECT 
+			SNUM AS snum
+			,BID AS bid
+			,SINTRO AS sintro
+			,SNAME AS sname
+			,SADDRESS AS saddress
+			,SDETAILADDR AS sdetailaddr
+			,SPHONE AS sphone
+			,STIME AS stime
+			,SPARKING AS sparking
+			,SIMAGE AS simage
+			,STYPE AS stype
+			,SHOLIDAY AS sholiday
+			,SDATE AS sdate
+			,SRATELV0 AS sratelv0
+			,SRATELV1 AS sratelv1
+			,SRATELV2 AS sratelv2
+			,SRATELV3 AS sratelv3
+			,SLIMIT AS slimit
+		FROM 
+			STORES 
+		WHERE 
+			BID = #{bid} 
+		ORDER BY SDATE DESC
 	</select>
 	
 	<select id="selectMembersByKeyword" parameterType="String" resultType="member">

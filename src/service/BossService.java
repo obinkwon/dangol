@@ -26,9 +26,9 @@ public class BossService {
 	private IAdminDao adao;
 	
 	public int loginBoss(String id, String pwd) {
-	//	System.out.println(id);
-		Boss b = bdao.loginBoss(id);
-		// System.out.println(b);
+		Boss boss = new Boss();
+		boss.setBid(id);
+		Boss b = bdao.selectBossOne(boss);
 		if (b != null) {
 			if (b.getBpw().equals(pwd)) {
 				return 0; // 로그인 성공
@@ -48,10 +48,9 @@ public class BossService {
 //		System.out.println(bdao.findPw(params));
 		return bdao.findPw(params);
 	}
-	public Boss checkId(String id) {
-		Boss b = bdao.loginBoss(id);
-	//	System.out.println(b);
-		return b;
+	//점장 정보 하나만 검색
+	public Boss selectBossOne(Boss boss) {
+		return bdao.selectBossOne(boss);
 	}
 	public List<Admin> showFoodTagList(){
 		Admin admin = new Admin();

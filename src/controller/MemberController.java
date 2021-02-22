@@ -71,7 +71,6 @@ public class MemberController {
 		} else {
 			if (bService.loginBoss(id, pwd) == 0) {
 				session.setAttribute("bid", id);
-		//		System.out.println("bid");
 				return "redirect:main.do";
 			} else {
 				str = "<script language='javascript'>";

@@ -55,9 +55,16 @@
 		</choose>
 	</sql>
 
-<select id="loginBoss" parameterType="String" resultType="boss">
-select * from boss where bid=#{id}
-</select>
+	<select id="selectBossOne" parameterType="boss" resultType="boss">
+		SELECT 
+			BID AS bid
+			,BPW AS bpw
+			,BPHONE AS bphone
+		FROM 
+			BOSS 
+		WHERE 
+			BID = #{bid}
+	</select>
 
 <select id="findId" parameterType="String" resultType="boss">
 select * from boss where bphone=#{phone}

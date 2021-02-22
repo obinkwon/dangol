@@ -1,9 +1,11 @@
 package controller;
 
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import model.Boss;
 import model.Details;
 import model.Member;
 import model.Store;
+import service.BossService;
 import service.OwnerService;
 
 @Controller
@@ -24,25 +27,62 @@ public class OwnerController {
 
 	@Autowired
 	private OwnerService oService;
+	@Autowired
+	private BossService bService;
 	
 	//내 정보
-	//ed 내 정보 페이지 불러오기
+	//내 정보 페이지 불러오기
 	@RequestMapping("ownerInfoForm.do")
-	public ModelAndView ownerInfoForm(HttpSession session) {
+	public ModelAndView ownerInfoForm(HttpSession session
+			,HttpServletResponse resp) throws Exception{
 		String bid = (String) session.getAttribute("bid");
+		Boss boss = new Boss();
+		Store store = new Store();
+		boss.setBid(bid);
+		store.setBid(bid);
+		
 		ModelAndView mav = new ModelAndView();
-
-		mav.addObject("boss", oService.ownerInfo(bid));
-		mav.addObject("stores", oService.selectStores(bid));
-		mav.setViewName("Owner/ownerInfoForm");
-		return mav;
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		
+		if(bid != null && !bid.equals("") ) {
+			mav.addObject("boss", bService.selectBossOne(boss));
+			mav.addObject("stores", oService.selectStoreList(store));
+			mav.setViewName("Owner/ownerInfoForm");
+			return mav;
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('세션이 만료되었습니다.');";
+			str += "location.href='main.do'";
+			str += "</script>";
+			pw.print(str);
+			return null;
+		}
 	}
 	
-	//ed 사장님 정보 수정하기
+	//사장님 정보 수정하기
 	@RequestMapping("updateOwner.do")
-	public String updateOwner(Boss boss) {
-		oService.updateOwner(boss);
-		return "redirect:ownerInfoForm.do";
+	public String updateOwner(Boss boss
+			,HttpServletResponse resp) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		int result = -1;
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		str = "<script language='javascript'>";
+		if(boss.getBid() != null && !boss.getBid().equals("")) {
+			result = oService.updateOwner(boss);
+		}
+		
+		if(result > 0) {
+			str += "alert('수정 되었습니다.');";
+		}else {
+			str += "alert('오류가 발생했습니다.');";
+		}
+		str += "location.href='ownerInfoForm.do'";
+		str += "</script>";
+		pw.print(str);
+		return null;
 	}
 
 	//ed 사장님 정보 삭제하기
@@ -58,22 +98,24 @@ public class OwnerController {
 	// ed snum에 일치하는 details 불러오기
 	@RequestMapping("selectDetailsBySnum.do")
 	public ModelAndView selectDetailsBySnum(HttpSession session, @RequestParam(defaultValue = "0") int snum) throws Exception{
-		ModelAndView mav = new ModelAndView();
 
 		//session bid에 일치하는 가게 목록 조회
 		String bid = (String) session.getAttribute("bid");
-		mav.addObject("stores", oService.selectStores(bid));
+		ModelAndView mav = new ModelAndView();
+		Store store = new Store();
+		store.setBid(bid);
+		List<Store> storeList = oService.selectStoreList(store);
+		mav.addObject("stores", storeList);
 		
 		switch (snum) {
 		//가게 전체선택
 		case 0:
 			//bid에서 snums 추출
-			List<Store> stores= oService.selectStores(bid);
 			int i=0;
-			int[] snums = new int[stores.size()];
+			int[] snums = new int[storeList.size()];
 			
-			for (Store store : stores) {
-				snums[i] = store.getSnum();
+			for (Store s : storeList) {
+				snums[i] = s.getSnum();
 				i++;
 			}
 			
@@ -249,13 +291,16 @@ public class OwnerController {
 	@RequestMapping("ownerStore.do")
 	public ModelAndView	ownerStore(HttpSession session) {
 		//ed session에 저장된 아이디 추출
-		String bid = (String)session.getAttribute("bid");
-		
+		String bid = (String) session.getAttribute("bid");
+		Boss boss = new Boss();
+		Store store = new Store();
+		boss.setBid(bid);
+		store.setBid(bid);
 		ModelAndView mav = new ModelAndView();
 		//bid에 일치하는 stores 정보 추출
 		
-		mav.addObject("boss", oService.ownerInfo(bid));
-		mav.addObject("stores", oService.selectStores(bid));
+		mav.addObject("boss", bService.selectBossOne(boss));
+		mav.addObject("stores", oService.selectStoreList(store));
 		mav.setViewName("Owner/ownerStore");
 		return mav;
 	}

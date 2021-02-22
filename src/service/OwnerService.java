@@ -33,21 +33,21 @@ public class OwnerService {
 	private IEventDao eDao;
 
 	//내 정보
-	public Boss ownerInfo(String bid) {
-		return bDao.loginBoss(bid);
+	public Boss ownerInfo(Boss boss) {
+		return bDao.selectBossOne(boss);
 	}
 
 	public void deleteOwner(String bid) {
 		oDao.deleteOwner(bid);
 	}
-
-	public void updateOwner(Boss boss) {
-		oDao.updateOwner(boss);
+	//사장님 정보 수정
+	public int updateOwner(Boss boss) {
+		return oDao.updateOwner(boss);
 	}
 	
 	//ed bid 일치하는 가게 목록 조회
-	public List<Store> selectStores(String bid) {
-		return oDao.selectStores(bid);
+	public List<Store> selectStoreList(Store store) {
+		return oDao.selectStoreList(store);
 	}
 	
 	//ed snum으로 예약자의 아이디, 핸드폰 번호 구하기(gcurrent='yes')
@@ -137,13 +137,15 @@ public class OwnerService {
 	//ed bid로 snums 구하기
 	public int[] selectsnumsByBid(String bid) {
 		//bid에 일치하는 stores 조회
-		List<Store> stores = oDao.selectStores(bid);
+		Store store = new Store();
+		store.setBid(bid);
+		List<Store> stores = oDao.selectStoreList(store);
 		
 		int i = 0;
 		int[] snums = new int[stores.size()];
 		//stores에서 snum 추출
-		for (Store store : stores) {
-			snums[i] = store.getSnum();
+		for (Store s : stores) {
+			snums[i] = s.getSnum();
 			i++;
 		}
 		return snums;

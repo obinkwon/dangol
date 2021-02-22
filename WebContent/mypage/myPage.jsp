@@ -7,8 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
 	div.main {
@@ -266,7 +265,6 @@ $(document).ready(function(){
 </head>
 <body>
 	<jsp:include page="../jsp/header.jsp" />
-
 	<div class="main">
 		<div class="nav">
 			<ul class="nav nav-pills nav-stacked">
