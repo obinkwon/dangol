@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import model.Admin;
 import model.Boss;
 import model.Order;
 import model.Store;
+import service.AdminService;
 import service.BossService;
 import service.MemberService;
 
@@ -33,13 +35,17 @@ public class BossController {
 	private BossService bservice;
 	@Autowired
 	private MemberService mservice;
+	@Autowired
+	private AdminService aService;
 	
 	@RequestMapping("signUpBossForm.do")
 	public ModelAndView signUpBossForm() throws Exception{
 		ModelAndView mav = new ModelAndView();
+		Admin admin = new Admin();
+		admin.setAtype("theme");
 		//admin 에서 가게업종 가져오기
 		mav.addObject("foodTagList",bservice.showFoodTagList());
-		mav.addObject("themeList", mservice.showThemeList());
+		mav.addObject("themeList", aService.selectAdminTypeList(admin));
 		mav.setViewName("jsp/signUpBossForm");
 		return mav;
 	}

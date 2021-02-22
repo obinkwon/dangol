@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
+import model.Admin;
 import model.Boss;
 import model.Member;
+import service.AdminService;
 import service.BossService;
 import service.MemberService;
 
@@ -31,6 +33,8 @@ public class MemberController {
 	private MemberService mService;
 	@Autowired
 	private BossService bService;
+	@Autowired
+	private AdminService aService;
 
 	@RequestMapping("loginForm.do")
 	public String loginForm() {
@@ -173,9 +177,10 @@ public class MemberController {
 	@RequestMapping("signUpMembersForm.do")
 	public ModelAndView signUpMembersForm() throws Exception{
 		// 회원가입시 해시태그 리스트 가져오기
-		// System.out.println(mService.showThemeList());
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("themeList", mService.showThemeList());
+		Admin admin = new Admin();
+		admin.setAtype("theme");
+		mav.addObject("themeList", aService.selectAdminTypeList(admin));
 		mav.setViewName("jsp/signUpMembersForm");
 		return mav;
 	}

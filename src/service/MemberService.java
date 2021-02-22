@@ -64,11 +64,6 @@ public class MemberService {
 		return m;
 	}
 
-	// 회원가입시 태그 리스트
-	public List<Admin> showThemeList() throws Exception{
-		return adao.showThemeTags();
-	}
-	
 	//회원가입
 	public void insertMember(Member member, String[] tag, MultipartFile mfile) throws Exception{
 		String path = imagePath +"member\\";

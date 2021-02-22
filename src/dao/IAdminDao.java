@@ -14,7 +14,7 @@ public interface IAdminDao {
 	//admin 하나만 검색
 	public Admin selectAdminOne(Admin admin);
 	
-	//admin 하나만 검색
+	//admin 여러개 검색
 	public List<Admin> selectAdminTypeList(Admin admin);
 	
 	//메인태그 수정

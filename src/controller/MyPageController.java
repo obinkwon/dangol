@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
+import model.Admin;
 import model.Comment;
 import model.Details;
 import model.Grade;
@@ -43,9 +44,11 @@ public class MyPageController {
 	public ModelAndView myPage(HttpSession session) throws Exception{
 		String mid = (String) session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
+		Admin admin = new Admin();
+		admin.setAtype("theme");
 		if (session.getAttribute("mid") != null) {
 			mav.addObject("Member", mypageService.selectMember(mid));
-			mav.addObject("themeList", mService.showThemeList());
+			mav.addObject("themeList", aService.selectAdminTypeList(admin));
 			if(mypageService.selectMtag(mid) !=null) {
 				mav.addObject("mTag", mypageService.selectMtag(mid));
 			}
@@ -356,8 +359,10 @@ public class MyPageController {
 			mav.addObject("menulist", menu);
 		}
 		Grade grade = mypageService.selectgradeByGnum(details.getGnum());
+		Admin admin = new Admin();
+		admin.setAtype("taste");
 		mav.addObject("mimage", member.getMimage());
-		mav.addObject("tasteTag", aService.showTasteTags());
+		mav.addObject("tasteTag", aService.selectAdminTypeList(admin));
 		mav.addObject("store", store);
 		mav.addObject("glevel", grade.getGlevel());
 		mav.addObject("details", mypageService.selectDetailsByDnum(dnum));

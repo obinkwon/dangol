@@ -54,8 +54,9 @@ public class BossService {
 		return b;
 	}
 	public List<Admin> showFoodTagList(){
-		List<Admin> foodTagList = adao.showFoodTags();
-		//System.out.println(foodTagList);
+		Admin admin = new Admin();
+		admin.setAtype("food");
+		List<Admin> foodTagList = adao.selectAdminTypeList(admin);
 		return foodTagList;
 	}
 	public void insertBoss(Boss boss, Store store, String[] tag, List<Order> order) {
