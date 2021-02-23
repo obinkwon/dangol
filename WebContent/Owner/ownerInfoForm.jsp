@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>내 정보_사장님</title>
+<title>사장님_내 정보</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
@@ -98,13 +98,10 @@
 	}
 </style>
 <script type="text/javascript">
-/* 수정 전 제약사항 */
-function checkpw() {
-	/* 비밀번호 제대로 입력했을 때 */
-	if (($('#txt_checkpw').text() == "비밀번호가 일치합니다")) {
+function checkpw() { //비밀번호 체크
+	if ($('#txt_checkpw').text() == "비밀번호가 일치합니다") { //비밀번호 제대로 입력했을 때
 		return true
-	}else{
-		/* 비밀번호 다르게 입력했을 때 */
+	}else{ //비밀번호 다르게 입력했을 때
 		return false
 	}
 }
@@ -119,19 +116,18 @@ function updateBtn(){ //수정하기
 	}
 }
 
-$(function(){
-	/* 탈퇴하기 */
-	$("#btn_drop_member").on("click", function(){
-		var chk1 = $('#pwd_checkpw1').val();
-		if (confirm("정말로 탈퇴하시겠습니까?")) {
- 			var password = prompt('개인정보 확인을 위해 \n비밀번호를 한 번 더 입력해주세요','');
- 			if (password == chk1) {
-				alert("그동안 단골의 희열 서비스를 \n이용해주셔서 감사합니다");
-				location.href="deleteOwner.do";	
-			}
+function deleteBtn(){ //탈퇴하기
+	var chk1 = $('#pwd_checkpw1').val();
+	if (confirm("정말로 탈퇴하시겠습니까?")) {
+			var password = prompt('개인정보 확인을 위해 \n비밀번호를 한 번 더 입력해주세요','');
+			if (password == chk1) {
+			$('#frmList').attr('action','deleteOwner.do');
+			$('#frmList').submit();
 		}
-	});
-	
+	}
+}
+
+$(function(){
 	$("#pwd_checkpw2").blur(function(){
 		if ($('#pwd_checkpw1').val() == $('#pwd_checkpw2').val()) {
 			$('#txt_checkpw').text("비밀번호가 일치합니다");
@@ -143,7 +139,6 @@ $(function(){
 	});
 });
 </script>
-
 </head>
 <body>
 	<jsp:include page="/jsp/header.jsp"/>
@@ -164,11 +159,11 @@ $(function(){
 				<table class="signForm">
 					<tr>
 						<td><span style="color:red">* </span>아이디</td>
-						<td><input class="inputText w300" type="text" name="bid" value="${boss.bid}" readonly="readonly"></td>
+						<td><input class="inputText w300" type="text" name="bid" value="${boss.bid}" readonly></td>
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>비밀번호</td>
-						<td><input class="inputText w300" id="pwd_checkpw1" name="bpw" value="${boss.bpw}" type="password"></td>
+						<td><input class="inputText w300" id="pwd_checkpw1" name="bpw" value="${boss.bpw}" type="password" ></td>
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>비밀번호 확인</td>
@@ -182,31 +177,17 @@ $(function(){
 						<td><span style="color:red">* </span>전화번호</td>
 						<td><input class="inputText w300" type="text" name="bphone" value="${boss.bphone}"></td>
 					</tr>
-					<tr>
-						<td>가게 현황</td>
-						<td>
-							<c:choose>
-								<c:when test="${empty stores}">등록된 가게가 없습니다.</c:when>
-								<c:otherwise>
-									<c:forEach var="store" items="${stores}">
-										<ul class="stores">
-											<li><a href="">${store.sname}</a></li>
-										</ul>
-									</c:forEach>
-								</c:otherwise>
-							</c:choose>
-						</td>
-					</tr>
 				</table>
 				<div class="contentsTitGroup">
 					<h4 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);"><span style="color:red">* </span>표시는 필수 입력 사항입니다.</h4>
 				</div>
 				<div class="btn-wrap">
 					<button class="btn-view btn-mint" type="button" onclick="updateBtn();">수정하기</button>
-					<button class="btn-view" id="btn_drop_member" type="button">탈퇴하기</button>
+					<button class="btn-view" id="btn_drop_member" type="button" onclick="deleteBtn();">탈퇴하기</button>
 				</div>
 			</form>
 		</div>
 	</div>
+	<jsp:include page="/jsp/footer.jsp"/>
 </body>
 </html>

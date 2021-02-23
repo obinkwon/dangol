@@ -5,8 +5,10 @@
 
 <mapper namespace="dao.IOwnerDao">
 <!-- 내 정보 -->
-	<delete id="deleteOwner" parameterType="String">
-		delete from boss where bid=#{bid}
+	<delete id="deleteOwner" parameterType="boss">
+		DELETE FROM BOSS 
+		WHERE BID = #{bid}
+		AND BPW = #{bpw}
 	</delete>
 	<!-- 정보 수정 -->
 	<update id="updateOwner" parameterType="boss">

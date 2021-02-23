@@ -37,15 +37,15 @@ public class OwnerService {
 		return bDao.selectBossOne(boss);
 	}
 
-	public void deleteOwner(String bid) {
-		oDao.deleteOwner(bid);
+	public int deleteOwner(Boss boss) {
+		return oDao.deleteOwner(boss);
 	}
 	//사장님 정보 수정
 	public int updateOwner(Boss boss) {
 		return oDao.updateOwner(boss);
 	}
 	
-	//ed bid 일치하는 가게 목록 조회
+	//사장님 가게 목록 조회
 	public List<Store> selectStoreList(Store store) {
 		return oDao.selectStoreList(store);
 	}

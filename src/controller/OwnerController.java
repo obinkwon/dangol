@@ -30,8 +30,8 @@ public class OwnerController {
 	@Autowired
 	private BossService bService;
 	
-	//내 정보
-	//내 정보 페이지 불러오기
+	//점장 정보
+	//점장 정보 페이지 불러오기
 	@RequestMapping("ownerInfoForm.do")
 	public ModelAndView ownerInfoForm(HttpSession session
 			,HttpServletResponse resp) throws Exception{
@@ -85,72 +85,100 @@ public class OwnerController {
 		return null;
 	}
 
-	//ed 사장님 정보 삭제하기
+	//사장님 정보 탈퇴하기
 	@RequestMapping("deleteOwner.do")
-	public String deleteOwner(HttpSession session) {
-		String bid = (String) session.getAttribute("bid");
-		oService.deleteOwner(bid);
-		session.invalidate();
-		return "redirect:main.do";
+	public String deleteOwner(HttpSession session
+			,Boss boss
+			,HttpServletResponse resp) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		int result = -1;
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		str = "<script language='javascript'>";
+		if(!boss.getBpw().equals("") && !boss.getBid().equals("")) {
+			result = oService.deleteOwner(boss);
+		}
+		if(result > 0) {
+			str += "alert('그동안 단골의 희열 서비스를 \\n이용해주셔서 감사합니다');";
+			session.invalidate();
+		}else {
+			str += "alert('오류가 발생했습니다.');";
+		}
+		str += "location.href='main.do'";
+		str += "</script>";
+		pw.print(str);
+		return null;
 	}
 
 	// 예약현황
-	// ed snum에 일치하는 details 불러오기
+	//snum에 일치하는 details 불러오기
 	@RequestMapping("selectDetailsBySnum.do")
-	public ModelAndView selectDetailsBySnum(HttpSession session, @RequestParam(defaultValue = "0") int snum) throws Exception{
-
+	public ModelAndView selectDetailsBySnum(HttpSession session
+			, @RequestParam(defaultValue = "0") int snum
+			, HttpServletResponse resp) throws Exception{
 		//session bid에 일치하는 가게 목록 조회
 		String bid = (String) session.getAttribute("bid");
-		ModelAndView mav = new ModelAndView();
 		Store store = new Store();
 		store.setBid(bid);
-		List<Store> storeList = oService.selectStoreList(store);
-		mav.addObject("stores", storeList);
+		ModelAndView mav = new ModelAndView();
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
 		
-		switch (snum) {
-		//가게 전체선택
-		case 0:
-			//bid에서 snums 추출
-			int i=0;
-			int[] snums = new int[storeList.size()];
-			
-			for (Store s : storeList) {
-				snums[i] = s.getSnum();
-				i++;
+		if(bid != null && !bid.equals("") ) {
+			List<Store> storeList = oService.selectStoreList(store);
+			mav.addObject("stores", storeList);
+			switch (snum) {
+			//가게 전체선택
+			case 0:
+				//bid에서 snums 추출
+				int i=0;
+				int[] snums = new int[storeList.size()];
+				
+				for (Store s : storeList) {
+					snums[i] = s.getSnum();
+					i++;
+				}
+				
+				//snums로 gnums 추출
+				int[] gnumsBySnums = oService.selectGnumsCurrentYBySnums(snums);
+				//gnums이 null이면 예약은 없다.
+				if (gnumsBySnums.length == 0) {
+					mav.addObject("details", null);
+					mav.addObject("reservers", null);
+				}else {
+					//gnums에 해당하는 details 불러오기
+					mav.addObject("details", oService.selectDetailsByGnums(gnumsBySnums));
+					// 예약한 사람 정보 구하기
+					mav.addObject("reservers", oService.selectReserversBySnums(snums));
+				}
+				break;
+			//가게 일부선택
+			default:
+				//snum으로 gnums 추출
+				int[] gnumsBySnum = oService.selectGnumsCurrentYBySnum(snum);
+				//gnums이 null이면 예약은 없다.
+				if (gnumsBySnum.length == 0) {
+					mav.addObject("details", null);
+					mav.addObject("reservers", null);
+				}else {
+					//gnums에 해당하는 details 불러오기
+					mav.addObject("details", oService.selectDetailsByGnums(gnumsBySnum));
+					// 예약한 사람 정보 구하기
+					mav.addObject("reservers", oService.selectReserversBySnum(snum));
+				}
+				break;
 			}
-			
-			//snums로 gnums 추출
-			int[] gnumsBySnums = oService.selectGnumsCurrentYBySnums(snums);
-			//gnums이 null이면 예약은 없다.
-			if (gnumsBySnums.length == 0) {
-				mav.addObject("details", null);
-				mav.addObject("reservers", null);
-			}else {
-				//gnums에 해당하는 details 불러오기
-				mav.addObject("details", oService.selectDetailsByGnums(gnumsBySnums));
-				// 예약한 사람 정보 구하기
-				mav.addObject("reservers", oService.selectReserversBySnums(snums));
-			}
-			break;
-			
-		//가게 일부선택
-		default:
-			//snum으로 gnums 추출
-			int[] gnumsBySnum = oService.selectGnumsCurrentYBySnum(snum);
-			//gnums이 null이면 예약은 없다.
-			if (gnumsBySnum.length == 0) {
-				mav.addObject("details", null);
-				mav.addObject("reservers", null);
-			}else {
-				//gnums에 해당하는 details 불러오기
-				mav.addObject("details", oService.selectDetailsByGnums(gnumsBySnum));
-				// 예약한 사람 정보 구하기
-				mav.addObject("reservers", oService.selectReserversBySnum(snum));
-			}
-			break;
+			mav.setViewName("Owner/ownerReserve");
+			return mav;
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('세션이 만료되었습니다.');";
+			str += "location.href='main.do'";
+			str += "</script>";
+			pw.print(str);
+			return null;
 		}
-		mav.setViewName("Owner/ownerReserve");
-		return mav;
 	}
 
 	// ed Gnums와 date에 일치하는 details 불러오기
@@ -287,10 +315,11 @@ public class OwnerController {
 	}
 	
 	//내 가게
-	//ed 가게 정보 페이지로 이동하기
+	//가게 정보 페이지로 이동하기
 	@RequestMapping("ownerStore.do")
-	public ModelAndView	ownerStore(HttpSession session) {
-		//ed session에 저장된 아이디 추출
+	public ModelAndView	ownerStore(HttpSession session
+			,HttpServletResponse resp) throws Exception{
+		//session에 저장된 아이디 추출
 		String bid = (String) session.getAttribute("bid");
 		Boss boss = new Boss();
 		Store store = new Store();
@@ -298,11 +327,23 @@ public class OwnerController {
 		store.setBid(bid);
 		ModelAndView mav = new ModelAndView();
 		//bid에 일치하는 stores 정보 추출
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
 		
-		mav.addObject("boss", bService.selectBossOne(boss));
-		mav.addObject("stores", oService.selectStoreList(store));
-		mav.setViewName("Owner/ownerStore");
-		return mav;
+		if(bid != null && !bid.equals("") ) {
+			mav.addObject("boss", bService.selectBossOne(boss));
+			mav.addObject("stores", oService.selectStoreList(store));
+			mav.setViewName("Owner/ownerStore");
+			return mav;
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('세션이 만료되었습니다.');";
+			str += "location.href='main.do'";
+			str += "</script>";
+			pw.print(str);
+			return null;
+		}
 	}
 	
 

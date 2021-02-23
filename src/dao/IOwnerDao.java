@@ -11,7 +11,7 @@ import model.Store;
 
 public interface IOwnerDao {
 	//내 정보
-	public int deleteOwner(String bid);
+	public int deleteOwner(Boss boss);
 	public int updateOwner(Boss boss);
 	
 	//예약현황

@@ -6,76 +6,72 @@
 <head>
 <meta charset="UTF-8">
 <title>예약현황_사장님</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>
+<link rel="stylesheet" href="/css/calendar.css">
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src="/js/calendar.js"></script>
 <style type="text/css">
-div.main {
-	display: block;
-	width: 100%;
-	margin-top: 50px;
-	margin-bottom:100px;
-}
-
-div.nav {
-	margin-top: 50px;
-	float: left;
-	width: 10%;
-	margin-left: 50px;
-}
-
-div.reserveContent {
-	position: relative;
-	margin-left: 22%;
-}
-
-table.reserveList {
-	position: relative;
-	margin-top: 17px;
-	width: 95%;
-	height: 140px;
-	border: 1px #d9d9d9;
-}
-
-table.reserveList th, td {
-	text-align: center;
-}
-
-table.reserveList th {
-	background-color: #d9d9d9;
-	height: 30px;
-}
-
-table.reserveList td {
-	height: 100px;
-}
-
-table.reserveList tr {
-	border: 1px solid #d9d9d9;
-}
-
-/* 달력 */
-#calendar {
- boarder: 1px solid;
- vertical-align: center;
- text-align: center;
- align: center;
-}
-
-td {
- width: 60px;
- height: 60px;
- text-align: center;
- font-size: 20px;
- font-family: 바탕;
- border:2px solid black;
- border-radius:8px;
-}
-
-td:hover {
-  color: red;
-  text-align: center;
-}
-
+	div.main {
+		margin : auto;
+		margin-top: 50px;
+		margin-bottom:100px;
+		width: 100%;
+	}
+	div.nav {
+		margin-top: 50px;
+		float: left;
+		width: 10%;
+		margin-left: 50px;
+	}
+	li.navTitle {
+		background-color: #d9d9d9;
+	}
+	a.navTitle {
+		font-size: 15px;
+		font-weight: bold;
+		color: #000000;
+		text-align: center;
+	}
+	a.nav {
+		text-align: center;
+		font-size: 14px;
+		color: #000000;
+	}
+	li.active {
+		background-color: #66ccff;
+	}
+	.contentsTitGroup{
+		padding-top: 2.0rem;
+	    text-align: center;
+	    display: block;
+	}
+	.inputText {
+		height: 40px;
+	    line-height: 40px;
+	    color: #7b6e66;
+	    padding: 0 7px;
+	    border: 1px solid #7b6e66;
+	    background-color: transparent;
+	    float: left;
+	}
+	.w300 {
+	    width: 300px;
+	}
+	.toggle-wrap {
+		width : 100%;
+	    margin-bottom : 100px;
+	    margin-left :800px;
+	    width: 41.1rem;
+	    font-size: 1.6rem;
+	    display: block;
+	}
+	.contents-wrap{
+		width: 100%;
+		height : 600px;
+	}
 
 /* 회원검색 */
 #txt_search_member{
@@ -93,9 +89,6 @@ td:hover {
  border-color: blue;
 }
 </style>
-	
-<!--  -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script type="text/javascript">
 function search_member() {
 	$("#div_manual").show();
@@ -167,165 +160,114 @@ $(function(){
 	
 });
 </script>
-<!-- 달력 코드 -->
-<script type="text/javascript">
-	var today = new Date();
-	
-	/* 저번 달 구하기 */
-	function prevCalendar() {
-		 today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
-		 buildCalendar();
-	}
-
-	/* 다음 달 구하기 */
-	function nextCalendar() {
-		 today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-		 buildCalendar();
-	}
-	
-	/* 달력 만들기 */
-	function buildCalendar() {
-		 var nMonth = new Date(today.getFullYear(), today.getMonth(), 1);  // 이번 달의 첫째 날
-		 var lastDate = new Date(today.getFullYear(), today.getMonth()+1, 0); // 이번 달의 마지막 날
-		 var tblCalendar = document.getElementById("calendar");     // 테이블 달력을 만들 테이블
-		 var tblCalendarYM = document.getElementById("calendarYM");    // yyyy년 m월 출력할 곳
-		 tblCalendarYM.innerHTML = today.getFullYear() + "년 " + (today.getMonth() + 1) + "월";  // yyyy년 m월 출력
-		 
-		// 기존 테이블에 뿌려진 줄, 칸 삭제
-		 while (tblCalendar.rows.length > 2) {
-			  tblCalendar.deleteRow(tblCalendar.rows.length - 1);
-		 }
-		 
-		 var row = null;
-		 row = tblCalendar.insertRow();
-		 var cnt = 0;
-		 
-		// 1일이 시작되는 칸을 맞추어 줌
-		 for (i=0; i<nMonth.getDay(); i++) {
-		  cell = row.insertCell();
-		  cnt = cnt + 1;
-		 }
-		 
-		 for (i=1; i<=lastDate.getDate(); i++) { 
-		  cell = row.insertCell();
-		  cell.innerHTML = i;
-		  cnt = cnt + 1;
-		  
-		  if (cnt%7 == 0)// 1주일이 7일 이므로
-		   row = calendar.insertRow();// 줄 추가
-		 }
-	 
-	}
-</script>
 </head>
 <body>
 	<jsp:include page="/jsp/header.jsp"/>
+	<div class="main">
+		<div class="nav">
+			<ul class="nav nav-pills nav-stacked">
+				<li class="navTitle"><a class="navTitle">사장님 페이지</a></li>
+				<li><a class="nav" href="ownerInfoForm.do">내 정보</a></li>
+				<li><a class="nav" href="ownerStore.do">내 가게</a></li>
+				<li class="active"><a class="nav" href="selectDetailsBySnum.do">예약현황</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="contentsTitGroup">
+				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">예약현황</h2>
+			</div>
+			<!-- 가게선택 단추 -->
+			<div class="toggle-wrap">
+				<h4 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">가게선택</h4>
+				<select class="inputText w300" id="select_store">
+					<c:if test="${not empty stores}">
+						<option id="0" value="-1">내 모든 가게</option>
+						<c:forEach var="store" items="${stores}">
+							<option id="${store.snum}" value="${store.snum}">${store.sname}</option>
+						</c:forEach>
+					</c:if>
+				</select>
+			</div>	
+			<!-- calendar -->
+			<div class="contents-wrap">
+				<div id="calendar">
+					<div id="calendar_header">
+						<i class="icon-chevron-left"></i>          
+						<h1></h1>
+						<i class="icon-chevron-right"></i>         
+					</div>
+					<div id="calendar_weekdays"></div>
+					<div id="calendar_content"></div>
+				</div>
+			</div>
+			<!-- 예약목록 -->
+			<table class="table">
+				<colgroup>
+					<col width="10%"/>
+					<col width="5%"/>
+					<col width="10%"/>
+					<col width="5%"/>
+					<col width="30%"/>
+					<col width="30%"/>
+					<col width="10%"/>
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>날짜</th>
+						<th>ID</th>
+						<th>핸드폰</th>
+						<th>인원</th>
+						<th>메뉴</th>
+						<th>요청사항</th>
+						<th>신고하기</th>
+					</tr>
+					<c:forEach var="detail" items="${details}" varStatus="status">
+					<tr>
+						<td>${detail.ddate}</td>
+						<td>${reservers[status.index].mid}</td>
+						<td>${reservers[status.index].mphone}</td>
+						<td>${detail.dperson}</td>
+						<td>${detail.dmenu}</td>
+						<td>${detail.dask}</td>
+						<td><input id="btn_report" type="button" value="신고"></td>
+					</tr>
+					</c:forEach>
+					<c:if test="${details eq null}">
+					<tr>
+						<td colspan="7" style="text-align:center;">예약이 없습니다</td>
+					</tr>
+					</c:if>
+				</tbody>
+			</table>
 
-<!-- 사장님 메뉴바-->
-<div class="main">
-	<div class="nav">
-		<ul class="nav nav-pills nav-stacked">
-			<li class="navTitle"><a class="navTitle" href="ownerInfoForm.do">사장님 페이지</a></li>
-			<li class="active"><a class="nav" href="ownerInfoForm.do">내 정보</a></li>
-			<li class="nav"><a class="nav" href="ownerStore.do">내 가게</a></li>
-			<li class="nav"><a class="nav" href="selectDetailsBySnum.do">예약현황<span class="sr-only">(current)</span></a></li>
-		</ul>
+			<!-- 예약가능인원 변경 및 확인 -->
+			<div id="div_reservation">
+				<h4>예약 인원 / 예약 가능인원</h4>
+				<input id="txt_reserved_member" type="text" value="test2"> / <input id="txt_reserveable_member" type="text" value="test">명
+				<input id="btn_update_reserve" type="button" value="수정">
+			</div>
+			<div id="div_search_member">	
+				<hr>
+				<h1>단골멤버쉽 적용</h1>
+				<input id="txt_search_member" type="text" placeholder="검색할 회원의 ID 또는 핸드폰 뒷자리를 입력해주세요">
+				<input id="btn_search_member" type="image" src="images/magnifying_glass.jpg" onclick="search_member()"><br>
+				 * 핸드폰 번호 및 일치하는 아이디 입력
+			</div>
+			<!-- 혜택내역 적용 -->
+			<div id="div_manual">
+				<table id="tbl_membership">
+					<tr>
+						<th>ID</th>
+						<th>핸드폰번호</th>
+						<th>등급</th>
+						<th>후기</th>
+						<th>예상혜택</th>
+						<th>멤버쉽</th>
+					</tr>
+				</table>
+			</div>
+		</div>
 	</div>
-</div>
-
-
-<h1>예약현황</h1>
-
-<!-- 달력 -->
-<table id="calendar">
-	<tr>
-		<td><label onclick="prevCalendar()">&lt;</label></td>
-	    <td id="calendarYM" colspan="5" align="center" >yyyy년 m월</td>
-	    <td><label onclick="nextCalendar()">></label></td>
-    </tr>
-    <tr class="td_calendarWeek">
-	     <td>일</td>
-	     <td>월</td>
-	     <td>화</td>
-	     <td>수</td>
-	     <td>목</td>
-	     <td>금</td>
-	     <td>토</td>
-   </tr>
-</table>
-
-
-<!-- 가게선택 단추 -->
-<c:if test="${not empty bid}">
-	<div>
-		가게선택 : 
-		<select id="select_store">
-					<option id="-1" value="-1">(가게선택)</option>
-			<c:if test="${not empty stores}">
-					<option id="0" value="0">내 모든 가게</option>
-				<c:forEach var="store" items="${stores}">
-					<option id="${store.snum}" value="${store.snum}">${store.sname}</option>
-				</c:forEach>
-			</c:if>
-		</select>
-	</div>	
-</c:if>
-
-<!-- 예약목록 -->
-<table class="reserveList">
-	<tr>
-		<th width="10%">날짜</th>
-		<th width="5%">ID</th>
-		<th width="10%">핸드폰</th>
-		<th width="5%">인원</th>
-		<th width="30%">메뉴</th>
-		<th width="30%">요청사항</th>
-		<th>신고하기</th>
-	</tr>
-	<c:forEach var="detail" items="${details}" varStatus="status">
-	<tr>
-		<td>${detail.ddate}</td>
-		<td>${reservers[status.index].mid}</td>
-		<td>${reservers[status.index].mphone}</td>
-		<td>${detail.dperson}</td>
-		<td>${detail.dmenu}</td>
-		<td>${detail.dask}</td>
-		<td><input id="btn_report" type="button" value="신고"></td>
-	</tr>
-	</c:forEach>
-</table>
-
-<!-- 예약가능인원 변경 및 확인 -->
-<div id="div_reservation">
-	<h4>예약 인원 / 예약 가능인원</h4>
-	<input id="txt_reserved_member" type="text" value="test2"> / <input id="txt_reserveable_member" type="text" value="test">명
-	<input id="btn_update_reserve" type="button" value="수정">
-</div>
-
-<div id="div_search_member">	
-	<hr>
-	<h1>단골멤버쉽 적용</h1>
-	<input id="txt_search_member" type="text" placeholder="검색할 회원의 ID 또는 핸드폰 뒷자리를 입력해주세요">
-	<input id="btn_search_member" type="image" src="images/magnifying_glass.jpg" onclick="search_member()"><br>
-	 * 핸드폰 번호 및 일치하는 아이디 입력
-</div>
-
-<!-- 혜택내역 적용 -->
-<div id="div_manual">
-	<table id="tbl_membership">
-		<tr>
-			<th>ID</th>
-			<th>핸드폰번호</th>
-			<th>등급</th>
-			<th>후기</th>
-			<th>예상혜택</th>
-			<th>멤버쉽</th>
-		</tr>
-	</table>
-</div>
-
-<script type="text/javascript">
-buildCalendar();
-</script>
+	<jsp:include page="/jsp/footer.jsp"/>
 </body>
 </html>
