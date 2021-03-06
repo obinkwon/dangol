@@ -69,6 +69,19 @@
 		padding-top: 4.5rem;
 	}
 	</style>
+	<script type="text/javascript">
+		function addStore(){ //가게 추가
+			location.href="ownerStoreForm.do?mode=ADD";
+		}
+		
+		function uptStore(snum){ //가게 수정
+			location.href="ownerStoreForm.do?mode=MOD&snum="+snum;
+		}
+		
+		function delStore(){ //가게 삭제
+			location.href="ownerStoreForm.do";
+		}
+	</script>
 </head>
 <body>
 	<jsp:include page="/jsp/header.jsp"/>
@@ -86,7 +99,7 @@
 				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">${boss.bid}님의 가게 등록 현황</h2>
 			</div>
 			<div class="btn-wrap">
-				<button class="btn-view btn-mint" type="button">추가</button>
+				<button class="btn-view btn-mint" type="button" onClick="addStore();">추가</button>
 			</div>
 			<table class="table">
 				<colgroup>
@@ -108,11 +121,11 @@
 					</tr>
 					<c:forEach var="store" items="${stores}">
 					<tr>
-						<td>${store.stype}</td>
+						<td>${store.avalue}</td>
 						<td>${store.sname}</td>
 						<td>${store.saddress} ${store.sdetailaddr}</td>
 						<td>${store.sphone}</td>
-						<td><button class="btn-view w100" type="button" >수정</button></td>
+						<td><button class="btn-view w100" type="button" onClick="uptStore('${store.snum}');">수정</button></td>
 						<td><button class="btn-view w100" type="button" >삭제</button></td>
 					</tr>
 					</c:forEach>

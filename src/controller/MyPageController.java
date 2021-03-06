@@ -307,7 +307,9 @@ public class MyPageController {
 	// 저장된 이미지 불러오기
 	@RequestMapping("downloadSImage.do")
 	public View download(int snum) {
-		File attachFile = mypageService.getAttachedFile(snum);
+		Store store = new Store();
+		store.setSnum(snum);
+		File attachFile = mypageService.getAttachedFile(store);
 		View view = new DownloadView(attachFile);
 		return view;
 	}

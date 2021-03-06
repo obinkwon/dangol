@@ -141,13 +141,7 @@
 		var status = $("#status").val(); 
 	
 		$(function(){
-			if (${bid != null} && ${Stores == "[]"}) {
-				alert("사장님 가게 등록을 먼저 해주세요");
-			}else if(${bid == null}){
-			}
-			
-			
-			$("#store").on("change",function(){
+			$("#status").on("change",function(){
 				location.href="selectEvents.do?status="+status+"&snum="+this.value;
 			});
 			

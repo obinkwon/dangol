@@ -23,11 +23,14 @@ public interface IOwnerDao {
 	public List<Details> selectDetailsByGnumsDdate(HashMap hm);
 	public List<Store> selectStoresBySnums(int[] snum);
 	
+	public List<Grade> selectGradeList(Grade grade);
+	public List<Details> selectDetailsList(Grade grade);
 	
 	//내 가게
-	public List<Store> selectStoreList(Store store);
-	public void insertStore(Store store);
-	public Store selectStore(int snum);
+	public List<Store> selectStoreList(Store store); //가게 리스트 가져오기
+	public int insertStore(Store store); //가게 등록
+	public int insertStag(Store store); //가게 태그 등록
+	public Store selectStore(Store store); //가게 정보 가져오기
 	public void updateStore(Store store);
 	public void deleteStore(int snum);
 

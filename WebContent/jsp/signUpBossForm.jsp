@@ -531,5 +531,4 @@ height:5px;}
 	</div>
 	<jsp:include page="footer.jsp" />
 </body>
-</body>
 </html>

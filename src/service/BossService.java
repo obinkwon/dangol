@@ -74,7 +74,7 @@ public class BossService {
 		} 
 		saddress=ss[0]+" "+ss[1];
 		
-		String time=store.getStime();
+		String time=store.getStime_start();
 		//System.out.println(store);
 		StringTokenizer tokens1 = new StringTokenizer( time, "," );
 		String stime="";
@@ -83,7 +83,7 @@ public class BossService {
 		//	System.out.println(stime);
 		} 
 		store.setSaddress(saddress);
-		store.setStime(stime);
+		store.setStime_start(stime);
 		store.setBid(boss.getBid());
 	//	System.out.println(store);
 		

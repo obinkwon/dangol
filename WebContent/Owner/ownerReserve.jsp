@@ -72,18 +72,23 @@
 		width: 100%;
 		height : 600px;
 	}
-
-/* 회원검색 */
-#txt_search_member{
- width: 350px;
- height: 30px;
-}
-
-#btn_search_member{
- border-radius: 5px;
- width: 30px;
- height: 30px;
-}
+	.btn-view {
+	    width: 200px;
+        font-size: 1.4rem;
+        background-color: #fff;
+		color: #000000;
+	    height: 4rem;
+	    margin: 0 auto;
+	    line-height: 3.9rem;
+		font-weight: 600;
+	    letter-spacing: 0.5px;
+	    transition-duration: .5s;
+        border: 0.1rem solid #66ccff;
+	}
+	.btn-mint{
+		background-color: #66ccff;
+		color: #fff;
+	}
 
 #btn_search_member:hover{
  border-color: blue;
@@ -179,14 +184,17 @@ $(function(){
 			<!-- 가게선택 단추 -->
 			<div class="toggle-wrap">
 				<h4 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">가게선택</h4>
+				<c:if test="${not empty storeList}">
 				<select class="inputText w300" id="select_store">
-					<c:if test="${not empty stores}">
-						<option id="0" value="-1">내 모든 가게</option>
-						<c:forEach var="store" items="${stores}">
-							<option id="${store.snum}" value="${store.snum}">${store.sname}</option>
-						</c:forEach>
-					</c:if>
+					<option value="0" <c:if test="${snum == 0}">selected</c:if>>내 모든 가게</option>
+					<c:forEach var="store" items="${storeList}">
+						<option value="${store.snum}" <c:if test="${store.snum == snum}">selected</c:if>>${store.sname}</option>
+					</c:forEach>
 				</select>
+				</c:if>
+				<c:if test="${empty storeList}">
+					<input class="inputText w300" type="text" value="등록된 가게 없음">
+				</c:if>
 			</div>	
 			<!-- calendar -->
 			<div class="contents-wrap">
@@ -243,14 +251,15 @@ $(function(){
 			<!-- 예약가능인원 변경 및 확인 -->
 			<div id="div_reservation">
 				<h4>예약 인원 / 예약 가능인원</h4>
-				<input id="txt_reserved_member" type="text" value="test2"> / <input id="txt_reserveable_member" type="text" value="test">명
-				<input id="btn_update_reserve" type="button" value="수정">
+				<input class="inputText w300" type="text" value="test2"> / 
+				<input class="inputText w300" type="text" value="test">명
+				<button class="btn-view btn-mint" type="button">수정</button>
 			</div>
 			<div id="div_search_member">	
 				<hr>
 				<h1>단골멤버쉽 적용</h1>
-				<input id="txt_search_member" type="text" placeholder="검색할 회원의 ID 또는 핸드폰 뒷자리를 입력해주세요">
-				<input id="btn_search_member" type="image" src="images/magnifying_glass.jpg" onclick="search_member()"><br>
+				<input class="inputText w300" id="txt_search_member" type="text" placeholder="검색할 회원의 ID 또는 핸드폰 뒷자리를 입력해주세요">
+				<input class="inputText w300" id="btn_search_member" type="image" src="images/magnifying_glass.jpg" onclick="search_member()"><br>
 				 * 핸드폰 번호 및 일치하는 아이디 입력
 			</div>
 			<!-- 혜택내역 적용 -->

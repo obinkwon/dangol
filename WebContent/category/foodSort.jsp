@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
@@ -154,7 +153,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("div.foodImg").click(function(){
-			location.href="foodSort.do?foodName="+$(this).children('p').text();
+			location.href="foodSort.do?type=food&anum="+$(this).children('input').val();
 		});
 		$("#sortSelect").change(function(){
 			location.href="foodSort.do?page=${param.page}&foodName=${param.foodName}&type="+this.value;
@@ -167,7 +166,7 @@
 			$("#option_new").prop('selected','true');
 		
 		$('div.storeOne').click(function(){
-			var snum = $(this).find('input[type=hidden]#storeNum').val();
+			var snum = $(this).find('input[type=hidden]').val();
 			location.href="storeView.do?snum="+snum;
 		});
 	});
@@ -181,14 +180,16 @@
 			<div class="foodSortImg">
 				<c:forEach var="admin" items="${adminList}">
 				<c:choose>
-					<c:when test="${param.foodName==admin.avalue}">
+					<c:when test="${param.anum == admin.anum}">
 						<div class="foodImg_check" style="background-image : url('downloadAimage.do?anum=${admin.anum}');">
-								<p class="foodImg">${admin.avalue}</p>
+							<p class="foodImg">${admin.avalue}</p>
+							<input type="hidden" value="${admin.anum}">
 						</div>
 					</c:when>
 					<c:otherwise>
 						<div class="foodImg" style="background-image : url('downloadAimage.do?anum=${admin.anum}');">
 							<p class="foodImg">${admin.avalue}</p>
+							<input type="hidden" value="${admin.anum}">
 						</div>
 					</c:otherwise>
 				</c:choose>
@@ -204,27 +205,25 @@
 				</select>
 			</div>
 			<div class="storeList">
-				<c:forEach var="storeMap" items="${storeMapList}">
+				<c:forEach var="store" items="${storeList}">
 				<div class="storeOne">
-					<input id="storeNum" type="hidden" value="${storeMap.snum}">
+					<input class="storeNum" type="hidden" value="${store.snum}">
 					<c:choose>
-						<c:when test="${storeMap.simage != null}">
-							<img class="storeOne" src="downloadStoreImg.do?snum=${storeMap.snum}">
+						<c:when test="${store.simage != null}">
+							<img class="storeOne" src="downloadStoreImg.do?snum=${store.snum}">
 						</c:when>
 						<c:otherwise>
 							<img class="storeOne" src="image_ready2.png">
 						</c:otherwise>
 					</c:choose>
-					<p class="storeOneA"><b>${storeMap.sname}</b></p>
-					<p class="storeOneB">${storeMap.saddress}</p>
+					<p class="storeOneA"><b>${store.sname}</b></p>
+					<p class="storeOneB">${store.saddress}</p>
 					<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					<a class="storeOneA">${storeMap.commentCount}점</a><br>
+					<a class="storeOneA">${store.commentTotal}점</a><br>
 					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-					<a class="storeOneB">${storeMap.userCount}명</a>
+					<a class="storeOneB">${store.dancnt}명</a>
 					<p class="hashTag">
-						<c:if test="${storeMap.stag1!=null}"><a>#${storeMap.stag1}</a></c:if>
-						<c:if test="${storeMap.stag2!=null}"><a>#${storeMap.stag2}</a></c:if>
-						<c:if test="${storeMap.stag3!=null}"><a>#${storeMap.stag3}</a></c:if>
+						<c:if test="${store.stag ne null}"><a>${store.stag}</a></c:if>
 					</p>
 				</div>
 				</c:forEach>
@@ -234,7 +233,7 @@
 				<input type="button" value="처음" onclick="location.href='foodSort.do?page=1&type=${param.type}&foodName=${param.foodName}'">
 				<input type="button" value="이전" onclick="location.href='foodSort.do?page=${viewInfo.start-1}&type=${param.type}&foodName=${param.foodName}'">
 			</c:if>
-			<c:forEach begin="${viewInfo.start}" end="${viewInfo.end<viewInfo.last?viewInfo.end:viewInfo.last}" var="i">
+			<c:forEach begin="${viewInfo.start}" end="${viewInfo.end < viewInfo.last ? viewInfo.end : viewInfo.last}" var="i">
 				<c:choose>
 					<c:when test="${i==viewInfo.current}">
 						[${i}]

@@ -22,37 +22,110 @@
 <!-- 예약현황 -->	
 	<select id="selectStoreList" parameterType="store" resultType="store">
 		SELECT 
-			SNUM AS snum
-			,BID AS bid
-			,SINTRO AS sintro
-			,SNAME AS sname
-			,SADDRESS AS saddress
-			,SDETAILADDR AS sdetailaddr
-			,SPHONE AS sphone
-			,STIME AS stime
-			,SPARKING AS sparking
-			,SIMAGE AS simage
-			,STYPE AS stype
-			,SHOLIDAY AS sholiday
-			,SDATE AS sdate
-			,SRATELV0 AS sratelv0
-			,SRATELV1 AS sratelv1
-			,SRATELV2 AS sratelv2
-			,SRATELV3 AS sratelv3
-			,SLIMIT AS slimit
+			A.SNUM AS snum
+			,A.BID AS bid
+			,A.SINTRO AS sintro
+			,A.SNAME AS sname
+			,A.SADDRESS AS saddress
+			,A.SDETAILADDR AS sdetailaddr
+			,A.SPHONE AS sphone
+			,A.STIME_START AS stime_start
+			,A.STIME_END AS stime_end
+			,A.SPARKING AS sparking
+			,A.SIMAGE AS simage
+			,A.STYPE AS stype
+			,A.SHOLIDAY AS sholiday
+			,A.SDATE AS sdate
+			,A.SRATELV0 AS sratelv0
+			,A.SRATELV1 AS sratelv1
+			,A.SRATELV2 AS sratelv2
+			,A.SRATELV3 AS sratelv3
+			,A.SLIMIT AS slimit
+			,B.AVALUE AS avalue
 		FROM 
-			STORES 
+			STORES A
+			LEFT JOIN ADMINS B ON A.STYPE = B.ANUM
 		WHERE 
 			BID = #{bid} 
 		ORDER BY SDATE DESC
 	</select>
+	
+	<select id="selectGradeList" parameterType="grade" resultType="grade">
+		SELECT 
+			GNUM AS gnum
+			,MID AS mid
+			,SNUM AS snum
+			,GLEVEL AS glevel
+			,GCURRENT AS gcurrent
+			,GLIKE AS glike
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			<if test="gcurrent != null and gcurrent != ''">
+			AND GCURRENT = #{gcurrent}
+			</if>
+	</select>
+	
+	<select id="selectDetailsList" parameterType="grade" resultType="details">
+		SELECT 
+			DNUM AS dnum
+			,GNUM AS gnum
+			,DDATE AS ddate
+			,DPERSON AS dperson
+			,DMENU AS dmenu
+			,DTYPE AS dtype
+			,DASK AS dask
+			,DCHECK AS dcheck
+			,DTIME AS dtime
+			,DCOUNT AS dcount
+			,DLIMIT AS dlimit
+		FROM 
+			DETAILS 
+		WHERE 
+			GNUM IN(
+				SELECT 
+					GNUM
+				FROM 
+					GRADES 
+				WHERE 
+					SNUM = #{snum} 
+					AND GCURRENT = 'yes'
+			)
+		 	AND DTYPE = 'yes' 
+		 	AND DCHECK = 'no' 
+		 ORDER BY DDATE
+	</select>
+	
+	<insert id="insertStag" parameterType="store">
+		INSERT INTO STAG(
+			STNUM
+			,SNUM
+			,ANUM
+		)VALUES(
+			STAG_SEQ.NEXTVAL
+			,#{snum}
+			,#{stag}
+		)
+	</insert>
 	
 	<select id="selectMembersByKeyword" parameterType="String" resultType="member">
 		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
 	</select>
 	
 	<select id="selectGradesCurrentYBySnum" parameterType="int" resultType="grade">
-		SELECT * FROM GRADES WHERE SNUM=#{snum} AND GCURRENT = 'yes'
+		SELECT 
+			GNUM AS gnum
+			,MID AS mid
+			,SNUM AS snum
+			,GLEVEL AS glevel
+			,GCURRENT AS gcurrent
+			,GLIKE AS glike
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			AND GCURRENT = 'yes'
 	</select>
 	
 	<select id="selectGradesCurrentYBysnums" parameterType="java.util.HashMap" resultType="grade">
@@ -95,12 +168,81 @@
 	</select>
 	
 	<insert id="insertStore" parameterType="store">
-		INSERT INTO STORES VALUES (snum_seq.nextval, #{sintro}, #{sname}, #{saddress}, #{sdetailaddr}, #{sphone}, #{sparking},
-#{slimit}, #{stime}, #{sholiday}, #{sintro}, #{sratelv0}, #{sratelv1}, #{sratelv2}, #{sratelv3}, #{simage}, #{stype}, #{bid})
+		<selectKey resultType="int" keyProperty="snum" order="BEFORE">
+			SELECT STORES_SEQ.NEXTVAL FROM DUAL
+      	</selectKey>
+		INSERT INTO STORES(
+			SNUM
+			,SINTRO
+			,SNAME
+			,SADDRESS
+			,SDETAILADDR
+			,SPHONE
+			,STIME_START
+			,STIME_END
+			,SPARKING
+			,SLIMIT
+			,SHOLIDAY
+			,SDATE
+			,SRATELV0
+			,SRATELV1
+			,SRATELV2
+			,SRATELV3
+			<if test="simage != null and simage != ''">
+			,SIMAGE
+			</if>
+			,STYPE
+			,BID
+		)VALUES (
+			#{snum}
+			, #{sintro}
+			, #{sname}
+			, #{saddress}
+			, #{sdetailaddr}
+			, #{sphone}
+			, #{stime_start}
+			, #{stime_end}
+			, #{sparking}
+			, #{slimit}
+			, #{sholiday}
+			, SYSDATE
+			, #{sratelv0}
+			, #{sratelv1}
+			, #{sratelv2}
+			, #{sratelv3}
+			<if test="simage != null and simage != ''">
+			, #{simage}
+			</if>
+			, #{stype}
+			, #{bid}
+		)
 	</insert>
 	
-	<select id="selectStore" parameterType="int" resultType="store">
-		SELECT * FROM STORES WHERE SNUM=#{snum}
+	<select id="selectStore" parameterType="store" resultType="store">
+		SELECT 
+			A.SNUM AS snum
+			,A.BID AS bid
+			,A.SINTRO AS sintro
+			,A.SNAME AS sname
+			,A.SADDRESS AS saddress
+			,A.SDETAILADDR AS sdetailaddr
+			,A.SPHONE AS sphone
+			,A.STIME_START AS stime_start
+			,A.STIME_END AS stime_end
+			,A.SPARKING AS sparking
+			,A.SIMAGE AS simage
+			,A.STYPE AS stype
+			,A.SHOLIDAY AS sholiday
+			,A.SDATE AS sdate
+			,A.SRATELV0 AS sratelv0
+			,A.SRATELV1 AS sratelv1
+			,A.SRATELV2 AS sratelv2
+			,A.SRATELV3 AS sratelv3
+			,A.SLIMIT AS slimit
+		FROM 
+			STORES A
+		WHERE 
+			A.SNUM = #{snum}
 	</select>
 	
 	<update id="updateStore" parameterType="store">

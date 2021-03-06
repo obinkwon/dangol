@@ -58,7 +58,9 @@ public class MainService {
 	public int selectBestStore() {
 		int[] snumList = imdao.selectStoreMemberBySnum();
 		if(snumList.length!=0) {
-			Store s = imdao.selectStoreOne(snumList[0]);
+			Store store = new Store();
+			store.setSnum(snumList[0]);
+			Store s = imdao.selectStoreOne(store);
 			if(s.getSimage()==null) return 758059;
 			else return s.getSnum();
 		}
@@ -139,7 +141,13 @@ public class MainService {
 	}
 	
 	public Store selectStore(int snum) {
-		return imdao.selectStoreOne(snum);
+		Store store = new Store();
+		store.setSnum(snum);
+		return imdao.selectStoreOne(store);
+	}
+	
+	public Store selectStoreOne(Store store) {
+		return imdao.selectStoreOne(store);
 	}
 	
 	public HashMap<String, String> selectMainTag(){

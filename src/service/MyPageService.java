@@ -33,6 +33,8 @@ public class MyPageService {
 	private IMemberDao mdao;
 	@Autowired
 	private IOwnerDao odao;
+	
+	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 
 	public Member selectMember(String mid) {
 		return mypagedao.selectMember(mid);
@@ -55,7 +57,7 @@ public class MyPageService {
 
 	public void updateMemberOne(Member member, String[] tag, MultipartFile mfile) throws Exception{
 
-		String path = "C:\\Users\\student\\git\\FinalProject\\FinalProject\\WebContent\\images\\member\\";
+		String path = imagePath+"member\\";
 		File dir = new File(path);
 		if (!dir.exists())
 			dir.mkdirs();
@@ -230,10 +232,10 @@ public class MyPageService {
 	}
 
 	// 파일 경로 생성
-	public File getAttachedFile(int snum) {
-		Store store = odao.selectStore(snum);
+	public File getAttachedFile(Store vo) {
+		Store store = odao.selectStore(vo);
 		String fileName = store.getSimage();
-		String path = "C:\\Users\\student\\git\\FinalProject\\FinalProject\\WebContent\\images\\store\\";
+		String path = imagePath+"store\\";
 		return new File(path + fileName);
 	}
 

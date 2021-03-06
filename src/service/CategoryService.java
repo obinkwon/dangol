@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dao.IAdminDao;
 import dao.IBossDao;
 import dao.ICategoryDao;
 import dao.IMemberDao;
@@ -36,12 +37,17 @@ public class CategoryService {
 	private IMyPageDao mydao;
 	@Autowired
 	private IBossDao bdao;
+	@Autowired
+	private IAdminDao adao;
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 	
-	public List<Admin> sortFoodList() {//음식태그 리스트
-		List<Admin> aList = icdao.selectAdminAllByFood();
-		return aList;
+	public List<Admin> sortFoodList(Admin admin) {//음식태그 리스트
+		return adao.selectAdminTypeList(admin);
+	}
+	
+	public List<Store> getStoreList(Admin admin){ //음식종류별 가게 리스트 가져오기
+		return icdao.selectStoreListType(admin);
 	}
 	
 	public List<Admin> sortThemeList() {//테마태그 리스트
@@ -59,20 +65,17 @@ public class CategoryService {
 		return gradeCount;
 	}
 	
-	public HashMap<String, Object> selectFoodStoreList(int page, int storesPerPage, String foodName) {//음식별 가게 리스트
-		HashMap<String, Object> params = new HashMap<String, Object>();
+	public HashMap<String, Object> selectFoodStoreList(int page,  Admin admin) {//음식별 가게 리스트 페이징
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		
-		int offset = getOffset(page, storesPerPage);
-		params.put("offset",offset);
-		params.put("storesPerPage", storesPerPage);
-		params.put("foodName", foodName);
-		result.put("sList", icdao.selectStoreAllByStype(params));
+		int offset = getOffset(page, admin.getStoresPerPage());
+		int resultSize = icdao.getStoreListCount(admin);
+		admin.setOffset(offset);
 		result.put("current",page);
 		result.put("start", getStartPage(page));
 		result.put("end", getEndPage(page));
-		result.put("last", getLastPage(storesPerPage,icdao.getStoreAllByStypeCount(foodName)));
-		result.put("totalBoard", icdao.getStoreAllByStypeCount(foodName));
+		result.put("last", getLastPage(admin.getStoresPerPage(),resultSize));
+		result.put("totalBoard", resultSize);
 		return result;
 	}
 	
@@ -131,11 +134,12 @@ public class CategoryService {
 		List<List<Grade>> gListAll = new ArrayList<List<Grade>>();
 		double[] commentCount = new double[sList.size()];
 		for(Store s : sList) {
-			List<Grade> gList = icdao.selectGradeBySnum(s.getSnum());
-			gListAll.add(gList);
-			i++;
+			System.out.println(s);
+			int total = icdao.selectCommentTotal(s); //가게별 리뷰 총점
+			int totalCnt = icdao.selectCommentTotalCnt(s); //가게별 리뷰 갯수
+			System.out.println(total +"::::"+ totalCnt);
+			s.setCommentTotal(total/totalCnt);
 		}
-		i = 0;
 		int count = 0;
 		List<Details> dList = null;
 		for(List<Grade> gl : gListAll) {
@@ -157,39 +161,61 @@ public class CategoryService {
 		return commentCount;
 	}
 	
-	public List<String> selectStagOne(int snum) {
-		List<Stag> stList = icdao.selectStagBySnum(snum);
-		List<String> tagList = new ArrayList<String>();
-		for(Stag st : stList) {
-			Admin a = icdao.selectAdminOne(st.getAnum());
-			if(a!=null) tagList.add(a.getAvalue());
+	public List<Store> etcCount(List<Store> sList) {//가게 후기 총 평점 평균 리스트
+		for(Store store : sList) {
+			String stag= "";
+			int total = icdao.selectCommentTotal(store); //가게별 리뷰 총점
+			int totalCnt = icdao.selectCommentTotalCnt(store); //가게별 리뷰 갯수
+			List<Admin> stagList = icdao.selectStagList(store);
+			for(Admin admin : stagList) {
+				stag = stag+" #"+admin.getAvalue();
+			}
+			store.setStag(stag);
+			if(total > 0 && totalCnt > 0) {
+				store.setCommentTotal(total/totalCnt);
+			}else {
+				store.setCommentTotal(0);
+			}
 		}
-		return tagList;
+		return sList;
 	}
 	
-	public List<Order> selectMenuList(int snum) {
-		return icdao.selectOrderAllBySnum(snum);
+	public List<Admin> selectStagList1(Store store) {
+		return icdao.selectStagList(store);
 	}
 	
-	public Grade selectMyGradeInfo(int snum,String mid) {
+	public List<Order> selectOrderList(Store store) {
+		return icdao.selectOrderList(store);
+	}
+	
+	public Grade selectMyGradeInfo1(int snum,String mid) {
 		Grade grade = new Grade();
 		grade.setMid(mid);
 		grade.setSnum(snum);
 		return icdao.selectGradeBySnumAndMid(grade);
 	}
 	
-	public HashMap<String, Object> selectDangolList(int snum) {
-		List<HashMap<String, Object>> dangolList = icdao.selectGlevelBySnum(snum);
+	public Grade selectMyGradeInfo(Grade grade) {
+		return icdao.selectGradeBySnumAndMid(grade);
+	}
+	
+	public HashMap<String, Object> selectDangolList(Store store) {
+		List<HashMap<String, Object>> dangolList = icdao.selectGlevelBySnum(store);
 		HashMap<String, Object> dangolMap = new HashMap<String, Object>();
 		dangolMap.put("glevel0", 0);
 		dangolMap.put("glevel1", 0);
 		dangolMap.put("glevel2", 0);
 		dangolMap.put("glevel3", 0);
 		for(HashMap<String, Object> dangol : dangolList) {
-			if(String.valueOf(dangol.get("GLEVEL")).equals("0")) dangolMap.put("glevel0", dangol.get("DANGOL"));
-			else if(String.valueOf(dangol.get("GLEVEL")).equals("1")) dangolMap.put("glevel1", dangol.get("DANGOL"));
-			else if(String.valueOf(dangol.get("GLEVEL")).equals("2")) dangolMap.put("glevel2", dangol.get("DANGOL"));
-			else dangolMap.put("glevel3", dangol.get("DANGOL"));
+			if(String.valueOf(dangol.get("GLEVEL")).equals("0")) {
+				dangolMap.put("glevel0", dangol.get("DANGOL"));
+			}else if(String.valueOf(dangol.get("GLEVEL")).equals("1")) {
+				dangolMap.put("glevel1", dangol.get("DANGOL"));
+			}else if(String.valueOf(dangol.get("GLEVEL")).equals("2")) {
+				dangolMap.put("glevel2", dangol.get("DANGOL"));
+			}else {
+				dangolMap.put("glevel3", dangol.get("DANGOL"));
+			}
 		}
 		return dangolMap;
 	}
@@ -197,7 +223,7 @@ public class CategoryService {
 	public List<String[]> selectStagList(List<Store> sList) {//해당 가게 태그 리스트
 		List<String[]> stagList = new ArrayList<String[]>();
 		for(Store s : sList) {
-			List<Stag> stList = icdao.selectStagBySnum(s.getSnum());
+			List<Admin> stList = icdao.selectStagList(s);
 			String[] stag = new String[3]; 
 			if(stList.size()<3) {
 				for(int i=0;i<stList.size();i++) {
@@ -273,12 +299,12 @@ public class CategoryService {
 		return recommendMap;
 	}
 	
-	public List<Comment> storeCommentList(int snum) {
-		return icdao.selectCommentListBySnum(snum);
+	public List<Comment> storeCommentList(Store store) {
+		return icdao.selectCommentListBySnum(store);
 	}
 	
-	public List<Comment> storeMyCommentList(HashMap<String, Object> gMap) {
-		return icdao.selectMyCommentListByGrade(gMap);
+	public List<Comment> storeMyCommentList(Grade grade) {
+		return icdao.selectMyCommentListByGrade(grade);
 	}
 	
 	public Grade commentMid(int dnum) {
@@ -386,8 +412,8 @@ public class CategoryService {
 		}
 	}
 	
-	public int likeTrueFalse(int gnum) {
-		List<Details> dList = icdao.selectDetailAllByGnum(gnum);
+	public int selectDetailsList(Grade grade) {
+		List<Details> dList = icdao.selectDetailsListGnum(grade);
 		return dList.size();
 	}
 	
@@ -409,7 +435,8 @@ public class CategoryService {
 			s.setSintro("환영합니다");
 			s.setSaddress(saddress);
 			s.setSphone("02-1234-1234");
-			s.setStime("10시00분21시00분");
+			s.setStime_start("1000");
+			s.setStime_end("2100");
 			s.setSparking("yes");
 			s.setSdetailaddr(sdetailaddr);
 			s.setStype(sdb.getType());

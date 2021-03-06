@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,12 +14,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import model.Admin;
 import model.Boss;
 import model.Details;
+import model.Grade;
 import model.Member;
 import model.Store;
+import service.AdminService;
 import service.BossService;
 import service.OwnerService;
 
@@ -29,6 +34,8 @@ public class OwnerController {
 	private OwnerService oService;
 	@Autowired
 	private BossService bService;
+	@Autowired
+	private AdminService aService;
 	
 	//점장 정보
 	//점장 정보 페이지 불러오기
@@ -114,11 +121,10 @@ public class OwnerController {
 	//snum에 일치하는 details 불러오기
 	@RequestMapping("selectDetailsBySnum.do")
 	public ModelAndView selectDetailsBySnum(HttpSession session
-			, @RequestParam(defaultValue = "0") int snum
-			, HttpServletResponse resp) throws Exception{
+			, HttpServletResponse resp
+			, Store store) throws Exception{
 		//session bid에 일치하는 가게 목록 조회
 		String bid = (String) session.getAttribute("bid");
-		Store store = new Store();
 		store.setBid(bid);
 		ModelAndView mav = new ModelAndView();
 		resp.setContentType("text/html; charset=UTF-8");
@@ -127,10 +133,27 @@ public class OwnerController {
 		
 		if(bid != null && !bid.equals("") ) {
 			List<Store> storeList = oService.selectStoreList(store);
-			mav.addObject("stores", storeList);
-			switch (snum) {
-			//가게 전체선택
-			case 0:
+			int snum = store.getSnum();
+			mav.addObject("storeList", storeList);
+			mav.addObject("snum", snum);
+			if(snum > 0) { //특정 가게 하나
+				//snum으로 gnums 추출
+				Grade grade = new Grade();
+				grade.setSnum(snum);
+				grade.setGcurrent("yes");
+//				int[] gnumsBySnum = oService.selectGnumsCurrentYBySnum(snum);
+				int[] gnumsBySnum = oService.selectGnums(grade);
+				//gnums이 null이면 예약은 없다.
+				if (gnumsBySnum.length == 0) {
+					mav.addObject("details", null);
+					mav.addObject("reservers", null);
+				}else {
+					//gnums에 해당하는 details 불러오기
+					mav.addObject("details", oService.selectDetailsList(grade));
+					// 예약한 사람 정보 구하기
+					mav.addObject("reservers", oService.selectReserversBySnum(snum));
+				}
+			}else { //내 가게 전체
 				//bid에서 snums 추출
 				int i=0;
 				int[] snums = new int[storeList.size()];
@@ -139,7 +162,6 @@ public class OwnerController {
 					snums[i] = s.getSnum();
 					i++;
 				}
-				
 				//snums로 gnums 추출
 				int[] gnumsBySnums = oService.selectGnumsCurrentYBySnums(snums);
 				//gnums이 null이면 예약은 없다.
@@ -152,22 +174,6 @@ public class OwnerController {
 					// 예약한 사람 정보 구하기
 					mav.addObject("reservers", oService.selectReserversBySnums(snums));
 				}
-				break;
-			//가게 일부선택
-			default:
-				//snum으로 gnums 추출
-				int[] gnumsBySnum = oService.selectGnumsCurrentYBySnum(snum);
-				//gnums이 null이면 예약은 없다.
-				if (gnumsBySnum.length == 0) {
-					mav.addObject("details", null);
-					mav.addObject("reservers", null);
-				}else {
-					//gnums에 해당하는 details 불러오기
-					mav.addObject("details", oService.selectDetailsByGnums(gnumsBySnum));
-					// 예약한 사람 정보 구하기
-					mav.addObject("reservers", oService.selectReserversBySnum(snum));
-				}
-				break;
 			}
 			mav.setViewName("Owner/ownerReserve");
 			return mav;
@@ -256,32 +262,79 @@ public class OwnerController {
 	 }
 	 
 	
-	//추가페이지로 이동
-	//test //ing 태그 가지고 나오는거 메소드 물어보기
+	//가게 등록 폼으로 이동
 	@RequestMapping("ownerStoreForm.do")
-	public ModelAndView ownerStoreForm() {
+	public ModelAndView ownerStoreForm(HttpSession session
+			, HttpServletResponse resp
+			, @RequestParam(defaultValue="ADD") String mode
+			, Store store) throws Exception{
 		ModelAndView mav = new ModelAndView();
-		/*
-		 * //가게정보 업종 불러오기 mav.addObject(); //해시태그 불러오기 mav.addObject();
-		 */
-		//jsp 이동
-		mav.setViewName("Owner/ownerStoreForm");
-		return mav;
+		String bid = (String) session.getAttribute("bid");
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		Admin admin = new Admin();
+		if(bid != null && !bid.equals("") ) {
+			//가게정보 업종 불러오기 mav.addObject(); 
+			admin.setAtype("food");
+			mav.addObject("foodTagList",aService.selectAdminTypeList(admin));
+			//해시태그 불러오기 mav.addObject();
+			admin.setAtype("theme");
+			mav.addObject("themeTagList",aService.selectAdminTypeList(admin));
+			if(mode.equals("MOD")){
+				store = oService.selectStore(store);
+				String[] stime = new String[4];
+				stime[0] = store.getStime_start().substring(0,2);
+				stime[1] = store.getStime_start().substring(2,4);
+				stime[2] = store.getStime_end().substring(0,2);
+				stime[3] = store.getStime_end().substring(2,4);
+				String[] sholiday = store.getSholiday().split(",");
+				Map<String,Object> holiMap = new HashMap<String,Object>();
+				for(String hol : sholiday) {
+					holiMap.put(hol, true);
+				}
+				mav.addObject("stime",stime);
+				mav.addObject("sholiday",holiMap);
+				mav.addObject("store",store);
+			}
+			mav.addObject("mode",mode);
+			mav.setViewName("Owner/ownerStoreForm");
+			return mav;
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('세션이 만료되었습니다.');";
+			str += "location.href='main.do'";
+			str += "</script>";
+			pw.print(str);
+			return null;
+		}
 	}
 	
-	//test //ed 가게 추가하기
+	//가게 추가하기
 	@RequestMapping("insertStore.do")
-	public String insertStore(HttpSession session, Store store) {
-		//test
-		//String bid = "boss01";
-		//ed session에 저장된 아이디 추출 및 store 객체에 저장
-		String bid = (String)session.getAttribute("bid");
-		store.setBid(bid);
-		
-		//ed 가게정보 넣기
-		oService.insertStore(store);
-		
-		return "redirect:ownerStore.do";
+	public String insertStore(Store store
+			, HttpServletResponse resp
+			, @RequestParam("sfile") MultipartFile sfile) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		int result = oService.insertStore(store,sfile);
+		if(!store.getStag().equals("")) {
+			oService.insertStag(store);
+		}
+		if(result > 0) {
+			str = "<script language='javascript'>";
+			str += "alert('가게가 등록되었습니다.');";
+			str += "location.href='ownerStore.do'";
+			str += "</script>";
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('가게등록에 실패했습니다.');";
+			str += "location.href='ownerStore.do'";
+			str += "</script>";
+		}
+		pw.print(str);
+		return null;
 	}
 	
 	//ing 수정페이지 이동
@@ -290,11 +343,11 @@ public class OwnerController {
 		ModelAndView mav = new ModelAndView();
 		
 		//ing 가게업종 정보 //aservice로 구현해야함
-		mav.addObject("foodList", oService.selectStore(snum));
+//		mav.addObject("foodList", oService.selectStore(snum));
 		//ing 해쉬태그 리스트 //aservice로 구현해야함
-		mav.addObject("themeList", oService.selectStore(snum));
+//		mav.addObject("themeList", oService.selectStore(snum));
 		//ed 가게정보 불러오기
-		mav.addObject("store", oService.selectStore(snum));
+//		mav.addObject("store", oService.selectStore(snum));
 		// jsp 출력
 		mav.setViewName("Owner/ownerStoreForm");
 		return mav;

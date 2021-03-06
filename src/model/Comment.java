@@ -11,6 +11,10 @@ public class Comment {
 	private double cprice;
 	private Date cdate;
 	private String creview;
+	private String mid;
+	private int gnum;
+	private String mimage;
+	
 	public int getCnum() {
 		return cnum;
 	}
@@ -58,6 +62,24 @@ public class Comment {
 	}
 	public void setCreview(String creview) {
 		this.creview = creview;
+	}
+	public String getMid() {
+		return mid;
+	}
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
+	public int getGnum() {
+		return gnum;
+	}
+	public void setGnum(int gnum) {
+		this.gnum = gnum;
+	}
+	public String getMimage() {
+		return mimage;
+	}
+	public void setMimage(String mimage) {
+		this.mimage = mimage;
 	}
 	public Comment() {}
 	public Comment(int cnum, int dnum, double ctotal, String ctaste, double cservice, double cprice, Date cdate,

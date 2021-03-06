@@ -4,6 +4,19 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.ICategoryDao">
+	<sql id="topPaging">
+		SELECT
+			*
+		FROM(
+			SELECT
+				ROWNUM AS RNUM
+				,t1.*
+			FROM(
+	</sql>
+	<sql id="btmPaging">
+			)t1
+		) WHERE RNUM BETWEEN #{offset} AND #{offset} + (#{storesPerPage} - 1)
+	</sql>
 	<sql id="dask">
 		<choose>
 			<when test="dask !=null">
@@ -30,28 +43,149 @@
 	<select id="selectAdminAllByTheme" resultType="admin">
 		select * from admins where atype = 'theme' order by anum
 	</select>
-	<select id="selectStoreAllByStype" parameterType="java.util.HashMap" resultType="store">
-		select * from
-		(select rownum as rn ,e.* from (select * from stores where stype = #{foodName} order by sdate desc) e) 
-		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
+	<!-- 음식종류별 가게 리스트 가져오기 -->
+	<select id="selectStoreListType" parameterType="admin" resultType="store">
+		<include refid="topPaging"/>
+		SELECT
+			A.SNUM AS snum
+			,A.BID AS bid
+			,A.SINTRO AS sintro
+			,A.SNAME AS sname
+			,A.SADDRESS AS saddress
+			,A.SDETAILADDR AS sdetailaddr
+			,A.SPHONE AS sphone
+			,A.STIME_START AS stime_start
+			,A.STIME_END AS stime_end
+			,A.SPARKING AS sparking
+			,A.SIMAGE AS simage
+			,A.STYPE AS stype
+			,A.SHOLIDAY AS sholiday
+			,A.SDATE AS sdate
+			,A.SRATELV0 AS sratelv0
+			,A.SRATELV1 AS sratelv1
+			,A.SRATELV2 AS sratelv2
+			,A.SRATELV3 AS sratelv3
+			,A.SLIMIT AS slimit
+			,(SELECT 
+					COUNT(*) 
+				FROM 
+					GRADES B
+				WHERE 
+					B.SNUM = A.SNUM
+					AND B.GCURRENT = 'yes' 
+					AND B.GLEVEL <![CDATA[>]]> 0
+			) AS dancnt 
+		FROM 
+			STORES A
+		WHERE 
+			A.STYPE = #{anum}
+		ORDER BY A.SDATE DESC
+		<include refid="btmPaging"/>
 	</select>
 	<select id="selectGradeCountBySnum" parameterType="int" resultType="int">
-		select count(*) from grades where snum = #{snum} and gcurrent = 'yes' and glevel != 0
+		SELECT 
+			COUNT(*) 
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			AND GCURRENT = 'yes' 
+			AND GLEVEL <![CDATA[>]]> 0
 	</select>
-	<select id="selectGradeBySnum" parameterType="int" resultType="grade">
-		select * from grades where snum = #{snum} and gcurrent = 'yes'
+	<!-- 가게 리뷰 총점 -->
+	<select id="selectCommentTotal" parameterType="store" resultType="int">
+		SELECT 
+			NVL(SUM(C.CTOTAL),0)
+		FROM 
+			GRADES A
+			LEFT JOIN DETAILS B ON A.GNUM = B.GNUM
+			LEFT JOIN COMMENTS C ON B.DNUM = C.DNUM
+		WHERE 
+			A.SNUM = #{snum} 
+			AND A.GCURRENT = 'yes'
+			AND B.DCOUNT <![CDATA[>]]> 0
+	</select>
+	<!-- 가게 리뷰 총 갯수 -->
+	<select id="selectCommentTotalCnt" parameterType="store" resultType="int">
+		SELECT 
+			COUNT(*)
+		FROM 
+			GRADES A
+			LEFT JOIN DETAILS B ON A.GNUM = B.GNUM
+			LEFT JOIN COMMENTS C ON B.DNUM = C.DNUM
+		WHERE 
+			A.SNUM = #{snum} 
+			AND A.GCURRENT = 'yes'
+			AND B.DCOUNT <![CDATA[>]]> 0
 	</select>
 	<select id="selectDetailAllByGnum" parameterType="int" resultType="details">
-		select * from details where gnum = #{gnum} and dcount != 0
+		SELECT 
+			DNUM AS dnum
+			,GNUM AS gnum
+			,DDATE AS ddate
+			,DPERSON AS dperson
+			,DMENU AS dmenu
+			,DTYPE AS dtype
+			,DASK AS dask
+			,DCHECK AS dcheck
+			,DTIME AS dtime
+			,DCOUNT AS dcount
+			,DLIMIT AS dlimit
+		FROM 
+			DETAILS 
+		WHERE 
+			GNUM = #{gnum} 
+			AND DCOUNT != 0
+	</select>
+	<select id="selectDetailsListGnum" parameterType="grade" resultType="details">
+		SELECT 
+			DNUM AS dnum
+			,GNUM AS gnum
+			,DDATE AS ddate
+			,DPERSON AS dperson
+			,DMENU AS dmenu
+			,DTYPE AS dtype
+			,DASK AS dask
+			,DCHECK AS dcheck
+			,DTIME AS dtime
+			,DCOUNT AS dcount
+			,DLIMIT AS dlimit
+		FROM 
+			DETAILS 
+		WHERE 
+			GNUM = #{gnum} 
+			AND DCOUNT <![CDATA[>]]> 0
 	</select>
 	<select id="selectCommentOneByDnum" parameterType="int" resultType="comment">
-		select * from comments where dnum = #{dnum}
+		SELECT
+			*
+		FROM 
+			COMMENTS 
+		WHERE 
+			DNUM = #{dnum}
 	</select>
-	<select id="selectStagBySnum" parameterType="int" resultType="stag">
-		select * from stag where snum = #{snum}
+	<select id="selectStagList" parameterType="store" resultType="admin">
+		SELECT 
+			AVALUE AS avalue
+		FROM 
+			ADMINS 
+		WHERE 
+			ANUM IN (
+				SELECT 
+					ANUM
+				FROM 
+					STAG 
+				WHERE 
+					SNUM = #{snum}
+			)
+		ORDER BY ANUM
 	</select>
 	<select id="selectAdminOne" parameterType="int" resultType="admin">
-		select * from admins where anum = #{anum} 
+		SELECT * 
+		FROM 
+			ADMINS 
+		WHERE 
+			ANUM = #{anum} 
 	</select>
 	<select id="selectStoreAllByAnum" parameterType="java.util.HashMap" resultType="store">
 		select * from
@@ -80,23 +214,91 @@
 	<select id="selectStoreOneByRecommendPre" parameterType="java.util.HashMap" resultType="store">
 		select * from stores where snum = #{snum} and (saddress = #{marea1} or saddress = #{marea2})
 	</select>
-	<select id="selectOrderAllBySnum" parameterType="int" resultType="order">
-		select * from orders where snum = #{snum}
+	<select id="selectOrderList" parameterType="store" resultType="order">
+		SELECT 
+			ONUM AS onum
+			,SNUM AS snum
+			,ONAME AS oname
+			,OPRICE AS oprice
+			,OIMAGE AS oimage
+		FROM 
+			ORDERS 
+		WHERE 
+			SNUM = #{snum}
 	</select>
 	<select id="selectOrderOneByOnum" parameterType="int" resultType="order">
 		select * from orders where onum = #{onum}
 	</select>
 	<select id="selectGradeBySnumAndMid" parameterType="grade" resultType="grade">
-		select * from grades where snum = #{snum} and mid = #{mid} and gcurrent like 'yes'
+		SELECT
+			GNUM AS gnum
+			,MID AS mid
+			,SNUM AS snum
+			,GLEVEL AS glevel
+			,GCURRENT AS gcurrent
+			,GLIKE AS glike
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			AND MID = #{mid} 
+			AND GCURRENT = 'yes'
 	</select>
-	<select id="selectGlevelBySnum" parameterType="int" resultType="java.util.HashMap">
-		select glevel,count(*) as dangol from grades where snum = #{snum} and gcurrent like 'yes' group by glevel order by glevel
+	<select id="selectGlevelBySnum" parameterType="store" resultType="java.util.HashMap">
+		SELECT 
+			GLEVEL
+			,COUNT(*) AS dangol 
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			AND GCURRENT = 'yes' 
+		GROUP BY GLEVEL 
+		ORDER BY GLEVEL
 	</select>
-	<select id="selectCommentListBySnum" parameterType="int" resultType="comment">
-		select * from comments where dnum in (select dnum from details where gnum in (select gnum from grades where snum = #{snum})) order by cdate desc
+	<select id="selectCommentListBySnum" parameterType="store" resultType="comment">
+		SELECT 
+			C.CNUM AS cnum
+			,C.DNUM AS dnum
+			,C.CTOTAL AS ctotal
+			,C.CTASTE AS ctaste
+			,C.CSERVICE AS cservice
+			,C.CPRICE AS cprice
+			,C.CDATE AS cdate
+			,C.CREVIEW AS creview
+			,B.MID AS mid
+			,B.GNUM AS gnum
+			,(SELECT MIMAGE FROM MEMBERS WHERE MID = B.MID) AS mimage
+		FROM 
+			COMMENTS C
+            LEFT JOIN DETAILS A ON A.DNUM = C.DNUM
+            LEFT JOIN GRADES B ON A.GNUM = B.GNUM 
+		WHERE 
+            B.SNUM = #{snum}
+		ORDER BY C.CDATE DESC
 	</select>
-	<select id="selectMyCommentListByGrade" parameterType="java.util.HashMap" resultType="comment">
-		select * from comments where dnum in (select dnum from details where gnum in (select gnum from grades where mid = #{mid} and snum = #{snum}) and dcount &gt; 0) order by cdate desc
+	<select id="selectMyCommentListByGrade" parameterType="grade" resultType="comment">
+		SELECT
+			C.CNUM AS cnum
+			,C.DNUM AS dnum
+			,C.CTOTAL AS ctotal
+			,C.CTASTE AS ctaste
+			,C.CSERVICE AS cservice
+			,C.CPRICE AS cprice
+			,C.CDATE AS cdate
+			,C.CREVIEW AS creview
+			,B.MID AS mid
+			,B.GNUM AS gnum
+			,(SELECT MIMAGE FROM MEMBERS WHERE MID = B.MID) AS mimage	
+		FROM 
+			COMMENTS C
+			LEFT JOIN DETAILS A ON A.DNUM = C.DNUM 
+			LEFT JOIN GRADES B ON A.GNUM = B.GNUM 
+		WHERE
+			B.MID = #{mid} 
+			AND B.SNUM = #{snum}
+			AND A.DCOUNT <![CDATA[>]]> 0
+		ORDER BY CDATE DESC
 	</select>
 	<select id="selectGradeByDnum" parameterType="int" resultType="grade">
 		select * from grades where gnum = (select gnum from Details where dnum = #{dnum})
@@ -147,8 +349,13 @@
 	<select id="getStoreNewCount" resultType="int"> 
 		select count(*) from stores where sdate between (sysdate-10) and sysdate
 	</select>
-	<select id="getStoreAllByStypeCount" parameterType="String" resultType="int"> 
-		select count(*) from stores where stype = #{foodName}
+	<select id="getStoreListCount" parameterType="admin" resultType="int"> 
+		SELECT 
+			COUNT(*) 
+		FROM 
+			STORES 
+		WHERE 
+			STYPE = #{anum}
 	</select>
 	<select id="getStoreAllByAnumCount" parameterType="int" resultType="int"> 
 		select count(*) from stores where snum in (select snum from stag where anum = #{anum})

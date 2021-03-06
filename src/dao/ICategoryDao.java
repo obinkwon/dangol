@@ -16,26 +16,39 @@ import model.Storedb;
 public interface ICategoryDao {
 	public List<Admin> selectAdminAllByFood();
 	public List<Admin> selectAdminAllByTheme();
-	public List<Store> selectStoreAllByStype(HashMap<String, Object> params);
+	//음식종류별 가게 리스트 가져오기
+	public List<Store> selectStoreListType(Admin admin);
 	public List<Store> selectStoreNew(HashMap<String, Object> params);
 	public List<Store> selectStoreAllByAnum(HashMap<String, Object> params);
 	public List<Store> selectStoreAllByArea(HashMap<String, Object> params);
+	//
 	public int selectGradeCountBySnum(int snum);
-	public List<Grade> selectGradeBySnum(int snum);
+	//
+	public int selectCommentTotal(Store store);
+	public int selectCommentTotalCnt(Store store);
+	//
+	public List<Details> selectDetailsListGnum(Grade grade);
 	public List<Details> selectDetailAllByGnum(int gnum);
 	public Comment selectCommentOneByDnum(int dnum);
-	public List<Stag> selectStagBySnum(int snum);
+	//가게 태그 리스트
+	public List<Admin> selectStagList(Store store);
 	public List<Stag> selectStagByAnum(int anum);
+	//
 	public Admin selectAdminOne(int anum);
 	public List<Mtag> selectMtagByMid(String mid);
 	public Store selectStoreOneByRecommend(HashMap<String, Object> rMap);
 	public Store selectStoreOneByRecommendPre(HashMap<String, Object> rMap);
-	public List<Order> selectOrderAllBySnum(int snum);
+	//메뉴 리스트
+	public List<Order> selectOrderList(Store store);
 	public Order selectOrderOneByOnum(int onum);
+	//
 	public Grade selectGradeBySnumAndMid(Grade grade);
-	public List<HashMap<String, Object>> selectGlevelBySnum(int snum);
-	public List<Comment> selectCommentListBySnum(int snum);
-	public List<Comment> selectMyCommentListByGrade(HashMap<String, Object> gMap);
+	//
+	public List<HashMap<String, Object>> selectGlevelBySnum(Store store);
+	//
+	public List<Comment> selectCommentListBySnum(Store store);
+	//내 리뷰 가져오기
+	public List<Comment> selectMyCommentListByGrade(Grade grade);
 	public List<Details> selectDetailReserveByDdate(HashMap<String, Object> dMap);
 	public int insertGradeBegin(Grade grade);
 	public int insertReserveDetail(Details detail);
@@ -52,7 +65,8 @@ public interface ICategoryDao {
 	public Comment selectCommentByDnum(int dnum);
 	public List<Storedb> selectStoreDB();
 	public int getStoreNewCount();
-	public int getStoreAllByStypeCount(String foodName);
+	//음식 종류별 가게 갯수
+	public int getStoreListCount(Admin admin);
 	public int getStoreAllByAnumCount(int anum);
 	public int getStoreAllByAreaCount(HashMap<String, Object> params);
 	public int insertStores(Store store);

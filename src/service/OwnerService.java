@@ -1,5 +1,7 @@
 package service;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +9,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dao.IBossDao;
 import dao.IEventDao;
@@ -31,6 +34,8 @@ public class OwnerService {
 
 	@Autowired
 	private IEventDao eDao;
+	
+	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 
 	//내 정보
 	public Boss ownerInfo(Boss boss) {
@@ -89,11 +94,26 @@ public class OwnerService {
 		//snum에 일치하는 현재등급 목록 불러오기
 		int i =0;
 		int[] Gnums = new int[oDao.selectGradesCurrentYBySnum(snum).size()];
-		List<Grade> grades = oDao.selectGradesCurrentYBySnum(snum);
+		List<Grade> gradeList = oDao.selectGradesCurrentYBySnum(snum);
 		
 		//Grades에서 gnum만 추출해서 Gnums에 저장
-		for (Grade grade : grades) {
+		for (Grade grade : gradeList) {
 			Gnums[i] = grade.getGnum();
+			i++;
+		}
+		return Gnums;
+	}
+	
+	//ed snum에 일치하는 Gnums 구하기
+	public int[] selectGnums(Grade grade) {
+		//snum에 일치하는 현재등급 목록 불러오기
+		int i =0;
+		List<Grade> gradeList = oDao.selectGradeList(grade);
+		int[] Gnums = new int[gradeList.size()];
+		
+		//Grades에서 gnum만 추출해서 Gnums에 저장
+		for (Grade gr : gradeList) {
+			Gnums[i] = gr.getGnum();
 			i++;
 		}
 		return Gnums;
@@ -134,6 +154,12 @@ public class OwnerService {
 		return oDao.selectDetailsByGnums(hm);
 	}
 	
+	//ed gnum에 해당하는 details 구하기
+	public List<Details> selectDetailsList(Grade grade){
+		//gnum으로 details 조회
+		return oDao.selectDetailsList(grade);
+	}
+	
 	//ed bid로 snums 구하기
 	public int[] selectsnumsByBid(String bid) {
 		//bid에 일치하는 stores 조회
@@ -161,14 +187,38 @@ public class OwnerService {
 		return oDao.selectDetailsByGnumsDdate(hm);
 	}
 
-	//ed
-	public void insertStore(Store store) {
-		oDao.insertStore(store);
+	// 가게 등록
+	public int insertStore(Store store
+		, MultipartFile sfile) throws Exception{
+		String path = imagePath +"store\\";
+		File dir = new File(path);
+		if(!dir.exists()) dir.mkdirs();
+		String simage = sfile.getOriginalFilename();
+		if(!simage.equals("")) {
+			File attachFile = new File(path+simage);
+			sfile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
+			store.setSimage(simage);//db에 파일 정보 저장을 하기위해 모델객체에 setting하기
+		}
+		return oDao.insertStore(store);
+	}
+	
+	//가게 태그 등록
+	public int insertStag(Store store) {
+		int result = 0;
+		String stag = store.getStag();
+		int snum = store.getSnum();
+		String[] stagArr = stag.split(",");
+		for(String st : stagArr){
+			Store s = new Store();
+			s.setStag(st);
+			s.setSnum(snum);
+			result += oDao.insertStag(s);
+		}
+		return result;
 	}
 
-	public Store selectStore(int snum) {
-		Store store = oDao.selectStore(snum);
-		return store;
+	public Store selectStore(Store vo) {
+		return oDao.selectStore(vo);
 	}
 
 	public void updateStore(Store store) {

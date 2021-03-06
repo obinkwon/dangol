@@ -8,7 +8,7 @@ import model.Inquiry;
 public interface IAdminDao {
 	
 //태그
-	//admin 하나만 검색
+	//admin 타입으로 리스트 검색
 	public Admin selectAdminTypeOne(Admin admin);
 	
 	//admin 하나만 검색

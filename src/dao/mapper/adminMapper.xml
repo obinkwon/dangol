@@ -38,6 +38,7 @@
 			ADMINS 
 		WHERE 
 			ATYPE = #{atype} 
+		ORDER BY ANUM
 	</select>
 	
 	<insert id="insertTag" parameterType="admin">

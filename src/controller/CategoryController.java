@@ -52,48 +52,40 @@ public class CategoryController {
 	private EventService eService;
 	
 	@RequestMapping("foodSort.do")//음식별 요청부분
-	public ModelAndView foodSort(@RequestParam(defaultValue="") String foodName,
-			@RequestParam(defaultValue="new") String type, @RequestParam(defaultValue="1") int page) {
+	public ModelAndView foodSort(@RequestParam(defaultValue="new") String type
+			, @RequestParam(defaultValue="1") int page
+			, Admin admin) {
 		ModelAndView mav = new ModelAndView();
-		List<Admin> aList = cservice.sortFoodList();
+		if(admin.getAtype() == null) {
+			admin.setAtype("food");
+		}
+		List<Admin> aList = cservice.sortFoodList(admin); // 음식 종류 리스트
 		HashMap<String, Object> params = null;
 		List<HashMap<String, Object>> storeMapList = new ArrayList<>();
-		if(aList != null && aList.size() > 0) {
-			if(foodName.equals("")) foodName = aList.get(0).getAvalue();
-			params = cservice.selectFoodStoreList(page, 12, foodName);
-			List<Store> sList = (List<Store>)params.get("sList");
-			int[] gradeCount = cservice.gradeCount(sList);
-			double[] commentCount = cservice.commentCount(sList);
-			List<String[]> stagList = cservice.selectStagList(sList);
-			for(int i=0; i<sList.size();i++) {
-				HashMap<String, Object> storeMap = new HashMap<String, Object>();
-				storeMap.put("snum", sList.get(i).getSnum()+"");
-				storeMap.put("sname", sList.get(i).getSname());
-				String[] str = sList.get(i).getSaddress().split(" ");
-				String address=str[0]+" "+str[1];
-				storeMap.put("saddress", address);
-				storeMap.put("simage", sList.get(i).getSimage());
-				storeMap.put("userCount", gradeCount[i]);
-				storeMap.put("commentCount", commentCount[i]);
-				String[] stag = stagList.get(i);
-				for(int j=0;j<3;j++) {
-					storeMap.put("stag"+(j+1), stag[j]);
-				}
-				storeMapList.add(storeMap);
+		List<Store> sList = null;
+		
+		if(aList.size() > 0) { //음식 종류가 하나라도 있을때
+			if(admin.getAnum() == 0) {
+				admin = (Admin)aList.get(0);
 			}
-			if(type.equals("star")) {
+			admin.setStoresPerPage(12);
+			params = cservice.selectFoodStoreList(page,admin); // page번호 / admin (페이징)
+			sList = cservice.getStoreList(admin); //음식종류별 가게 리스트 가져오기
+			sList = cservice.etcCount(sList);
+			
+			if(type.equals("star")) { //별점순
 				MapComparatorDouble comp = new MapComparatorDouble("commentCount");
 				Collections.sort(storeMapList, comp);
 				Collections.reverse(storeMapList);
-			}else if(type.equals("dan")){
+			}else if(type.equals("dan")){ //단골순
 				MapComparatorInt comp = new MapComparatorInt("userCount");
 				Collections.sort(storeMapList, comp);
 				Collections.reverse(storeMapList);
 			}
 		}
 		mav.addObject("viewInfo", params);
-		mav.addObject("adminList", aList);
-		mav.addObject("storeMapList", storeMapList);
+		mav.addObject("adminList", aList); //음식 태그 리스트
+		mav.addObject("storeList", sList); //가게 리스트
 		mav.setViewName("category/foodSort");
 		return mav;
 	}
@@ -278,26 +270,19 @@ public class CategoryController {
 	
 	@RequestMapping("storeView.do")//가게 상세보기 요청 부분
 	public ModelAndView storeView(@RequestParam(defaultValue="new") String type
-			,int snum
-			,HttpSession session) throws Exception{
+			, Grade grade
+			, Store store
+			, HttpSession session) throws Exception{
+		String mid = (String)session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
 		Grade g = null;
-		String mid = null;
-		if(session.getAttribute("mid")!=null) {
-			mid = (String)session.getAttribute("mid");
-			g = cservice.selectMyGradeInfo(snum, mid);
+		int snum = grade.getSnum();
+		if(mid != null && mid.equals("")) { //로그인 되어있을때
+			grade.setMid(mid);
+			g = cservice.selectMyGradeInfo(grade);
 		}
-		Store s = mservice.selectStore(snum);
-		//System.out.println(s);
-		//시간 쪼개서 보내기
-		String[] sadr= s.getStime().split("분");
-		String[] time = new String[4];
-		String[] begin = sadr[0].split("시");
-		String[] end = sadr[1].split("시");
-		time[0] = begin[0];
-		time[1] = begin[1];
-		time[2] = end[0];
-		time[3] = end[1];
+		Store s = mservice.selectStoreOne(store);
+		
 		//휴무일 쪼개서 보내기
 		List<String> hoList = new ArrayList<String>();
 		String[] holiday = s.getSholiday().split(",");
@@ -326,60 +311,38 @@ public class CategoryController {
 				break;
 			}
 		}
-		//좋아요 기능 여부
-		int like = 0;
-		if(g!=null) like = cservice.likeTrueFalse(g.getGnum());
 		//메뉴 가져오기
-		List<Order> menuList = cservice.selectMenuList(snum);
-		//태그 가져오기
-		List<String> tagList = cservice.selectStagOne(snum);
+		List<Order> menuList = cservice.selectOrderList(s);
 		//현재 날짜
 		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.sql.Date(System.currentTimeMillis()));
 		//후기가져오기
-		List<HashMap<String, Object>> commentMapList = new ArrayList<HashMap<String,Object>>();
-		if(type.equals("new")){
-			List<Comment> cList = cservice.storeCommentList(snum);
-			for(Comment c : cList) {
-				HashMap<String, Object> commentMap = new HashMap<String, Object>();
-				commentMap.put("comment", c);
-				mid = cservice.commentMid(c.getDnum()).getMid();
-				int gnum = cservice.commentMid(c.getDnum()).getGnum();
-				commentMap.put("mid", mid);
-				commentMap.put("gnum", gnum);
-				commentMap.put("mimage", memservice.selectMember(mid).getMimage());
-				commentMapList.add(commentMap);
+		List<Comment> cList = null;
+		if(type.equals("new")){ //전체 리뷰
+			cList = cservice.storeCommentList(s);
+		}else if(type.equals("my")) { //내 리뷰
+			if(mid.equals("")) {
+				cList = cservice.storeMyCommentList(g);
 			}
-		}else if(type.equals("my")) {
-			if(mid!=null) {
-				HashMap<String, Object> gMap = new HashMap<String, Object>();
-				gMap.put("mid", mid);
-				gMap.put("snum", snum);
-				List<Comment> cList = null;
-				if(mid!=null) cList = cservice.storeMyCommentList(gMap);
-				for(Comment c : cList) {
-					HashMap<String, Object> commentMap = new HashMap<String, Object>();
-					commentMap.put("comment", c);
-					mid = cservice.commentMid(c.getDnum()).getMid();
-					int gnum = cservice.commentMid(c.getDnum()).getGnum();
-					commentMap.put("mid", mid);
-					commentMap.put("gnum", gnum);
-					commentMap.put("mimage", memservice.selectMember(mid).getMimage());
-					commentMapList.add(commentMap);
-				}
-			}else {}
 		}
-		mav.addObject("like",like);
+		//메뉴 개수
 		mav.addObject("menuSize",menuList.size());
-		mav.addObject("listSize",commentMapList.size());
-		mav.addObject("commentMapList",commentMapList);
+		//리뷰 리스트 갯수
+		mav.addObject("listSize",cList.size());
+		//리뷰 리스트 가져오기
+		mav.addObject("commentMapList",cList);
 		//단골수 가져오기
-		mav.addAllObjects(cservice.selectDangolList(snum));
-		mav.addObject("time",time);
+		mav.addAllObjects(cservice.selectDangolList(s));
+		//등급 정보
 		mav.addObject("grade",g);
+		//거게 정보
 		mav.addObject("store",s);
+		//휴일 정보
 		mav.addObject("hoList",hoList);
+		//메뉴 리스트 가져오기
 		mav.addObject("menuList",menuList);
-		mav.addObject("tagList",tagList);
+		//가게 태그 가져오기
+		mav.addObject("tagList",cservice.selectStagList1(s));
+		//현재 날짜
 		mav.addObject("currentDate",currentDate);
 		mav.setViewName("category/storeView");
 		return mav;
@@ -403,7 +366,7 @@ public class CategoryController {
 		
 		String mid = (String)session.getAttribute("mid");
 		int result = 0;
-		Grade g = cservice.selectMyGradeInfo(snum, mid);
+		Grade g = cservice.selectMyGradeInfo1(snum, mid);
 		if(g==null) {
 			g= new Grade();
 			g.setMid(mid);

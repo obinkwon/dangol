@@ -5,6 +5,9 @@ public class Admin {
 	private String atype;
 	private String avalue;
 	private String aimage;
+	private int offset;
+	private int storesPerPage;
+	
 	
 	public int getAnum() {
 		return anum;
@@ -29,6 +32,18 @@ public class Admin {
 	}
 	public void setAimage(String aimage) {
 		this.aimage = aimage;
+	}
+	public int getOffset() {
+		return offset;
+	}
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+	public int getStoresPerPage() {
+		return storesPerPage;
+	}
+	public void setStoresPerPage(int storesPerPage) {
+		this.storesPerPage = storesPerPage;
 	}
 	public Admin() {}
 	public Admin(int anum, String atype, String avalue, String aimage) {

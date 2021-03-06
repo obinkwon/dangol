@@ -33,7 +33,8 @@ public class MainController {
 	public ModelAndView main() {
 		ModelAndView mav = new ModelAndView();
 		HashMap<String, Object>	params = cservice.selectNewStoreList(1,3);
-		List<Store> sList = (List<Store>)params.get("sList");
+//		List<Store> sList = (List<Store>)params.get("sList");
+		List<Store> sList = new ArrayList<Store>();
 		List<HashMap<String, Object>> storeMapList = new ArrayList<HashMap<String, Object>>();
 		int[] gradeCount = cservice.gradeCount(sList);
 		double[] commentCount = cservice.commentCount(sList);

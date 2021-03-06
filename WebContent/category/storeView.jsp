@@ -307,8 +307,9 @@ $(document).ready(function(){
 	
 	$('a.likes').click(function(){//좋아요 버튼 클릭시 이벤트
 		var like = $(this).find('img');
-		if('${grade.glike}'!='' && ${like}>0) location.href="likes.do?mid=${mid}&snum=${store.snum}&like=${grade.glike}";
-		else{
+		if('${grade.glike}'!='') {
+			location.href="likes.do?mid=${mid}&snum=${store.snum}&like=${grade.glike}";
+		}else{
 			if('${mid}'=='') alert('일반 사용자 로그인후 이용해주세요');
 			else alert('가게 이용후 이용해주세요');
 		}
@@ -454,7 +455,13 @@ $(document).ready(function(){
 					<p class="storeAddress"><span class="glyphicon glyphicon-map-marker"></span>  ${store.saddress} ${store.sdetailaddr}</p>
 					<div class="storeMenu">
 						<div class="storeMenuLeft">
-							<p class="storeTime"><span class="	glyphicon glyphicon-time"></span>  ${time[0]}:${time[1]} ~ ${time[2]}:${time[3]}</p>
+							<p class="storeTime">
+								<span class="	glyphicon glyphicon-time"></span>  
+								<fmt:parseDate var="startTime" value="${store.stime_start}"  pattern="HHmm"/>
+								<fmt:formatDate value="${startTime}"  pattern="HH:mm"/> ~
+								<fmt:parseDate var="endTime" value="${store.stime_end}"  pattern="HHmm"/>
+								<fmt:formatDate value="${endTime}"  pattern="HH:mm"/>
+							</p>
 							<p class="storeTime">
 							<c:forEach var="holiday" items="${hoList}">
 								${holiday}  

@@ -100,13 +100,11 @@ public class MemberController {
 			if (mService.findId(phone) != null) {
 				for (i = 0; i < mlist.size(); i++) {
 					str.add(mlist.get(i).getMid());
-					// System.out.println(mlist.get(i).getMid());
 				}
 			} else {
 				str = null;
 			}
 		} else {
-			// System.out.println("sdf");
 			if (bService.findId(phone) != null) {
 				for (i = 0; i < blist.size(); i++) {
 					str.add(blist.get(i).getBid());
