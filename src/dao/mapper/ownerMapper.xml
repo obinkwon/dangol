@@ -4,13 +4,13 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.IOwnerDao">
-<!-- 내 정보 -->
+	<!-- 점장 정보 삭제 -->
 	<delete id="deleteOwner" parameterType="boss">
 		DELETE FROM BOSS 
 		WHERE BID = #{bid}
 		AND BPW = #{bpw}
 	</delete>
-	<!-- 정보 수정 -->
+	<!-- 점장 정보 수정 -->
 	<update id="updateOwner" parameterType="boss">
 		UPDATE BOSS SET 
 			BPW = #{bpw}
@@ -18,8 +18,7 @@
 		WHERE 
 			BID = #{bid} 
 	</update> 
-
-<!-- 예약현황 -->	
+	<!-- 예약현황 -->	
 	<select id="selectStoreList" parameterType="store" resultType="store">
 		SELECT 
 			A.SNUM AS snum
@@ -96,7 +95,7 @@
 		 	AND DCHECK = 'no' 
 		 ORDER BY DDATE
 	</select>
-	
+	<!-- 가게 태그 등록 -->
 	<insert id="insertStag" parameterType="store">
 		INSERT INTO STAG(
 			STNUM
@@ -108,7 +107,17 @@
 			,#{stag}
 		)
 	</insert>
-	
+	<!--  -->
+	<select id="selectStag" parameterType="store" resultType="store">
+		SELECT
+			STNUM
+			,SNUM
+			,ANUM
+		FROM
+			STAG
+		WHERE
+			SNUM = #{snum}
+	</select>
 	<select id="selectMembersByKeyword" parameterType="String" resultType="member">
 		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
 	</select>

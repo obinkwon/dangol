@@ -30,8 +30,9 @@ public interface IOwnerDao {
 	public List<Store> selectStoreList(Store store); //가게 리스트 가져오기
 	public int insertStore(Store store); //가게 등록
 	public int insertStag(Store store); //가게 태그 등록
+	public Store selectStag(Store store); //가게 태그 가져오기
 	public Store selectStore(Store store); //가게 정보 가져오기
-	public void updateStore(Store store);
+	public int updateStore(Store store); //가게 수정하기
 	public void deleteStore(int snum);
 
 	

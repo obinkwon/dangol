@@ -293,6 +293,10 @@ public class OwnerController {
 				for(String hol : sholiday) {
 					holiMap.put(hol, true);
 				}
+				if(store.getStag() != null) {
+					String[] stag = store.getStag().split(",");
+					mav.addObject("stagList",stag);
+				}
 				mav.addObject("stime",stime);
 				mav.addObject("sholiday",holiMap);
 				mav.addObject("store",store);
@@ -353,11 +357,31 @@ public class OwnerController {
 		return mav;
 	}
 	
-	//ed 가게 수정하기
+	//가게 수정하기
 	@RequestMapping("updateStore.do")
-	public String updateStore(Store store) {
-		oService.updateStore(store);
-		return "redirect:ownerStore.do";
+	public String updateStore(Store store
+			, HttpServletResponse resp
+			, @RequestParam("sfile") MultipartFile sfile) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		int result = oService.updateStore(store,sfile);
+		if(!store.getStag().equals("")) {
+			oService.insertStag(store);
+		}
+		if(result > 0) {
+			str = "<script language='javascript'>";
+			str += "alert('가게가 수정되었습니다.');";
+			str += "location.href='ownerStore.do'";
+			str += "</script>";
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('가게수정에 실패했습니다.');";
+			str += "location.href='ownerStore.do'";
+			str += "</script>";
+		}
+		pw.print(str);
+		return null;
 	}
 	
 	//ed 가게 삭제하기

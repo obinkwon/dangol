@@ -210,19 +210,34 @@ public class OwnerService {
 		String[] stagArr = stag.split(",");
 		for(String st : stagArr){
 			Store s = new Store();
+			System.out.println(st);
 			s.setStag(st);
 			s.setSnum(snum);
 			result += oDao.insertStag(s);
 		}
 		return result;
 	}
+	
+	public Store selectStag(Store vo) {
+		return oDao.selectStag(vo);
+	}
 
 	public Store selectStore(Store vo) {
 		return oDao.selectStore(vo);
 	}
 
-	public void updateStore(Store store) {
-		oDao.updateStore(store);
+	public int updateStore(Store store
+		, MultipartFile sfile) throws Exception{
+		String path = imagePath +"store\\";
+		File dir = new File(path);
+		if(!dir.exists()) dir.mkdirs();
+		String simage = sfile.getOriginalFilename();
+		if(!simage.equals("")) {
+			File attachFile = new File(path+simage);
+			sfile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
+			store.setSimage(simage);//db에 파일 정보 저장을 하기위해 모델객체에 setting하기
+		}
+		return oDao.updateStore(store);
 	}
 
 	public void deleteStore(int snum) {

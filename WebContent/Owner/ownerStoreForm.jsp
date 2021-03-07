@@ -490,6 +490,11 @@ $(function(){
 							</select>
 							<button id="addBtn" type="button" class="btn-view btn-mint" onClick="addTag();">추가</button>
 							<div id="tagDiv" class="btn-wrap tl">
+							<c:forEach var="stag" items="${stagList}" varStatus="status">
+								<span style="margin-left:20px;" id="themeTag_${stag}">
+									<button class="delBtn" type="button" onClick="delTag('${stag}')"><img class="cancelImg" src="/jsp/cancel.png"></button>
+								</span>
+							</c:forEach>
 							</div>
 							<input id="stag" type="hidden" name="stag" value="">
 						</td>
