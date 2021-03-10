@@ -218,14 +218,30 @@ public class OwnerService {
 		return result;
 	}
 	
-	public Store selectStag(Store vo) {
+	//가게 태그 수정
+	public int updateStag(Store store) {
+		int result = 0;
+		String stag = store.getStag();
+		oDao.deleteStag(store); //가게 태그 삭제
+		int snum = store.getSnum();
+		String[] stagArr = stag.split(",");
+		for(String st : stagArr){
+			Store s = new Store();
+			s.setStag(st);
+			s.setSnum(snum);
+			result += oDao.insertStag(s);
+		}
+		return result;
+	}
+	
+	public List<Store> selectStag(Store vo) {
 		return oDao.selectStag(vo);
 	}
 
 	public Store selectStore(Store vo) {
 		return oDao.selectStore(vo);
 	}
-
+	
 	public int updateStore(Store store
 		, MultipartFile sfile) throws Exception{
 		String path = imagePath +"store\\";

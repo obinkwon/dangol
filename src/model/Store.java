@@ -15,7 +15,7 @@ public class Store {
 	private String simage;
 	private String stype;
 	private String sholiday;
-	private Date sdate;
+	private String sdate;
 	private int sratelv0;
 	private int sratelv1;
 	private int sratelv2;
@@ -28,6 +28,7 @@ public class Store {
 	private int commentTotal;
 	private String stag;
 	private String avalue;
+	private String anum;
 	
 	public int getSnum() {
 		return snum;
@@ -95,10 +96,10 @@ public class Store {
 	public void setSholiday(String sholiday) {
 		this.sholiday = sholiday;
 	}
-	public Date getSdate() {
+	public String getSdate() {
 		return sdate;
 	}
-	public void setSdate(Date sdate) {
+	public void setSdate(String sdate) {
 		this.sdate = sdate;
 	}
 	public int getSratelv0() {
@@ -179,6 +180,12 @@ public class Store {
 	public void setAvalue(String avalue) {
 		this.avalue = avalue;
 	}
+	public String getAnum() {
+		return anum;
+	}
+	public void setAnum(String anum) {
+		this.anum = anum;
+	}
 	@Override
 	public String toString() {
 		return "Store [snum=" + snum + ", bid=" + bid + ", sintro=" + sintro + ", sname=" + sname + ", saddress="
@@ -191,7 +198,7 @@ public class Store {
 	}
 	public Store() {}
 	public Store(int snum, String bid, String sintro, String sname, String saddress, String sdetailaddr, String sphone,
-			String stime_start, String sparking, String simage, String stype, String sholiday, Date sdate, int sratelv0,
+			String stime_start, String sparking, String simage, String stype, String sholiday, String sdate, int sratelv0,
 			int sratelv1, int sratelv2, int sratelv3, int slimit, double slatitude, double slongitude, String stime_end,
 			int dancnt, int commentTotal, String stag) {
 		super();

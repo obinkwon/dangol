@@ -283,6 +283,7 @@ public class OwnerController {
 			mav.addObject("themeTagList",aService.selectAdminTypeList(admin));
 			if(mode.equals("MOD")){
 				store = oService.selectStore(store);
+				List<Store> stagList = oService.selectStag(store);
 				String[] stime = new String[4];
 				stime[0] = store.getStime_start().substring(0,2);
 				stime[1] = store.getStime_start().substring(2,4);
@@ -293,10 +294,7 @@ public class OwnerController {
 				for(String hol : sholiday) {
 					holiMap.put(hol, true);
 				}
-				if(store.getStag() != null) {
-					String[] stag = store.getStag().split(",");
-					mav.addObject("stagList",stag);
-				}
+				mav.addObject("stagList",stagList);
 				mav.addObject("stime",stime);
 				mav.addObject("sholiday",holiMap);
 				mav.addObject("store",store);
@@ -367,7 +365,7 @@ public class OwnerController {
 		String str = "";
 		int result = oService.updateStore(store,sfile);
 		if(!store.getStag().equals("")) {
-			oService.insertStag(store);
+			oService.updateStag(store);
 		}
 		if(result > 0) {
 			str = "<script language='javascript'>";

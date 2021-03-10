@@ -98,23 +98,26 @@
 	<!-- 가게 태그 등록 -->
 	<insert id="insertStag" parameterType="store">
 		INSERT INTO STAG(
-			STNUM
-			,SNUM
+			SNUM
 			,ANUM
 		)VALUES(
-			STAG_SEQ.NEXTVAL
-			,#{snum}
+			#{snum}
 			,#{stag}
 		)
 	</insert>
+	<!-- 가게 태그 등록 -->
+	<delete id="deleteStag" parameterType="store">
+		DELETE FROM STAG WHERE SNUM = #{snum} 
+	</delete>
 	<!--  -->
 	<select id="selectStag" parameterType="store" resultType="store">
 		SELECT
-			STNUM
-			,SNUM
-			,ANUM
+			SNUM AS snum
+			,A.ANUM AS anum
+			,B.AVALUE AS avalue
 		FROM
-			STAG
+			STAG A
+			LEFT JOIN ADMINS B ON A.ANUM = B.ANUM
 		WHERE
 			SNUM = #{snum}
 	</select>
@@ -255,9 +258,26 @@
 	</select>
 	
 	<update id="updateStore" parameterType="store">
-		UPDATE STORES SET SINTRO=#{sintro}, SNAME=#{sname}, SADDRESS=#{saddress}, SDETAILADDR=#{sdetailaddr}, SPHONE=#{sphone}, STIME=#{stime},  SPARKING=#{sparking}, SIMAGE=#{simage}, STYPE=#{stype}, SHOLIDAY=#{sholiday},
- SDATE=#{sdate}, SRLATE0=#{srlate0}, SRLATE1=#{srlate1},SRLATE2=#{srlate2}, SRLATE3=#{srlate3}, SLIMIT=#{slimit} 
-WHERE SNUM=#{snum}
+		UPDATE STORES 
+		SET 
+			SINTRO = #{sintro}
+			, SNAME = #{sname}
+			, SADDRESS = #{saddress}
+			, SDETAILADDR = #{sdetailaddr}
+			, SPHONE = #{sphone}
+			, STIME_START = #{stime_start}
+			, STIME_END = #{stime_end}
+			, SPARKING = #{sparking}
+			, SIMAGE = #{simage}
+			, STYPE = #{stype}
+			, SHOLIDAY = #{sholiday}
+			, SRATELV0 = #{sratelv0}
+			, SRATELV1 = #{sratelv1}
+			, SRATELV2 = #{sratelv2}
+			, SRATELV3 = #{sratelv3}
+			, SLIMIT = #{slimit} 
+		WHERE 
+			SNUM = #{snum}
 	</update>
 	
 	<delete id="deleteStore" parameterType="int">

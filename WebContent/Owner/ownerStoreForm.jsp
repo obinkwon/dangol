@@ -222,7 +222,6 @@ $(function(){
 </script>
 <script type="text/javascript">
 	var stag = new Array();
-	var final_stag = new Array();
 	var sel_files = [];
 	function goPopup(){// 주소검색을 수행할 팝업 페이지를 호출합니다.
 		var pop = window.open("jusoPopup.do?index=0","pop","width=570,height=420, scrollbars=yes, resizable=yes,left=400,top=300");
@@ -249,31 +248,27 @@ $(function(){
 	
 	function addTag(){ // 태그 추가
 		var tagVal = $('#ttag').val();
+		var checkVal = $('#themeTag_'+tagVal).length;
 		var tagStatus = $('#ttag option:checked').prop('disabled');
-		if(tagStatus){
+		if(checkVal){
 			alert('중복된 태그 입니다. 다시 선택해주세요');
 		}else{
 			var tagText = $('#ttag option:checked').text();
 			var tagList = $('#themeTag').text();
-			var deleteBtn = '<span style="margin-left:20px;" id="themeTag_'+tagVal+'">'+tagText;
+			var deleteBtn = '<span style="margin-left:20px;" id="themeTag_'+tagVal+'">';
+			deleteBtn += '<input type="hidden" name="stag" value="'+tagVal+'">'+tagText;
 			deleteBtn += '<button class="delBtn" type="button" onClick="delTag('+tagVal+')"><img class="cancelImg" src="/jsp/cancel.png"></button>';
 			deleteBtn += '</span>';
 			$('#tagDiv').append(deleteBtn);
-			$('#ttag option:checked').attr('disabled','disabled');
-			stag[stag.length] = tagVal;
 		}
 	}
 	
 	function delTag(val){ //태그 삭제
 		$('#themeTag_'+val).remove();
-		$('#ttag option[value*='+val+']').prop('disabled',false);
 	}
 	
 	function addStore(){ //가맹점 등록
 		if(confirm('이대로 등록하시겠습니까?')){
-			$.each(stag,function(i,value){
-			    if(final_stag.indexOf(value) == -1 ) final_stag.push(value);
-			});
 			var start_si = $('#start_si').val();
 			var start_bun = $('#start_bun').val();
 			var end_si = $('#end_si').val();
@@ -281,7 +276,21 @@ $(function(){
 			
 			$('#stime_start').val(start_si + start_bun);
 			$('#stime_end').val(end_si + end_bun);
-			$('#stag').val(final_stag);
+			$('#frmList').attr('action','insertStore.do');
+			$('#frmList').submit();
+		}
+	}
+	
+	function uptStore(){ //가맹점 수정
+		if(confirm('이대로 수정하시겠습니까?')){
+			var start_si = $('#start_si').val();
+			var start_bun = $('#start_bun').val();
+			var end_si = $('#end_si').val();
+			var end_bun = $('#end_bun').val();
+			
+			$('#stime_start').val(start_si + start_bun);
+			$('#stime_end').val(end_si + end_bun);
+			$('#frmList').attr('action','updateStore.do');
 			$('#frmList').submit();
 		}
 	}
@@ -300,10 +309,16 @@ $(function(){
 		</div>
 		<div class="container">
 			<div class="contentsTitGroup">
+			<c:if test="${mode == 'ADD'}">
 				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">가게 등록</h2>
+			</c:if>
+			<c:if test="${mode == 'MOD'}">
+				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">가게 수정</h2>
+			</c:if>
 			</div>
-			<form id="frmList" action="insertStore.do" enctype="multipart/form-data" method="post">
+			<form id="frmList" enctype="multipart/form-data" method="post">
 				<input type="hidden" name="bid" value="${bid}">
+				<input type="hidden" name="snum" value="${store.snum}">
 				<input type="hidden" id="stime_start" name="stime_start" value="">
 				<input type="hidden" id="stime_end" name="stime_end" value="">
 				<table class="table">
@@ -471,7 +486,8 @@ $(function(){
 							</c:if>
 							<div class="filebox">
 								<label for="sfile">이미지 업로드</label>
-								<input id="sfile" type="file" name="sfile">
+								<input id="sfile" type="file" name="sfile" >
+								<input type="hidden" name="simage" value="${store.simage}">
 							</div>
 						</td>
 					</tr>
@@ -491,12 +507,13 @@ $(function(){
 							<button id="addBtn" type="button" class="btn-view btn-mint" onClick="addTag();">추가</button>
 							<div id="tagDiv" class="btn-wrap tl">
 							<c:forEach var="stag" items="${stagList}" varStatus="status">
-								<span style="margin-left:20px;" id="themeTag_${stag}">
-									<button class="delBtn" type="button" onClick="delTag('${stag}')"><img class="cancelImg" src="/jsp/cancel.png"></button>
+								<span style="margin-left:20px;" id="themeTag_${stag.anum}">
+									<input type="hidden" name="stag" value="${stag.anum}">
+									#${stag.avalue}
+									<button class="delBtn" type="button" onClick="delTag('${stag.anum}')"><img class="cancelImg" src="/jsp/cancel.png"></button>
 								</span>
 							</c:forEach>
 							</div>
-							<input id="stag" type="hidden" name="stag" value="">
 						</td>
 					</tr>
 				</table>
@@ -504,7 +521,12 @@ $(function(){
 					<span style="color:red">* </span>표시는 필수 입력 사항입니다.
 				</div>
 				<div class="btn-wrap">
-					<button class="btn-view w300" type="button" onClick="addStore();">가맹점 등록</button>
+					<c:if test="${mode == 'ADD'}">
+						<button class="btn-view w300" type="button" onClick="addStore();">가맹점 등록</button>
+					</c:if>
+					<c:if test="${mode == 'MOD'}">
+						<button class="btn-view w300" type="button" onClick="uptStore();">가맹점 수정</button>
+					</c:if>
 				</div>
 			</form> 
 		</div>

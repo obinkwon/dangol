@@ -138,7 +138,11 @@ public class CategoryService {
 			int total = icdao.selectCommentTotal(s); //가게별 리뷰 총점
 			int totalCnt = icdao.selectCommentTotalCnt(s); //가게별 리뷰 갯수
 			System.out.println(total +"::::"+ totalCnt);
-			s.setCommentTotal(total/totalCnt);
+			if(total > 0 ) {
+				s.setCommentTotal(total/totalCnt);
+			}else {
+				s.setCommentTotal(0);
+			}
 		}
 		int count = 0;
 		List<Details> dList = null;
