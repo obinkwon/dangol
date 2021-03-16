@@ -78,8 +78,14 @@
 			location.href="ownerStoreForm.do?mode=MOD&snum="+snum;
 		}
 		
-		function delStore(){ //가게 삭제
-			location.href="ownerStoreForm.do";
+		function delStore(snum){ //가게 삭제
+			if(confirm('삭제 하시겠습니까?')){
+				location.href="deleteStore.do?snum="+snum;
+			}
+		}
+		
+		function menuStore(snum){ //가게 메뉴
+			location.href="ownerMenu.do?snum="+snum;
 		}
 	</script>
 </head>
@@ -109,6 +115,7 @@
 					<col width="15%"/>
 					<col width="10%"/>
 					<col width="10%"/>
+					<col width="10%"/>
 				</colgroup>
 				<tbody>
 					<tr>
@@ -116,6 +123,7 @@
 						<th>가게이름</th>
 						<th>주소</th>
 						<th>전화번호</th>
+						<th>메뉴</th>
 						<th>수정</th>
 						<th>삭제</th>
 					</tr>
@@ -125,8 +133,9 @@
 						<td>${store.sname}</td>
 						<td>${store.saddress} ${store.sdetailaddr}</td>
 						<td>${store.sphone}</td>
+						<td><button class="btn-view w100" type="button" onClick="menuStore('${store.snum}');">메뉴</button></td>
 						<td><button class="btn-view w100" type="button" onClick="uptStore('${store.snum}');">수정</button></td>
-						<td><button class="btn-view w100" type="button" >삭제</button></td>
+						<td><button class="btn-view w100" type="button" onClick="delStore('${store.snum}');">삭제</button></td>
 					</tr>
 					</c:forEach>
 				</tbody>
