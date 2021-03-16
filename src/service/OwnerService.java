@@ -19,6 +19,7 @@ import model.Boss;
 import model.Details;
 import model.Grade;
 import model.Member;
+import model.Order;
 import model.Store;
 
 @Service
@@ -202,6 +203,26 @@ public class OwnerService {
 		return oDao.insertStore(store);
 	}
 	
+	// 메뉴 등록
+	public int insertMenu(Order order
+			, MultipartFile ofile) throws Exception{
+		String path = imagePath +"order\\";
+		File dir = new File(path);
+		if(!dir.exists()) dir.mkdirs();
+		String oimage = ofile.getOriginalFilename();
+		if(!oimage.equals("")) {
+			File attachFile = new File(path+oimage);
+			ofile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
+			order.setOimage(oimage);//db에 파일 정보 저장을 하기위해 모델객체에 setting하기
+		}
+		return oDao.insertMenu(order);
+	}
+	
+	// 메뉴 삭제
+	public int deleteMenu(Order order) throws Exception{
+		return oDao.deleteMenu(order);
+	}
+	
 	//가게 태그 등록
 	public int insertStag(Store store) {
 		int result = 0;
@@ -256,8 +277,9 @@ public class OwnerService {
 		return oDao.updateStore(store);
 	}
 
-	public void deleteStore(int snum) {
-		oDao.deleteStore(snum);
+	public int deleteStore(Store store) {
+		oDao.deleteStag(store); //가게 태그 삭제
+		return oDao.deleteStore(store);
 	}
 
 	public int[] selectRatesByMids(String[] mids) {

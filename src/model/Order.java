@@ -1,16 +1,16 @@
 package model;
 
 public class Order {
-	private int onum;
+	private int ord;
 	private int snum;
 	private String oname;
 	private int oprice;
 	private String oimage;
-	public int getOnum() {
-		return onum;
+	public int getOrd() {
+		return ord;
 	}
-	public void setOnum(int onum) {
-		this.onum = onum;
+	public void setOrd(int ord) {
+		this.ord = ord;
 	}
 	public int getSnum() {
 		return snum;
@@ -37,8 +37,8 @@ public class Order {
 		this.oimage = oimage;
 	}
 	public Order() {}
-	public Order(int onum, int snum, String oname, int oprice, String oimage) {
-		this.onum = onum;
+	public Order(int ord, int snum, String oname, int oprice, String oimage) {
+		this.ord = ord;
 		this.snum = snum;
 		this.oname = oname;
 		this.oprice = oprice;
@@ -46,7 +46,7 @@ public class Order {
 	}
 	@Override
 	public String toString() {
-		return "Order [onum=" + onum + ", snum=" + snum + ", oname=" + oname + ", oprice=" + oprice + ", oimage="
+		return "Order [ord=" + ord + ", snum=" + snum + ", oname=" + oname + ", oprice=" + oprice + ", oimage="
 				+ oimage + "]";
 	}
 	

@@ -40,7 +40,7 @@ public interface ICategoryDao {
 	public Store selectStoreOneByRecommendPre(HashMap<String, Object> rMap);
 	//메뉴 리스트
 	public List<Order> selectOrderList(Store store);
-	public Order selectOrderOneByOnum(int onum);
+	public Order selectOrderOne(Order order);
 	//
 	public Grade selectGradeBySnumAndMid(Grade grade);
 	//

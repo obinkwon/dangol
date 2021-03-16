@@ -395,11 +395,15 @@ public class CategoryService {
 		return file;
 	}
 	
-	public File getAttachedFileMenu(int onum) {
-		Order o = icdao.selectOrderOneByOnum(onum);
+	public File getAttachedFileMenu(Order order) {
+		Order o = icdao.selectOrderOne(order);
 		String fileName = o.getOimage();
 		String path = imagePath+"order\\";
 		return new File(path+fileName);
+	}
+	
+	public Order selectOrderOne(Order order) {
+		return icdao.selectOrderOne(order);
 	}
 	
 	public void insertStoreMenu() {//메뉴 입력 부분

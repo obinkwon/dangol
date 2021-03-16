@@ -7,6 +7,7 @@ import model.Boss;
 import model.Details;
 import model.Grade;
 import model.Member;
+import model.Order;
 import model.Store;
 
 public interface IOwnerDao {
@@ -34,7 +35,9 @@ public interface IOwnerDao {
 	public List<Store> selectStag(Store store); //가게 태그 가져오기
 	public Store selectStore(Store store); //가게 정보 가져오기
 	public int updateStore(Store store); //가게 수정하기
-	public void deleteStore(int snum);
+	public int deleteStore(Store store); //가게 삭제하기
+	public int insertMenu(Order order); //메뉴 등록
+	public int deleteMenu(Order order); //메뉴 삭제
 
 	
 	 

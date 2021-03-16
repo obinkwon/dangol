@@ -109,7 +109,7 @@
 	<delete id="deleteStag" parameterType="store">
 		DELETE FROM STAG WHERE SNUM = #{snum} 
 	</delete>
-	<!--  -->
+	<!-- 가게 태그 조회 -->
 	<select id="selectStag" parameterType="store" resultType="store">
 		SELECT
 			SNUM AS snum
@@ -121,6 +121,30 @@
 		WHERE
 			SNUM = #{snum}
 	</select>
+	<!-- 메뉴 등록 -->
+	<insert id="insertMenu" parameterType="order">
+		<selectKey resultType="int" keyProperty="ord" order="BEFORE">
+			SELECT COUNT(*) FROM ORDERS WHERE SNUM = #{snum}
+      	</selectKey>
+		INSERT INTO ORDERS(
+			ORD
+			,SNUM
+			,ONAME
+			,OPRICE
+			,OIMAGE
+		)VALUES(
+			#{ord}
+			,#{snum}
+			,#{oname}
+			,#{oprice}
+			,#{oimage}
+		)
+	</insert>
+	<!-- 메뉴 삭제 -->
+	<delete id="deleteMenu" parameterType="order">
+		DELETE FROM ORDERS WHERE ORD = #{ord} AND SNUM = #{snum}
+	</delete>
+	
 	<select id="selectMembersByKeyword" parameterType="String" resultType="member">
 		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
 	</select>
@@ -280,8 +304,8 @@
 			SNUM = #{snum}
 	</update>
 	
-	<delete id="deleteStore" parameterType="int">
-		DELETE FROM STORES WHERE SNUM=#{snum}
+	<delete id="deleteStore" parameterType="store">
+		DELETE FROM STORES WHERE SNUM = #{snum}
 	</delete>
 
 <!-- 	<select id="selectMembersByMphone" parameterType="String" resultType="Member">

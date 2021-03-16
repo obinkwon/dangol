@@ -216,7 +216,7 @@
 	</select>
 	<select id="selectOrderList" parameterType="store" resultType="order">
 		SELECT 
-			ONUM AS onum
+			ORD AS ord
 			,SNUM AS snum
 			,ONAME AS oname
 			,OPRICE AS oprice
@@ -226,8 +226,18 @@
 		WHERE 
 			SNUM = #{snum}
 	</select>
-	<select id="selectOrderOneByOnum" parameterType="int" resultType="order">
-		select * from orders where onum = #{onum}
+	<select id="selectOrderOne" parameterType="order" resultType="order">
+		SELECT
+			ORD AS ord
+			,SNUM AS snum
+			,ONAME AS oname
+			,OPRICE AS oprice
+			,OIMAGE AS oimage
+		FROM 
+			ORDERS 
+		WHERE 
+			ORD = #{ord}
+			AND SNUM = #{snum}
 	</select>
 	<select id="selectGradeBySnumAndMid" parameterType="grade" resultType="grade">
 		SELECT

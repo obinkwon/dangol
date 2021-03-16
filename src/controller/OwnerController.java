@@ -22,9 +22,11 @@ import model.Boss;
 import model.Details;
 import model.Grade;
 import model.Member;
+import model.Order;
 import model.Store;
 import service.AdminService;
 import service.BossService;
+import service.CategoryService;
 import service.OwnerService;
 
 @Controller
@@ -36,6 +38,8 @@ public class OwnerController {
 	private BossService bService;
 	@Autowired
 	private AdminService aService;
+	@Autowired
+	private CategoryService cService;
 	
 	//점장 정보
 	//점장 정보 페이지 불러오기
@@ -339,22 +343,6 @@ public class OwnerController {
 		return null;
 	}
 	
-	//ing 수정페이지 이동
-	@RequestMapping("ownerStoreUpdateForm.do")
-	public ModelAndView ownerStoreUpdateForm(int snum) {
-		ModelAndView mav = new ModelAndView();
-		
-		//ing 가게업종 정보 //aservice로 구현해야함
-//		mav.addObject("foodList", oService.selectStore(snum));
-		//ing 해쉬태그 리스트 //aservice로 구현해야함
-//		mav.addObject("themeList", oService.selectStore(snum));
-		//ed 가게정보 불러오기
-//		mav.addObject("store", oService.selectStore(snum));
-		// jsp 출력
-		mav.setViewName("Owner/ownerStoreForm");
-		return mav;
-	}
-	
 	//가게 수정하기
 	@RequestMapping("updateStore.do")
 	public String updateStore(Store store
@@ -382,11 +370,27 @@ public class OwnerController {
 		return null;
 	}
 	
-	//ed 가게 삭제하기
+	//가게 삭제하기
 	@RequestMapping("deleteStore.do")
-	public String deleteStore(int snum) {
-		oService.deleteStore(snum);
-		return "redirect:ownerStore.do";
+	public String deleteStore(Store store
+			, HttpServletResponse resp) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		int result = oService.deleteStore(store);
+		if(result > 0) {
+			str = "<script language='javascript'>";
+			str += "alert('가게가 삭제되었습니다.');";
+			str += "location.href='ownerStore.do'";
+			str += "</script>";
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('가게삭제에 실패했습니다.');";
+			str += "location.href='ownerStore.do'";
+			str += "</script>";
+		}
+		pw.print(str);
+		return null;
 	}
 	
 	//내 가게
@@ -419,6 +423,83 @@ public class OwnerController {
 			pw.print(str);
 			return null;
 		}
+	}
+	
+	//가게 메뉴 리스트로 이동하기
+	@RequestMapping("ownerMenu.do")
+	public ModelAndView	ownerMenu(HttpSession session
+			,HttpServletResponse resp
+			,Store store) throws Exception{
+		//session에 저장된 아이디 추출
+		String bid = (String) session.getAttribute("bid");
+		Boss boss = new Boss();
+		boss.setBid(bid);
+		store.setBid(bid);
+		ModelAndView mav = new ModelAndView();
+		//bid에 일치하는 stores 정보 추출
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		if(bid != null && !bid.equals("") ) {
+			mav.addObject("boss", bService.selectBossOne(boss));
+			mav.addObject("menuList", cService.selectOrderList(store));
+			mav.setViewName("Owner/ownerMenu");
+			return mav;
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('세션이 만료되었습니다.');";
+			str += "location.href='main.do'";
+			str += "</script>";
+			pw.print(str);
+			return null;
+		}
+	}
+	
+	//가게 메뉴 추가하기
+	@RequestMapping("insertMenu.do")
+	public String insertMenu(Order order
+			, HttpServletResponse resp
+			, @RequestParam("ofile") MultipartFile ofile) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		int result = oService.insertMenu(order,ofile);
+		if(result > 0) {
+			str = "<script language='javascript'>";
+			str += "alert('메뉴가 추가되었습니다.');";
+			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
+			str += "</script>";
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('메뉴추가에 실패했습니다.');";
+			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
+			str += "</script>";
+		}
+		pw.print(str);
+		return null;
+	}
+	
+	//가게 메뉴 삭제하기
+	@RequestMapping("deleteMenu.do")
+	public String deleteMenu(Order order
+			, HttpServletResponse resp) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		int result = oService.deleteMenu(order);
+		if(result > 0) {
+			str = "<script language='javascript'>";
+			str += "alert('메뉴가 삭제되었습니다.');";
+			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
+			str += "</script>";
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('메뉴삭제에 실패했습니다.');";
+			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
+			str += "</script>";
+		}
+		pw.print(str);
+		return null;
 	}
 	
 

@@ -458,9 +458,12 @@ public class CategoryController {
 	}
 	
 	@RequestMapping("downloadStoreMenuImg.do")
-	public View downloadStoreMenuImg(int onum) {
-		File attachFile= cservice.getAttachedFileMenu(onum);
-		View view = new DownloadView(attachFile);
+	public View downloadStoreMenuImg(Order order) {
+		File attachFile= cservice.getAttachedFileMenu(order);
+		View view = null;
+		if(attachFile != null) {
+			view = new DownloadView(attachFile);
+		}
 		return view;
 	}
 	
