@@ -144,7 +144,17 @@
 	<delete id="deleteMenu" parameterType="order">
 		DELETE FROM ORDERS WHERE ORD = #{ord} AND SNUM = #{snum}
 	</delete>
-	
+	<!-- 메뉴 수정 -->
+	<insert id="updateMenu" parameterType="order">
+		UPDATE ORDERS 
+		SET
+			ONAME = #{oname}
+			,OPRICE = #{oprice}
+			,OIMAGE = #{oimage}
+		WHERE  
+			ORD = #{ord}
+			AND SNUM = #{snum}
+	</insert>
 	<select id="selectMembersByKeyword" parameterType="String" resultType="member">
 		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
 	</select>

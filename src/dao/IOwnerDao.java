@@ -38,6 +38,7 @@ public interface IOwnerDao {
 	public int deleteStore(Store store); //가게 삭제하기
 	public int insertMenu(Order order); //메뉴 등록
 	public int deleteMenu(Order order); //메뉴 삭제
+	public int updateMenu(Order order); //메뉴 수정
 
 	
 	 

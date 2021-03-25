@@ -502,5 +502,29 @@ public class OwnerController {
 		return null;
 	}
 	
+	//가게 메뉴 수정하기
+	@RequestMapping("updateMenu.do")
+	public String updateMenu(Order order
+			, HttpServletResponse resp
+			, @RequestParam("ofile") MultipartFile ofile) throws Exception{
+		resp.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = resp.getWriter();
+		String str = "";
+		int result = oService.updateMenu(order,ofile);
+		if(result > 0) {
+			str = "<script language='javascript'>";
+			str += "alert('메뉴가 수정되었습니다.');";
+			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
+			str += "</script>";
+		}else {
+			str = "<script language='javascript'>";
+			str += "alert('메뉴수정에 실패했습니다.');";
+			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
+			str += "</script>";
+		}
+		pw.print(str);
+		return null;
+	}
+	
 
 }

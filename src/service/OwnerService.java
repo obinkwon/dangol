@@ -223,6 +223,21 @@ public class OwnerService {
 		return oDao.deleteMenu(order);
 	}
 	
+	// 메뉴 수정
+	public int updateMenu(Order order
+			, MultipartFile ofile) throws Exception{
+		String path = imagePath +"order\\";
+		File dir = new File(path);
+		if(!dir.exists()) dir.mkdirs();
+		String oimage = ofile.getOriginalFilename();
+		if(!oimage.equals("")) {
+			File attachFile = new File(path+oimage);
+			ofile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
+			order.setOimage(oimage);//db에 파일 정보 저장을 하기위해 모델객체에 setting하기
+		}
+		return oDao.updateMenu(order);
+	}
+	
 	//가게 태그 등록
 	public int insertStag(Store store) {
 		int result = 0;

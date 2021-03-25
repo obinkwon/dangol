@@ -5,80 +5,97 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<title>사장님_회원가입</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
-.main {
-	position: relative;
-	margin-left: 300px;
-	margin-bottom: 100px;
-	margin-top : 100px;
-	width: 700px;
-	border: 1px solid #dedede;
-}
+	div.main {
+		margin : auto;
+		margin-top: 50px;
+		margin-bottom: 100px;
+		width: 35%;
+		border: 1px solid #dedede;
+	}
+	.signFormtitle {
+		text-align: center;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-size: 24px;
+		font-weight: bold;
+	}
+	table.signForm {	
+		margin : auto;		
+		font-size: 15px;
+	}
+	table.signForm td {
+		padding : 10px;
+		height: 30px;
+	}
+	.tagText {
+		text-align: center;
+		height: 10px;
+		font-weight: bold;
+		font-size: 15px;
+	}
+	.inputText {
+		height: 40px;
+	    line-height: 40px;
+	    color: #7b6e66;
+	    padding: 0 7px;
+	    border: 1px solid #7b6e66;
+	    background-color: transparent;
+	    vertical-align: middle;
+	    float: left;
+	}
+	.btn-view {
+	    width: 200px;
+        font-size: 1.4rem;
+        background-color: #fff;
+		color: #000000;
+	    height: 4rem;
+	    margin: 0 auto;
+	    line-height: 3.9rem;
+		font-weight: 600;
+	    letter-spacing: 0.5px;
+	    transition-duration: .5s;
+        border: 0.1rem solid #66ccff;
+	}
+	.btn-mint{
+		background-color: #66ccff;
+		color: #fff;
+	}
+	.btn-wrap {
+		display: block;
+		text-align: center;
+	    width: 100%;
+	    margin: 0 auto;
+	    margin-bottom : 30px;
+		padding-top: 4.5rem;
+	}
+	.contentsTitGroup{
+		padding-top: 2.0rem;
+	    text-align: center;
+	    display: block;
+	}
 
-.sub {
-	position: relative;
-	width: 700px;
-}
-
-.line {
-	border: solid #000000;
-	border-width: 1px;
-}
-
-.storeList {
-	border: 2px solid;
-	text-align: center;
-}
-
-img {
-	width: 50px;
-	height: 50px;
-}
-img.menuImg{
-	margin-top :10px;
-	margin-left : 160px;
-	width : 130px;
-	height : 100px;
-}
-#storeImg {
-	width: 175px;
-	height: 130px;
-}
-img#img2{
-	width : 100%;
-	height : 200px;
-}
-.plus {
-	width: 80px;
-	height: 80px;
-}
-p.img2{
-	width : 70px;
-}
-.tagCancel{
-width : 5px;
-height:5px;}
 </style>
 
 <script type="text/javascript">
  $(document).ready(function(){
-		$('#pwdCheck').blur(function(){
-			if(($('#pwd').val()!="")){
-				
-				
-				if(($('#pwd').val())==($('#pwdCheck').val())){
-			  		$('#isPwdSame').text("비밀번호가 일치합니다");
-				}
-				else{
-					$('#isPwdSame').text("비밀번호가 일치하지 않습니다");
+	 $('#pwdCheck').blur(function(){
+		if(($('#pwd').val()!="")){
+			if(($('#pwd').val())==($('#pwdCheck').val())){
+				$('#isPwdSame').text("비밀번호가 일치합니다");
+				$('#isPwdSame').css({"color" : "green"});
+			}else{
+				$('#isPwdSame').text("비밀번호가 일치하지 않습니다");
+		  		$('#isPwdSame').css({"color" : "red"});
 			}
-				}
-			});
+		}else{
+			$('#isPwdSame').text("비밀번호를 입력해주세요");
+	  		$('#isPwdSame').css({"color" : "red"});
+		}
+	});
 		
 			 var area0 = ["시/도 선택","서울특별시","인천광역시","대전광역시","광주광역시","대구광역시","울산광역시","부산광역시","경기도","강원도","충청도","전라도","경상북도","경상남도","제주도"];
 			  var area1 = ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구","마포구","서대문구","서초구","성동구","성북구","송파구","양천구","영등포구","용산구","은평구","종로구","중구","중랑구"];
@@ -168,365 +185,88 @@ height:5px;}
 								
 							}
 						});
-				 
-				//태그 제한
-				
-				$('#addTag').click(function(){
-					var tag = $('#tag').val();
-				if(tag!=null){ //처음 값 append 막기
-					
-				$('#addLine').append('<tr><td><input type="text" name="tag" value="'+tag
-						+'" readonly="readonly"></td><td><input type="button" class="delBtn"><img class="img1" src="jsp/cancel.png" ></td></tr>');
-				$('#tag option:eq(0)').prop("selected", true); //select 초기값 설정
-				var count=$('#addLine tr').length;
-				 if(count<7){
-					 $('#addTag').attr('disabled',false);
-				}else {
-					 $('#addTag').attr('disabled',true);					
-				}	
-						//태그삭제
-						$('.delBtn').click(function(){
-							$(this).closest('tr').remove();
-							var count=$('#addLine tr').length;
-			 			 if(count<7){
-							 $('#addTag').attr('disabled',false);
-							}else{
-						 $('#addTag').attr('disabled',true);
-						}  
-						})
-				 
-				 
-				}
-				
-				})
 }); 
 
 </script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#overlap_check').attr("disabled", true);
-		$('#bid').bind("click", function() {
-			$('#overlap_check').attr("disabled", false);
-			$('#overlap_check').click(function() {
-				$.ajax({
-					url : "checkId.do",
-					data : {
-						id : $('#bid').val()
-					},
-					type : "get",
-					success : function(data) {
-					
-						if (data) {
-						
-							$('#canId').text("사용가능한 id 입니다");
-						} else {
-							
-							$('#canId').text("중복된 id 입니다.");
-							$('#bid').val("");
-
-						}
-					}
-				})
-			})
-		})
-		//추가한 메뉴 불러오기
-	 	$('#addMenu').click(function(){
+	function idCheck(){ //id 체크
+		var bid = $('#bid').val();
+		if(bid == ''){
+			alert('id를 입력해주세요');			
+		}else{
 			$.ajax({
-				url: "addMenuList.do",
-				data:{
-					oname:$('#omenu').val(),
-					oprice:$('#oprice').val(),
-					oimage:$('#oimage').val()},
-				type: "post",
-				success: function(data){
-					var table = "";
-					$('#addMenuList tr:eq(2)').remove();
-					for( var key in data){
-						table += '<tr>';
-						table += '<td><input type="text" name="oimage" value="' + data[key].oimage + '" readonly="readonly"></td>';
-						table += '<td><input type="text" name="oname" value="' + data[key].oname + '" readonly="readonly"></td>';
-						table += '<td><input type="text" name="oprice" value="' + data[key].oprice + '" readonly="readonly"></td>';
-						table += '<td><img src="jsp/cancel.png"</td>';
-						table += '</tr>';
-			
-					} 
-					$('#addMenuList tr:eq(1)').after(table);
-				
-				}	
-			})
-			
-		}) 
-		
-
-	
-	})
-</script>
-<script type="text/javascript">
-	var sel_files = [];
-	
-	$(document).ready(function(){
-		$("#file").on("change",SelectImg1);
-		$("#file2").on("change",SelectImg2);
-	});
-	function SelectImg1(e){
-		var files=e.target.files;
-		var filesArr = Array.prototype.slice.call(files);
-		
-		filesArr.forEach(function(f){
-			sel_file = f;
-			var reader = new FileReader();
-			reader.onload = function(e){
-				$("#img").attr("src",e.target.result);
-			}
-			reader.readAsDataURL(f);
-		});
-	}
-	function SelectImg2(e){
-		var files=e.target.files;
-		var filesArr = Array.prototype.slice.call(files);
-		
-		filesArr.forEach(function(f){
-			sel_file = f;
-			var reader = new FileReader();
-			reader.onload = function(e){
-				$("#img2").attr("src",e.target.result);
-			}
-			reader.readAsDataURL(f);
-		});
+				url : 'checkId.do',
+				data : {
+					id : bid
+				},
+				type : 'get',
+				success : function(data) {
+					if (data) {
+						$('#canId').text('사용가능한 id 입니다');
+					} else {
+						$('#canId').text('중복된 id 입니다.');
+						$('#bid').val('');
+					}
+				}
+			});
+		}
 	}
 </script>
 </head>
 <body>
-	<jsp:include page="header.jsp" />
+<jsp:include page="header.jsp" />
 	<div class="main">
-	<form action="insertBoss.do" id="signUp">
-		<table class="sub">
-			<tr>
-				<td colspan="3"><p>가맹점주 가입</p></td>
-			</tr>
-			<tr>
-				<td>*아이디</td>
-				<td><input type="text" id="bid" name="bid"></td>
-				<td><input type="button" value="중복확인" id="overlap_check"></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td colspan="2"><div id="canId"></div></td>
-			</tr>
-			<tr>
-				<td>*비밀번호</td>
-				<td colspan="2"><input type="password" name="bpw" id="pwd"></td>
-			</tr>
-			<tr>
-				<td>*비밀번호 확인</td>
-				<td colspan="2"><input type="password" id="pwdCheck"></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td colspan="2" id="isPwdSame"></td>
-			</tr>
-			<tr>
-				<td>*전화번호</td>
-				<td><input type="text" placeholder="(-)제외  13자리를 입력하세요"
-					maxlength="13" id="bphone" name="bphone"></td>
-		</table>
-			
-		<hr class="line">
-
-		<table width="700px" class="storeList">
-			<tr>
-				<td rowspan="3" width="25%"><img src="jsp/cafe.jpg" id="storeImg"></td>
-				<td width="50%">가게이름</td>
-				<td rowspan="3" width="25%"><img src="jsp/cancel.png"></td>
-			</tr>
-			<tr>
-				<td>주소</td>
-			</tr>
-			<tr>
-				<td>전화번호</td>
-			</tr>
-
-			<tr>
-				<td rowspan="3" colspan="3"><img src="jsp/plus.png"
-					class="plus"></td>
-			</tr>
-		</table>
-		
-		
-		<hr class="line">
-		
-		<table width="700px">
-			<tr>
-				<td>*가게 업종 분류</td>
-				<td><select name="stype">
-						<c:forEach var="foodTagList" items="${foodTagList}">
-							<option value="${foodTagList.avalue}">#${foodTagList.avalue}</option>
-						</c:forEach>
-				</select></td>
-			</tr>
-			<tr>
-				<td>*가게 이름</td>
-				<td><input type="text" id="sname" name="sname"></td>
-			</tr>
-			<tr>
-				<td>*주소</td>
-					<td><select class="sido1" id="saddress" name="saddress"></select> <select
-						class="sido1" name="saddress"></select></td>
-			</tr>
-			<tr>
-				<td>상세주소</td>
-				<td><input type="text" placeholder="상세주소를 입려해주세요" name="sdetailaddr"></td>
-			</tr>
-			<tr>
-				<td>*가게번호</td>
-				<td><input type="text" placeholder="(-)제외한 변호를 입력해주세요" id="sphone" name="sphone"></td>
-			</tr>
-			<tr>
-				<td>*주차가능 여부</td>
-				<td><input type="radio" name="sparking" value="yes" checked="checked">가능
-					&nbsp;&nbsp; <input type="radio" name="sparking" value="no">불가능
-				</td>
-			</tr>
-			<tr>
-				<td>*예약가능 인원</td>
-				<td><input type="text" id="slimit" name="slimit" placeholder="최소0명 이상 입력해주세요">명</td>
-			<tr>
-				<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp; 점심/저녁 시간대의 예약가능 최대 인원
-					수 (기본값)</td>
-			</tr>
-			<tr>
-				<td>*영업시간 영업일</td>
-				<td><select name="stime">	 
- 				<script>
-				var i;
-				for(i=0;i<24;i++){
-				 document.write("<option>"+i+"시</option>");
-				}
-				</script>
-				</select> <select name="stime">
-						<option value="00분">00&nbsp;분</option>
-						<option value="30분">30&nbsp;분</option>
-				</select> ~
-				<select name="stime">	 
- 				<script>
-				var i;
-				for(i=0;i<24;i++){
-				 document.write("<option>"+i+"시</option>");
-				}
-				</script>
-				</select><select name="stime">
-						<option value="00분">00&nbsp;분</option>
-						<option value="30분">30&nbsp;분</option>
-				</select></td>
-			</tr>
-			<tr>
-				<td>휴무일</td>
-				<td><input type="checkbox" name="sholiday" value="mon" >월요일</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><input type="checkbox" name="sholiday" value="tue" >화요일</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><input type="checkbox" name="sholiday" value="wed" >수요일</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><input type="checkbox" name="sholiday" value="thu" >목요일</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><input type="checkbox" name="sholiday" value="fri" >금요일</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><input type="checkbox" name="sholiday" value="sat" >토요일</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><input type="checkbox" name="sholiday" value="sun" checked="checked">일요일</td>
-			</tr>
-			<tr>
-				<td>*멤버쉽</td>
-				<td>범골 <input type="text" id="sratelv0" name="sratelv0" placeholder="3%이상 ">%
-				</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>진골 <input type="text" id="sratelv1" name="sratelv1" placeholder="3%이상 ">%
-				</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>성골 <input type="text" id="sratelv2" name="sratelv2" placeholder="3%이상 ">%
-				</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>단골 <input type="text" id="sratelv3" name="sratelv3" placeholder="3%이상 ">%
-				</td>
-			</tr>
-	
-			<tr>
-				<td>자기소개</td>
-				<td><textarea class="form-control" name="sintro"rows="3"></textarea></td>
-				
-			</tr>
-					</table>
-		
-	
-
-		<table width="700px" id="addMenuList">
-			<tr>
-				<td colspan="2"><img id="img" class="menuImg" src="menu_ready.png"></td>
-				<td><input id="file" type="file" name="ufile" id="oimage" ></td>
-			</tr>
-			<tr>
-				<td rowspan="2" width="20%" >메뉴</td>
-				<td width="30%"><input type="text" placeholder="메뉴명" id="omenu"></td>
-				<td width="30%"><input type="text" placeholder="가격" id="oprice"></td>
-				<td width="20%"><input type="button" id="addMenu" value="추가"></td>
-			</tr>
-		
-		</table>
-	
-		<table width="700px">
-			<tr>
-					<td>해시태그</td>
-					<td><select id="tag">
-							<option  id="click" selected disabled hidden>#해시태그</option>
-							<c:forEach var="themeList" items="${themeList}">
-								<option value="${themeList.avalue}">#${themeList.avalue}</option>
-							</c:forEach>
-					</select>&nbsp;<input type="button" id="addTag" value="추가"></td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<table id="addLine">
-						
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">해시태그는 회원별 추천에 사용됩니다.</td>
-				</tr>
-				<tr>
-					<td colspan="2">※태그최대 등록 갯수: 7개</td>
-				</tr>
-			<tr>
-				<td><p class="img2">가게이미지</p></td>
-				<td><img id="img2" src="image_ready.png"></td>
-			</tr>
-			<tr>
-				<td colspan="2"><input id="file2" type="file" name="ufile" id="simage" ></td>
-			</tr>
-		</table>
-		<input type="button" id="storeBtn" value="가맹점 등록">
-		*표시는 필수 입력 사항입니다.
-		
-		<input type="submit" id="joinBtn" value="가입하기">
+		<form action="insertBoss.do" id="signUp" method="post">
+			<p class="signFormtitle">가맹점주 가입</p>
+			<table class="signForm">
+				<colgroup>
+					<col width="30%">
+					<col width="*">
+					<col width="30%">
+				</colgroup>
+				<tbody>
+					<tr>
+						<td><span style="color:red">* </span>아이디</td>
+						<td>
+							<input type="text" class="inputText" id="bid" name="bid" maxlength="10" placeholder="특수문자 없이 10자이내">
+						</td>
+						<td>
+							<button class="btn-view btn-mint" type="button" onclick="idCheck()" style="width:100px;">중복확인</button>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td colspan="2">
+							<div id="canId"></div>
+						</td>
+					</tr>
+					<tr>
+						<td><span style="color:red">* </span>비밀번호</td>
+						<td colspan="2"><input type="password" class="inputText" id="pwd" name="bpw" maxlength="13" placeholder="공백없이 13자이내"></td>
+					</tr>
+					<tr>
+						<td><span style="color:red">* </span>비밀번호 확인</td>
+						<td colspan="2"><input type="password"  class="inputText" id="pwdCheck" maxlength="13" placeholder="공백없이 13자이내"></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td id="isPwdSame" colspan="2"></td>
+					</tr>
+					<tr>
+						<td><span style="color:red">* </span>전화번호</td>
+						<td>
+							<input type="text" placeholder="(-)제외  11자리를 입력하세요" maxlength="11" id="bphone"  class="inputText" name="bphone">
+						</td>
+						<td id="phoneCheck"></td>
+					<tr>
+				</tbody>
+			</table>
+			<div class="contentsTitGroup">
+				<h4 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);"><span style="color:red">* </span>표시는 필수 입력 사항입니다.</h4>
+			</div>
+			<div class="btn-wrap">
+				<button class="btn-view btn-mint" onclick="" type="submit" id="joinBtn">가입하기</button>
+			</div>
 		</form> 
 	</div>
 	<jsp:include page="footer.jsp" />

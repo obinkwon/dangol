@@ -195,6 +195,20 @@ $(function(){
 		}
 	}
 	
+	function uptMenuSet(ord,oname,oprice){ //메뉴 수정 세팅 
+		$('#addBtn').text('수정');
+		$('#addBtn').attr('onclick','uptMenu('+ord+')');
+		$('#oname').val(oname);
+		$('#oprice').val(oprice);
+	}
+	
+	function uptMenu(ord){ //메뉴 수정
+		if(confirm('수정 하시겠습니까?')){
+			$('#frmList').attr('action','updateMenu.do?ord='+ord);
+			$('#frmList').submit();
+		}
+	}
+	
 	function viewMenu(ord){// 메뉴 이미지 팝업
 		var snum = $('#storeNum').val();
 		$.ajax({
@@ -251,12 +265,12 @@ $(function(){
 				<div class="btn-wrap">
 					<img class="menuImg" id="oimage" src="menu_ready.png">
 					<div class="menubox">
-						<input class="inputText w300" type="text" placeholder="메뉴명" name="oname">
-						<input class="inputText w300" type="text" placeholder="가격" name="oprice">
+						<input id="oname" class="inputText w300" type="text" placeholder="메뉴명" name="oname">
+						<input id="oprice" class="inputText w300" type="text" placeholder="가격" name="oprice">
 						<label for="ofile">이미지 업로드</label>
 						<input id="ofile" type="file" name="ofile" >
 						<input type="hidden" name="oimage" value="${store.simage}">
-						<button class="btn-view w100 btn-mint" type="button" onclick="addMenu()">추가</button>
+						<button id="addBtn" class="btn-view w100 btn-mint" type="button" onclick="addMenu()">추가</button>
 						<div class="ttip">
 							<img class="img30" alt="" src="/jsp/question-mark.png">
 							<span class="ttiptext">사이즈 : 500 x 400 (px)</span>
@@ -276,7 +290,7 @@ $(function(){
 					<c:forEach var="order" items="${menuList}" varStatus="status">
 					<tr>
 						<td>${status.index+1}</td>
-						<td>${order.oname}</td>
+						<td><a href="javascript:uptMenuSet('${order.ord}','${order.oname}','${order.oprice}');">${order.oname}</a></td>
 						<td>${order.oprice}</td>
 						<td><button class="btn-view w100" type="button" onclick="delMenu('${order.ord}')">삭제</button></td>
 						<td><button class="btn-view w100" type="button" onclick="viewMenu('${order.ord}')">이미지</button></td>
