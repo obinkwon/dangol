@@ -48,15 +48,16 @@ public class MemberService {
 	}
 
 	public List<Member> findId(String phone) throws Exception{
-		// System.out.println(phone);
-		List<Member> m = mdao.findId(phone);
-		return m;
+		Member member = new Member();
+		member.setMphone(phone);
+		return mdao.findId(member);
 	}
 
-	public Member findPw(HashMap<String, Object> params) throws Exception{
-		// System.out.println(params);
-		// System.out.println(mdao.findPw(params));
-		return mdao.findPw(params);
+	public Member findPw(String id, String phone) throws Exception{
+		Member member = new Member();
+		member.setMid(id);
+		member.setMphone(phone);
+		return mdao.findPw(member);
 	}
 
 	// 회원 id로 조회

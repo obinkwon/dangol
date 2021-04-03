@@ -114,10 +114,10 @@
 						</tr>
 						<tr>
 							<td>
-								<a class="findId" href="findIdPwForm.do">ID/PW찾기</a>
+								<a href="findIdPwForm.do?type=id">아이디 찾기</a>
 							</td>
 							<td>
-								<a class="findId" href="signUpForm.do">회원가입</a>
+								<a href="findIdPwForm.do?type=pwd">비밀번호 찾기</a>
 							</td>
 						</tr>
 					</tbody>

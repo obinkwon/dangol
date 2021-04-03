@@ -35,17 +35,41 @@ public class MemberController {
 	private BossService bService;
 	@Autowired
 	private AdminService aService;
-
+	
+	//로그인 폼 이동
 	@RequestMapping("loginForm.do")
-	public String loginForm() { //로그인 폼 이동
+	public String loginForm() { 
 		return "jsp/loginForm";
 	}
 	
+	//회원가입 폼 이동
+	@RequestMapping("signUpForm.do")
+	public String signUpForm() {
+		return "jsp/signUpForm";
+	}
+	
+	//id, pwd 찾기 폼 이동
 	@RequestMapping("findIdPwForm.do")
-	public String findIdPwForm() { //id, pwd 찾기 폼 이동
-		return "jsp/findIdPwForm";
+	public ModelAndView findIdPwForm(String type) { 
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("type",type);
+		mav.setViewName("jsp/findIdPwForm");
+		return mav;
+	}
+	
+	//회원 가입 폼 이동
+	@RequestMapping("signUpMembersForm.do")
+	public ModelAndView signUpMembersForm() throws Exception{
+		// 회원가입시 해시태그 리스트 가져오기
+		ModelAndView mav = new ModelAndView();
+		Admin admin = new Admin();
+		admin.setAtype("theme");
+		mav.addObject("themeList", aService.selectAdminTypeList(admin));
+		mav.setViewName("jsp/signUpMembersForm");
+		return mav;
 	}
 
+	//로그인
 	@RequestMapping("login.do")
 	public String login(HttpServletResponse resp
 			, HttpSession session
@@ -87,110 +111,64 @@ public class MemberController {
 		}
 	}
 
+	//id 찾기
 	@RequestMapping("findId.do")
-	public @ResponseBody List<String> checkById(String loginUser, String phone) throws Exception{
-	//	System.out.println(phone);
-		int i = 0;
-		List<Member> mlist = mService.findId(phone);
-		List<Boss> blist = bService.findId(phone);
+	@ResponseBody
+	public List<String> checkById(String loginUser
+			, String phone) throws Exception{ 
 		List<String> str = new ArrayList<String>();
 
-		if (loginUser.equals("user")) {
-			if (mService.findId(phone) != null) {
-				for (i = 0; i < mlist.size(); i++) {
+		if (loginUser.equals("user")) { //사용자 일때
+			List<Member> mlist = mService.findId(phone);
+			if (mlist.size() > 0) {
+				for (int i = 0; i < mlist.size(); i++) {
 					str.add(mlist.get(i).getMid());
 				}
-			} else {
-				str = null;
 			}
-		} else {
-			if (bService.findId(phone) != null) {
-				for (i = 0; i < blist.size(); i++) {
+		} else { //점장 일때
+			List<Boss> blist = bService.findId(phone);
+			if (blist.size() > 0) {
+				for (int i = 0; i < blist.size(); i++) {
 					str.add(blist.get(i).getBid());
 				}
-			} else {
-				str = null;
 			}
-		}
-		for (String s : str) {
-			//System.out.println(s);
 		}
 		return str;
 	}
 
-	@RequestMapping("findIdResult.do")
-	public String FindIdResult(int result) {
-		if (result == 0) {
-			return "jsp/findIdResult0";
-		} else {
-			return "jsp/findIdResult1";
-		}
-
-	}
-
+	//비밀번호 찾기
 	@RequestMapping("findPw.do")
-	public @ResponseBody String checkByPw(String loginUser, String id, String phone) throws Exception{
-		// System.out.println(id);
-		//System.out.println(phone);
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("id", id);
-		params.put("phone", phone);
-
-		// System.out.println(mService.findPw(params).getMpw());
-
+	@ResponseBody
+	public String checkByPw(String loginUser
+			, String id
+			, String phone) throws Exception{
 		String result = "";
 
-		if (loginUser.equals("user")) {
-			if (mService.findPw(params) != null) {
-				result = mService.findPw(params).getMpw();
-			} else {
-				result = "";
+		if (loginUser.equals("user")) { //사용자 일때
+			Member member = mService.findPw(id, phone);
+			if (member != null) {
+				result = member.getMpw();
 			}
-		} else {
-			if (bService.findPw(params) != null) {
-				result = bService.findPw(params).getBid();
-			} else {
-				result = "";
+		} else { //점장 일때
+			Boss boss = bService.findPw(id, phone);
+			if (boss != null) {
+				result = boss.getBid();
 			}
 		}
 		return result;
-	}
-
-	@RequestMapping("findPwResult.do")
-	public String findPwResult(int result) {
-		if (result == 0) {
-			return "jsp/findPwResult0";
-		} else {
-			return "jsp/findIdResult1";
-		}
-	}
-
-	@RequestMapping("signUpForm.do")
-	public String signUpForm() {
-		return "jsp/signUpForm";
-	}
-
-	@RequestMapping("signUpMembersForm.do")
-	public ModelAndView signUpMembersForm() throws Exception{
-		// 회원가입시 해시태그 리스트 가져오기
-		ModelAndView mav = new ModelAndView();
-		Admin admin = new Admin();
-		admin.setAtype("theme");
-		mav.addObject("themeList", aService.selectAdminTypeList(admin));
-		mav.setViewName("jsp/signUpMembersForm");
-		return mav;
 	}
 
 	// 회원가입시 id 중복체크
 	@RequestMapping("checkIdMember.do")
 	@ResponseBody
 	public boolean checkId(Member member) throws Exception{
-		if (mService.checkId(member) == null)
+		if (mService.checkId(member) == null) {
 			return true;
-		else {
+		}else {
 			return false;
 		}
 	}
+	
 	// 회원가입
 	@RequestMapping("signUp.do")
 	public String signUp(HttpServletResponse resp
@@ -224,6 +202,7 @@ public class MemberController {
 		return view;
 	}
 	
+	//도로명 주소 api
 	@RequestMapping("jusoPopup.do")
 	public ModelAndView jusoPopup(int index) {
 		ModelAndView mav = new ModelAndView();

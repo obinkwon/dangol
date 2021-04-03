@@ -66,12 +66,22 @@
 			BID = #{bid}
 	</select>
 
-<select id="findId" parameterType="String" resultType="boss">
-select * from boss where bphone=#{phone}
-</select>
-<select id="findPw" parameterType="java.util.HashMap" resultType="boss">
-select * from boss where bid=#{id} and bphone=#{phone}
-</select>
+	<select id="findId" parameterType="boss" resultType="boss">
+		SELECT
+			BID AS bid
+		FROM
+			BOSS 
+		WHERE 
+			BPHONE = #{bphone}
+	</select>
+	<select id="findPw" parameterType="boss" resultType="boss">
+		SELECT 
+		FROM 
+			BOSS 
+		WHERE 
+			BID = #{bid} 
+			AND BPHONE = #{bphone}
+	</select>
 <insert id="insertBoss" parameterType="boss">
 insert into boss values (#{bid}, #{bpw}, #{bphone})
 </insert>

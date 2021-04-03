@@ -41,12 +41,16 @@ public class BossService {
 	}
 
 	public List<Boss> findId(String phone) {
-		return bdao.findId(phone);
+		Boss boss = new Boss();
+		boss.setBphone(phone);
+		return bdao.findId(boss);
 	}
 
-	public Boss findPw(HashMap<String, Object> params) {
-//		System.out.println(bdao.findPw(params));
-		return bdao.findPw(params);
+	public Boss findPw(String id, String phone) {
+		Boss boss = new Boss();
+		boss.setBid(id);
+		boss.setBphone(phone);
+		return bdao.findPw(boss);
 	}
 	//점장 정보 하나만 검색
 	public Boss selectBossOne(Boss boss) {

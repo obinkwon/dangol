@@ -1,15 +1,14 @@
 package dao;
 
-import java.util.HashMap;
 import java.util.List;
+
 import model.Member;
-import model.Mtag;
 
 public interface IMemberDao {
 
-	public List<Member> findId(String phone) throws Exception;
+	public List<Member> findId(Member member) throws Exception;
 	
-	public Member findPw(HashMap<String, Object>params) throws Exception;
+	public Member findPw(Member member) throws Exception;
 	
 	public int insertMember(Member member);
 	

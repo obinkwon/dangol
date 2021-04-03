@@ -5,13 +5,24 @@
 
 <mapper namespace="dao.IMemberDao">
 
-<select id="findId" parameterType="String" resultType="member">
-select * from members where mphone=#{phone}
-</select>
+	<select id="findId" parameterType="member" resultType="member">
+		SELECT
+			MID AS mid
+		FROM  
+			MEMBERS 
+		WHERE 
+			MPHONE = #{mphone}
+	</select>
 
-<select id="findPw" parameterType="java.util.HashMap" resultType="member">
-select * from members where mid=#{id} and mphone=#{phone}
-</select>
+	<select id="findPw" parameterType="member" resultType="member">
+		SELECT
+			MPW AS mpw
+		FROM  
+			MEMBERS 
+		WHERE 
+			MID = #{mid} 
+			AND MPHONE = #{mphone} 
+	</select>
 	<sql id="mjob">
 		<choose>
 			<when test="mjob !=null and mjob != ''">
