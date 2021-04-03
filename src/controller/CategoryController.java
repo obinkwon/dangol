@@ -416,7 +416,9 @@ public class CategoryController {
 			, @RequestParam(defaultValue="0") int dnum) throws Exception{
 		ModelAndView mav = new ModelAndView();
 		String mid = (String)session.getAttribute("mid");
-		Member m = memservice.selectMember(mid);
+		Member member = new Member();
+		member.setMid(mid);
+		Member m = memservice.selectMember(member);
 		Comment c = cservice.selectComment(cnum,dnum);
 		Details d = cservice.selectDetail(c.getDnum());
 		String[] menuList = null;

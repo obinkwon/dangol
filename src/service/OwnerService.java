@@ -66,7 +66,9 @@ public class OwnerService {
 		
 		//Grades에 해당하는 mid와 mphone을 Reservers에 입력
 		for (Grade grade: Grades) {
-			Reservers.add(mDao.loginMembers(grade.getMid()));
+			Member member = new Member();
+			member.setMid(grade.getMid());
+			Reservers.add(mDao.selectMember(member));
 		}
 		
 		return Reservers;
@@ -85,7 +87,9 @@ public class OwnerService {
 		
 		//grades로 Reservers 담기
 		for (Grade grade: Grades) {
-			Reservers.add(mDao.loginMembers(grade.getMid()));
+			Member member = new Member();
+			member.setMid(grade.getMid());
+			Reservers.add(mDao.selectMember(member));
 		}
 		
 		return Reservers;
@@ -246,7 +250,6 @@ public class OwnerService {
 		String[] stagArr = stag.split(",");
 		for(String st : stagArr){
 			Store s = new Store();
-			System.out.println(st);
 			s.setStag(st);
 			s.setSnum(snum);
 			result += oDao.insertStag(s);

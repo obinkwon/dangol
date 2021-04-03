@@ -287,7 +287,6 @@ public class OwnerController {
 			mav.addObject("themeTagList",aService.selectAdminTypeList(admin));
 			if(mode.equals("MOD")){
 				store = oService.selectStore(store);
-				List<Store> stagList = oService.selectStag(store);
 				String[] stime = new String[4];
 				stime[0] = store.getStime_start().substring(0,2);
 				stime[1] = store.getStime_start().substring(2,4);
@@ -298,7 +297,7 @@ public class OwnerController {
 				for(String hol : sholiday) {
 					holiMap.put(hol, true);
 				}
-				mav.addObject("stagList",stagList);
+				mav.addObject("stagList",oService.selectStag(store));
 				mav.addObject("stime",stime);
 				mav.addObject("sholiday",holiMap);
 				mav.addObject("store",store);
@@ -328,17 +327,14 @@ public class OwnerController {
 		if(!store.getStag().equals("")) {
 			oService.insertStag(store);
 		}
+		str = "<script language='javascript'>";
 		if(result > 0) {
-			str = "<script language='javascript'>";
 			str += "alert('가게가 등록되었습니다.');";
-			str += "location.href='ownerStore.do'";
-			str += "</script>";
 		}else {
-			str = "<script language='javascript'>";
 			str += "alert('가게등록에 실패했습니다.');";
-			str += "location.href='ownerStore.do'";
-			str += "</script>";
 		}
+		str += "location.href='ownerStore.do'";
+		str += "</script>";
 		pw.print(str);
 		return null;
 	}

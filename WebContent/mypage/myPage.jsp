@@ -377,10 +377,10 @@ $(document).ready(function(){
 						<td>&nbsp;</td>
 						<td colspan="2">
 							<table id="addLine">
-							<c:forEach var="mTag" items="${mTag}">
+							<c:forEach var="mtag" items="${mtagList}">
 								<tr>
 									<td>#
-										<input type="text" name="tag" class="addTag" value="${mTag}" readonly="readonly">
+										<input type="text" name="mtag" class="addTag" value="${mtag.avalue}" readonly="readonly">
 									</td>
 									<td>
 										<button class="delBtn"><img class="cancelImg" src="jsp/cancel.png" ></button>

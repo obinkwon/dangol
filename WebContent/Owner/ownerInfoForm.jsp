@@ -42,13 +42,6 @@
 		margin : auto;		
 		font-size: 15px;
 	}
-	.formTitle {
-		text-align : center;
-		margin-top: 20px;
-		margin-bottom: 20px;
-		font-size: 24px;
-		font-weight: bold;
-	}
 	table.signForm td {
 		padding : 10px;
 		height: 30px;

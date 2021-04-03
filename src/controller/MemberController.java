@@ -37,8 +37,13 @@ public class MemberController {
 	private AdminService aService;
 
 	@RequestMapping("loginForm.do")
-	public String loginForm() {
+	public String loginForm() { //로그인 폼 이동
 		return "jsp/loginForm";
+	}
+	
+	@RequestMapping("findIdPwForm.do")
+	public String findIdPwForm() { //id, pwd 찾기 폼 이동
+		return "jsp/findIdPwForm";
 	}
 
 	@RequestMapping("login.do")
@@ -51,8 +56,8 @@ public class MemberController {
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
 		String str = "";
-		int memberCnt = mService.loginMembers(id, pwd);
-		if (loginUser.equals("user")) {
+		if (loginUser.equals("user")) { //사용자 로그인일때
+			int memberCnt = mService.loginMembers(id, pwd);
 			if (memberCnt == 0) {
 				session.setAttribute("mid", id);
 				return "redirect:main.do";
@@ -67,8 +72,7 @@ public class MemberController {
 				pw.print(str);
 				return null;
 			}
-
-		} else {
+		} else { //점장 로그인일때
 			if (bService.loginBoss(id, pwd) == 0) {
 				session.setAttribute("bid", id);
 				return "redirect:main.do";
@@ -81,11 +85,6 @@ public class MemberController {
 				return null;
 			}
 		}
-	}
-
-	@RequestMapping("findIdPwForm.do")
-	public String findIdPwForm() {
-		return "jsp/findIdPwForm";
 	}
 
 	@RequestMapping("findId.do")
@@ -184,9 +183,9 @@ public class MemberController {
 
 	// 회원가입시 id 중복체크
 	@RequestMapping("checkIdMember.do")
-	public @ResponseBody boolean checkId(String id) throws Exception{
-		// System.out.println(id);
-		if (mService.checkId(id) == null)
+	@ResponseBody
+	public boolean checkId(Member member) throws Exception{
+		if (mService.checkId(member) == null)
 			return true;
 		else {
 			return false;
@@ -194,13 +193,22 @@ public class MemberController {
 	}
 	// 회원가입
 	@RequestMapping("signUp.do")
-	public String signUp(HttpServletResponse resp, Member member, String[] tag, @RequestParam("mfile") MultipartFile mfile) throws Exception {
-		mService.insertMember(member, tag, mfile);
+	public String signUp(HttpServletResponse resp
+			, Member member
+			, @RequestParam("mfile") MultipartFile mfile) throws Exception {
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
 		String str = "";
+		int result = mService.insertMember(member, mfile);
+		if(!member.getMtag().equals("")) {
+			mService.insertMtag(member);
+		}
 		str = "<script language='javascript'>";
-		str += "alert('회원가입이 완료되었습니다.');";
+		if(result > 0) {
+			str += "alert('가입이 완료되었습니다.');";
+		}else {
+			str += "alert('가입에 실패하였습니다.');";
+		}
 		str += "location.href='loginForm.do'";
 		str += "</script>";
 		pw.print(str);

@@ -246,7 +246,9 @@ public class CategoryService {
 	}
 	
 	public HashMap<String, Object> selectRecommendList(String mid) throws Exception{//추천 별 가게 리스트
-		Member m = mdao.loginMembers(mid);
+		Member member = new Member();
+		member.setMid(mid);
+		Member m = mdao.selectMember(member);
 		List<Mtag> mtagList = icdao.selectMtagByMid(mid);
 		List<Admin> aList = new ArrayList<Admin>();
 		ArrayList<Integer> snumList = new ArrayList<Integer>();

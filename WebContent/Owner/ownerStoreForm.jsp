@@ -503,6 +503,9 @@ $(function(){
 								<c:forEach var="themeTag" items="${themeTagList}">
 									<option value="${themeTag.anum}">#${themeTag.avalue}</option>
 								</c:forEach>
+								<c:if test="${empty themeTagList}">
+									<option selected disabled>태그 없음</option>
+								</c:if>
 							</select>
 							<button id="addBtn" type="button" class="btn-view btn-mint" onClick="addTag();">추가</button>
 							<div id="tagDiv" class="btn-wrap tl">

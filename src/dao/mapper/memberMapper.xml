@@ -5,10 +5,6 @@
 
 <mapper namespace="dao.IMemberDao">
 
-<select id="loginMembers" parameterType="String" resultType="member">
-select * from members where mid=#{id}
-</select>
-
 <select id="findId" parameterType="String" resultType="member">
 select * from members where mphone=#{phone}
 </select>
@@ -16,89 +12,122 @@ select * from members where mphone=#{phone}
 <select id="findPw" parameterType="java.util.HashMap" resultType="member">
 select * from members where mid=#{id} and mphone=#{phone}
 </select>
-<sql id="mjob">
-	<choose>
-		<when test="mjob !=null and mjob != ''">
-			#{mjob}
-		</when>
-		<otherwise>
-			null
-		</otherwise>
-	</choose>
-</sql>
-<sql id="marea1">
-	<choose>
-		<when test="marea1 !=null and marea1 != ''">
-			#{marea1}
-		</when>
-		<otherwise>
-			null
-		</otherwise>
-	</choose>
-</sql>
-<sql id="marea2">
-	<choose>
-		<when test="marea2 !=null and marea2 != ''">
-			#{marea2}
-		</when>
-		<otherwise>
-			null
-		</otherwise>
-	</choose>
-</sql>
-<sql id="mimage">
-	<choose>
-		<when test="mimage !=null and mimage != ''">
-			#{mimage}
-		</when>
-		<otherwise>
-			null
-		</otherwise>
-	</choose>
-</sql>
-
-<insert id="insertMember" parameterType="member">
-	INSERT INTO MEMBERS(
-		MID
-		,MPW
-		,MPHONE
-		,MADDRESS
-		,MADDRESS_D
-		,MGENDER
-		,MJOB
-		,MTYPE
-		,MAREA1
-		,MAREA2
-		,MIMAGE
-		,MPENALTY	
-	) 
-	VALUES (
-			#{mid}
-		, 	#{mpw}
-		, 	#{mphone}
-		, 	#{maddress}
-		,	#{maddress_d}
-		, 	#{mgender}
-		, 	<include refid="mjob"/>
-		,	'user'
-		, 	<include refid="marea1"/>
-		, 	<include refid="marea2"/>
-		,	<include refid="mimage"/>
-		,	0
-	)
-</insert>
+	<sql id="mjob">
+		<choose>
+			<when test="mjob !=null and mjob != ''">
+				#{mjob}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="marea1">
+		<choose>
+			<when test="marea1 !=null and marea1 != ''">
+				#{marea1}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="marea2">
+		<choose>
+			<when test="marea2 !=null and marea2 != ''">
+				#{marea2}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="mimage">
+		<choose>
+			<when test="mimage !=null and mimage != ''">
+				#{mimage}
+			</when>
+			<otherwise>
+				null
+			</otherwise>
+		</choose>
+	</sql>
+	<!-- 회원 등록 -->
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO MEMBERS(
+			MID
+			,MPW
+			,MPHONE
+			,MADDRESS
+			,MADDRESS_D
+			,MGENDER
+			,MJOB
+			,MTYPE
+			,MAREA1
+			,MAREA2
+			,MIMAGE
+			,MPENALTY	
+		) 
+		VALUES (
+				#{mid}
+			, 	#{mpw}
+			, 	#{mphone}
+			, 	#{maddress}
+			,	#{maddress_d}
+			, 	#{mgender}
+			, 	<include refid="mjob"/>
+			,	'user'
+			, 	<include refid="marea1"/>
+			, 	<include refid="marea2"/>
+			,	<include refid="mimage"/>
+			,	0
+		)
+	</insert>
 
 <select id="selectAnumByMtag" resultType="int" parameterType="String">
 select anum from admins  where avalue=#{tag} and atype='theme'
 </select>
-
-<insert id="insertMtag" parameterType="mtag">
- INSERT INTO MTAG VALUES (mtag_seq.nextval,#{mid},#{anum})
-</insert>
-
-<select id="selectMember" parameterType="String" resultType="member">
-select * from members where mid=#{mid}
-</select>
+	<!-- 회원 태그 등록 -->
+	<insert id="insertMtag" parameterType="member">
+		INSERT INTO MTAG (
+		 	MID
+		 	,ANUM
+		) VALUES (
+			, #{mid}
+			, #{anum}
+		)
+	</insert>
+	<!-- 회원 정보 조회 -->
+	<select id="selectMember" parameterType="member" resultType="member">
+		SELECT 
+			MID AS mid
+			,MPW AS mpw
+			,MPHONE AS mphone
+			,MADDRESS AS maddress
+			,MADDRESS_D AS maddress_d
+			,MGENDER AS mgender
+			,MJOB AS mjob
+			,MTYPE AS mtype
+			,MAREA1 AS marea1
+			,MAREA2 AS marea2
+			,MIMAGE AS mimage
+			,MPENALTY AS mpenalty
+		FROM 
+			MEMBERS 
+		WHERE 
+			MID = #{mid}
+	</select>
+	<!-- 회원 태그 조회 -->
+	<select id="selectMtag" parameterType="member" resultType="member">
+		SELECT
+			A.ANUM AS anum
+			,B.AVALUE AS avalue
+		FROM
+			MTAG A
+			LEFT JOIN ADMINS B ON A.ANUM = B.ANUM
+		WHERE
+			MID = #{mid}
+	</select>
 <update id="updateMpenalty" parameterType="String">
 update members set mpenalty = mpenalty+1 where mid = #{mid}
 </update>

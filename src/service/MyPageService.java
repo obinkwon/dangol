@@ -40,21 +40,6 @@ public class MyPageService {
 		return mypagedao.selectMember(mid);
 	}
 
-	// 회원의 태그 리스트 가져오기
-	public List<String> selectMtag(String mid) {
-	List<Mtag> mtag = mypagedao.selectMtag(mid);
-		int i;
-		List<String> avalue = new ArrayList<String>();
-	if(mtag!=null) {
-		for (i = 0; i < mtag.size(); i++) {
-			Admin anum = mypagedao.selectAvalue(mtag.get(i).getAnum());
-		avalue.add(anum.getAvalue());
-		}
-	}
-
-		return avalue;
-	}
-
 	public void updateMemberOne(Member member, String[] tag, MultipartFile mfile) throws Exception{
 
 		String path = imagePath+"member\\";
@@ -134,10 +119,8 @@ public class MyPageService {
 
 				}
 				for (int i = 0; i < tag.length; i++) {
-					mtag = tag[i];
-					mt.setAnum(mdao.selectAnumByMtag(mtag));
-					mt.setMid(member.getMid());
-					mdao.insertMtag(mt);
+					member.setAnum(mdao.selectAnumByMtag(tag[i])+"");
+					mdao.insertMtag(member);
 				}
 
 			}
@@ -248,7 +231,9 @@ public class MyPageService {
 		} else {
 			mdao.updateMpenalty(mid);// penalty+1
 			mypagedao.deleteReserve(dnum);
-			Member member = mdao.selectMember(mid);
+			Member m = new Member();
+			m.setMid(mid);
+			Member member = mdao.selectMember(m);
 			if (member.getMpenalty() == 3) {
 				List<Grade> grade = mypagedao.selectHistoryAll(mid); //현재등급리스트
 				for (Grade g : grade) {

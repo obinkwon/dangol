@@ -46,16 +46,14 @@ public class MyPageController {
 		ModelAndView mav = new ModelAndView();
 		Admin admin = new Admin();
 		admin.setAtype("theme");
-		if (session.getAttribute("mid") != null) {
-			mav.addObject("Member", mypageService.selectMember(mid));
+		if (!mid.equals("") && mid != null) {
+			Member member = new Member();
+			member.setMid(mid);
+			mav.addObject("Member", mService.selectMember(member));
 			mav.addObject("themeList", aService.selectAdminTypeList(admin));
-			if(mypageService.selectMtag(mid) !=null) {
-				mav.addObject("mTag", mypageService.selectMtag(mid));
-			}
+			mav.addObject("mtagList", mService.selectMtag(member));
 			mav.setViewName("mypage/myPage");
-		} else if (session.getAttribute("bid") != null) {
-			mav.setViewName("Owner/ownerInfoForm");
-		} else {
+		}else {
 			mav.setViewName("jsp/loginForm");
 		}
 		return mav;
@@ -351,8 +349,10 @@ public class MyPageController {
 	@RequestMapping("createCommentForm.do")
 	public ModelAndView createCommentForm(HttpSession session, int dnum, int snum) throws Exception{
 		String mid = (String) session.getAttribute("mid");
+		Member member = new Member();
+		member.setMid(mid);
 		ModelAndView mav = new ModelAndView();
-		Member member = mService.selectMember(mid);
+		member = mService.selectMember(member);
 		Store store = mypageService.selectStoreBySnum(snum);
 		Details details = mypageService.selectDetailsByDnum(dnum);
 		String str = details.getDmenu();
