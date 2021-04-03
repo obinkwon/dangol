@@ -13,6 +13,9 @@ public class Member {
     private String marea2;
     private String mimage;
     private int mpenalty;
+    private String mtag;
+    private String avalue;
+	private String anum;
 	public String getMid() {
 		return mid;
 	}
@@ -84,6 +87,24 @@ public class Member {
 	}
 	public void setMpenalty(int mpenalty) {
 		this.mpenalty = mpenalty;
+	}
+	public String getMtag() {
+		return mtag;
+	}
+	public void setMtag(String mtag) {
+		this.mtag = mtag;
+	}
+	public String getAvalue() {
+		return avalue;
+	}
+	public void setAvalue(String avalue) {
+		this.avalue = avalue;
+	}
+	public String getAnum() {
+		return anum;
+	}
+	public void setAnum(String anum) {
+		this.anum = anum;
 	}
 	public Member() {}
 	
