@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.IMemberDao">
-
+	<!-- id 찾기 -->
 	<select id="findId" parameterType="member" resultType="member">
 		SELECT
 			MID AS mid
@@ -13,7 +13,7 @@
 		WHERE 
 			MPHONE = #{mphone}
 	</select>
-
+	<!-- 비밀번호 찾기 -->
 	<select id="findPw" parameterType="member" resultType="member">
 		SELECT
 			MPW AS mpw
@@ -104,7 +104,7 @@ select anum from admins  where avalue=#{tag} and atype='theme'
 		 	MID
 		 	,ANUM
 		) VALUES (
-			, #{mid}
+			#{mid}
 			, #{anum}
 		)
 	</insert>
@@ -145,5 +145,4 @@ update members set mpenalty = mpenalty+1 where mid = #{mid}
 <update id="resetMpenalty" parameterType="String">
 update members set mpenalty=0 where mid=#{mid}
 </update>
-
 </mapper>

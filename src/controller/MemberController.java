@@ -143,14 +143,21 @@ public class MemberController {
 			, String id
 			, String phone) throws Exception{
 		String result = "";
-
+		
 		if (loginUser.equals("user")) { //사용자 일때
-			Member member = mService.findPw(id, phone);
+			Member member = new Member();
+			member.setMid(id);
+			member.setMphone(phone);
+			
+			member = mService.findPw(member);
 			if (member != null) {
 				result = member.getMpw();
 			}
 		} else { //점장 일때
-			Boss boss = bService.findPw(id, phone);
+			Boss boss = new Boss();
+			boss.setBid(id);
+			boss.setBphone(phone);
+			boss = bService.findPw(boss);
 			if (boss != null) {
 				result = boss.getBid();
 			}
@@ -178,7 +185,7 @@ public class MemberController {
 		PrintWriter pw = resp.getWriter();
 		String str = "";
 		int result = mService.insertMember(member, mfile);
-		if(!member.getMtag().equals("")) {
+		if(member.getMtag() != null) {
 			mService.insertMtag(member);
 		}
 		str = "<script language='javascript'>";

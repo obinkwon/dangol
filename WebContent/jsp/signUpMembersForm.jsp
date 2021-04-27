@@ -224,13 +224,14 @@ $(document).ready(function(){
 			$.ajax({
 				url : "checkIdMember.do",
 				data : {
-					id : mid
+					mid : mid
 				},
 				type : "get",
 				success : function(data) {
 					if (data) {
 						$('#canId').text("사용가능한 id 입니다");
 						$('#canId').css({"color" : "green"});
+						$('#mid').attr('readonly','readonly');
 					} else {
 						$('#canId').text("중복된 id 입니다.");
 						$('#canId').css({"color" : "red"});
@@ -270,16 +271,37 @@ $(document).ready(function(){
 	}
 	
 	function formCheck(){ //폼 체크
-		if(($('#isPwdSame').text() != '비밀번호가 일치합니다') 
-				|| ($('#canId').text() != '사용가능한 id 입니다') 
-				|| ($('#mphone').val() == '') 
-				|| ($('#address').val() == '')){
-			
-			alert("필수항목을 입력해주세요.");
+		if($('#mid').val() == ''){
+			alert('아이디를 입력해주세요.');
+			$('#mid').focus();
 			return false;
+		}else if($('#canId').text() != '사용가능한 id 입니다'){
+			alert('중복된 아이디입니다.');
+			$('#mid').focus();
+			return false;
+		}else if($('#pwd').val() == ''){
+			alert("비밀번호를 입력해주세요.");
+			$('#pwd').focus();
+			return false;
+		}else if($('#pwdCheck').val() == ''){
+			alert("비밀번호 확인을 입력해주세요.");
+			$('#pwdCheck').focus();
+			return false;
+		}else if($('#pwd').val() != $('#pwdCheck').val()){
+			alert("비밀번호가 일치하지 않습니다.");
+			$('#pwdCheck').focus();
+			return false;
+		}else if($('#mphone').val() == ''){
+			alert("전화번호를 입력해주세요.");
+			$('#mphone').focus();
+			return false;
+		}else if($('#address').val() == ''){
+			alert("주소를 입력해주세요.");
+			$('#address').focus();
+			return false;
+		}else{
+			return true;
 		}
-	
-		return true;
 	}
 </script>
 </head>

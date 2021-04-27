@@ -5,11 +5,11 @@ import java.util.List;
 import model.Member;
 
 public interface IMemberDao {
-
+	//ID 찾기
 	public List<Member> findId(Member member) throws Exception;
-	
+	//비밀번호 찾기
 	public Member findPw(Member member) throws Exception;
-	
+	//회원 등록
 	public int insertMember(Member member);
 	
 	public int selectAnumByMtag (String tag) throws Exception;

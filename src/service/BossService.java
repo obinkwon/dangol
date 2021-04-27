@@ -46,10 +46,7 @@ public class BossService {
 		return bdao.findId(boss);
 	}
 
-	public Boss findPw(String id, String phone) {
-		Boss boss = new Boss();
-		boss.setBid(id);
-		boss.setBphone(phone);
+	public Boss findPw(Boss boss) {
 		return bdao.findPw(boss);
 	}
 	//점장 정보 하나만 검색

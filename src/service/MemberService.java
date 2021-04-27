@@ -53,10 +53,7 @@ public class MemberService {
 		return mdao.findId(member);
 	}
 
-	public Member findPw(String id, String phone) throws Exception{
-		Member member = new Member();
-		member.setMid(id);
-		member.setMphone(phone);
+	public Member findPw(Member member) throws Exception{
 		return mdao.findPw(member);
 	}
 
@@ -73,10 +70,11 @@ public class MemberService {
 		if(!dir.exists()) dir.mkdirs();
 		String mimage = "";
 		if(mfile != null) {
-			System.out.println("mfile is not null");
 			mimage = mfile.getOriginalFilename();
-			File attachFile = new File(path+mimage);
-			mfile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
+			if(!mimage.equals("")) {
+				File attachFile = new File(path+mimage);
+				mfile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
+			}
 		}
 		member.setMimage(mimage);//db에 파일 정보 저장을 하기위해 모델객체에 setting하기
 		return mdao.insertMember(member);
@@ -95,7 +93,7 @@ public class MemberService {
 		String[] mtagArr = mtag.split(",");
 		for(String mt : mtagArr){
 			Member m = new Member();
-			m.setMtag(mt);
+			m.setAnum(mt);
 			m.setMid(mid);
 			result += mdao.insertMtag(m);
 		}
