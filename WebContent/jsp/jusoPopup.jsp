@@ -15,7 +15,7 @@
 <script language="javascript">
 function init(){
 	var url = location.href;
-	var confmKey = "devU01TX0FVVEgyMDIxMDIwMzE1MzY1MTExMDc3NjA="; //개발 ( 사용기간 : 2021-02-03 ~ 2021-05-04 )
+	var confmKey = "devU01TX0FVVEgyMDIxMDYwMTE0NDAwMzExMTIzMDY="; //개발 ( 사용기간 : 2021-06-01 ~ 2021-08-30 )
 	var resultType = "4"; // 도로명주소 검색결과 화면 출력내용, 1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명
 	var inputYn= "<%=inputYn%>";
 	if(inputYn != "Y"){

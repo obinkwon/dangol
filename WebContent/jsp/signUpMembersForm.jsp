@@ -349,10 +349,9 @@ $(document).ready(function(){
 						</tr>
 						<tr>
 							<td><span style="color:red">* </span>전화번호</td>
-							<td>
+							<td colspan="2">
 								<input type="text" placeholder="(-)제외  11자리이내" maxlength="11" id="mphone"  class="inputText w300" name="mphone" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 							</td>
-							<td id="phoneCheck"></td>
 						<tr>
 							<td><span style="color:red">* </span>주소</td>
 							<td>

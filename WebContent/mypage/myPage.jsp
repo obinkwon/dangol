@@ -1,12 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
- 
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이페이지</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
@@ -16,13 +14,6 @@
 		margin-bottom:100px;
 		width: 100%;
 	}
-	.modifyFormTitle {
-		text-align : center;
-		margin-top: 20px;
-		margin-bottom: 20px;
-		font-size: 24px;
-		font-weight: bold;
-	}
 	table.modifyFormList {
 		margin : auto;
 		font-size: 15px;
@@ -31,8 +22,85 @@
 		padding : 10px;
 		height: 30px;
 	}
-	select {
-		padding: 5px;
+	.inputText {
+		height: 40px;
+	    line-height: 40px;
+	    color: #7b6e66;
+	    padding: 0 7px;
+	    border: 1px solid #7b6e66;
+	    background-color: transparent;
+	    vertical-align: middle;
+	    float: left;
+	}
+	.btn-view {
+	    width: 200px;
+        font-size: 1.4rem;
+        background-color: #fff;
+		color: #000000;
+	    height: 4rem;
+	    margin: 0 auto;
+	    line-height: 3.9rem;
+		font-weight: 600;
+	    letter-spacing: 0.5px;
+	    transition-duration: .5s;
+        border: 0.1rem solid #66ccff;
+	}
+	.btn-mint{
+		background-color: #66ccff;
+		color: #fff;
+	}
+	.btn-wrap {
+		display: block;
+		text-align: center;
+	    width: 100%;
+	    margin: 0 auto;
+	    margin-bottom : 30px;
+		padding-top: 4.5rem;
+	}
+	.contentsTitGroup{
+		padding-top: 2.0rem;
+	    text-align: center;
+	    display: block;
+	}
+	.w300{
+		width: 300px;
+	}
+	.formArea{
+		vertical-align: middle;
+		height: 40px;
+    	line-height: 40px;
+	}
+	.formArea label{
+		margin-left: 10px;
+		vertical-align: middle;
+    	line-height: 40px;
+	}
+	.formArea ul {
+	    padding-inline-start: 0px;
+	    overflow: hidden;
+	    height: 100%;
+	    width: 100%;
+	    margin-bottom : 0px;
+	}
+	.formArea li {
+	    vertical-align: middle;
+	    display: block;
+	    float: left;
+	    overflow: hidden;
+	    margin-right: 25px;
+	}
+	.inputRadio{
+	    margin: 0;
+	    width: 15px;
+	    height: 15px;
+	    border: 0;
+	    margin-right: 20px;
+	}
+	.tagText {
+		text-align: center;
+		height: 10px;
+		font-weight: bold;
+		font-size: 15px;
 	}
 	div.nav {
 		margin-top: 50px;
@@ -57,42 +125,6 @@
 	li.active {
 		background-color: #66ccff;
 	}
-	div.modifyFormContent {
-		border: 1px solid #dedede;
-		margin : auto;
-		width: 30%;
-	}
-	.inputText {
-		width: 210px;
-		height : 28px; 
-	}
-	#isPwdSame {
-		color: #ff0000;
-	}
-	.inputRadio {
-		margin-top: 10px;
-		height: 20px;
-	}
-	#addTag, .addressBtn{
-		background-color: #66ccff;
-		color: white;
-		text-align: center;
-		text-decoration: none;
-		font-size: 13px;
-		border: none;
-		cursor: pointer;
-		width: 100px;
-		height: 28px;
-	}
-	.addTag {
-		border: none;
-	}
-	p.tagtext, p.text {
-		text-align: center;
-		height: 10px;
-		font-weight: bold;
-		font-size: 15px;
-	}
 	.cancelImg {
 		width: 100%;
 		height: 100%;
@@ -112,27 +144,6 @@
 		width: 120px;
 		height: 120px;
 	}
-	.addImg {
-		margin-top: 10px;
-	}
-	#addLine td{
-		padding: 0px;
-	}
-	.actionBtn {
-		display : block;
-		text-align: center;
-		margin : auto;
-		margin-top: 25px;
-		margin-bottom : 30px;
-		background-color: #66ccff;
-		border: none;
-		color: white;
-		width: 300px;
-		height: 45px;
-		text-decoration: none;
-		font-size: 18px;
-		cursor: pointer;
-	}
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -140,102 +151,15 @@ $(document).ready(function(){
 		if(($('#pwd').val()!="")){
 			if(($('#pwd').val())==($('#pwdCheck').val())){
 		  		$('#isPwdSame').text("비밀번호가 일치합니다");
-			}else{
-				$('#isPwdSame').text("비밀번호가 일치하지 않습니다");
+		  		$('#isPwdSame').css({"color" : "green"});
 			}
-		}
-	});
-	//회원정보수정 버튼 누를 때 제한 할 사항들
-	$('#modifyBtn').click(function(){
-		if(($('#pwd').val()!="") 
-			&& ($('#isPwdSame').text() =="비밀번호가 일치합니다")
-			&& ($('#mphone').val()!="")
-			&&($('#address').val()!="")){
-						
+			else{
+				$('#isPwdSame').text("비밀번호가 일치하지 않습니다");
+		  		$('#isPwdSame').css({"color" : "red"});
+			}
 		}else{
-			$('form#modify').attr("action","");
-			alert("필수항목을 입력해주세요.");
-		}
-	});
-			 
- 	//태그 제한
-  	var tag1 =$('#addLine').find('tr:eq(0)').find('td').find('input').val();
-  	var tag2 =$('#addLine').find('tr:eq(1)').find('td').find('input').val();
-  	var tag3 =$('#addLine').find('tr:eq(2)').find('td').find('input').val();
-	//	alert(tag1);
-	//	alert(tag2);
-	//	alert(tag3);
-	$("#tag option[value='"+tag1+"']").remove();	
-	$("#tag option[value='"+tag2+"']").remove();	
-	$("#tag option[value='"+tag3+"']").remove();	
-			
-  	var count=$('#addLine tr').length;
-	if(count<3){
-		$('#addTag').attr('disabled',false);
-	}else {
-		$('#addTag').attr('disabled',true);					
-	}	
-	
-	$('#addTag').click(function(){
-		var tag = $('#tag').val();
-		if(tag!=null){ //처음 값 append 막기
-			var msg = '';
-			msg += '<tr>';
-			msg += '<td>';
-			msg += '#<input type="text" name="tag" class="addTag" value="'+tag+'" readonly="readonly">';
-			msg += '</td>';
-			msg += '</tr>';
-			msg += '<td>';
-			msg += '<button class="delBtn">';
-			msg += '<img class="cancelImg" src="jsp/cancel.png">';
-			msg += '</button>';
-			msg += '</td>';
-			msg += '</tr>';
-			$('#addLine').append(msg);
-			
-			var selectTag=	$("#tag option:selected");
-			selectTag.remove();
-			$('#tag option:eq(0)').prop("selected", true); //select 초기값 설정
-			var count=$('#addLine tr').length;
-			if(count<3){
-				$('#addTag').attr('disabled',false);
-			}else {
-				$('#addTag').attr('disabled',true);					
-			}	
-			
-			//태그삭제
-			$('.delBtn').click(function(){
-				$(this).closest('tr').remove();
-				var s = $(this).closest('tr').find('td').find('input').val();
-				$('#tag').append('<option value="'+s+'">#'+s+'</option>');
-				var count=$('#addLine tr').length;
-			 	if(count<3){
-					$('#addTag').attr('disabled',false);
-				}else{
-					$('#addTag').attr('disabled',true);
-				}  
-			});
-		}
-	});
-	
-	//태그삭제
-	$('.delBtn').click(function(){
-		$(this).closest('tr').remove();
-		var s = $(this).closest('tr').find('td').find('input').val();
-		$('#tag').append('<option value="'+s+'">#'+s+'</option>');
-		var count=$('#addLine tr').length;
-		if(count<3){
-			$('#addTag').attr('disabled',false);
-		}else{
-			$('#addTag').attr('disabled',true);
-		}  
-	});
-					
-	//회원 탈퇴
-	$('#deleteBtn').click(function() { 
-		var result = confirm('정말로 탈퇴하시겠습니까?');
-		if(result) { 
-			location.replace('removeMember.do');
+			$('#isPwdSame').text("비밀번호를 입력해주세요");
+	  		$('#isPwdSame').css({"color" : "red"});
 		}
 	});
 }); 
@@ -260,11 +184,81 @@ $(document).ready(function(){
 			reader.readAsDataURL(f);
 		});
 	}
+	
+	function goPopup(){
+		// 주소검색을 수행할 팝업 페이지를 호출합니다.
+		var pop = window.open("jusoPopup.do?index=0","pop","width=570,height=420, scrollbars=yes, resizable=yes,left=400,top=300");
+	}
+	function prefer1(){
+		var pop = window.open("jusoPopup.do?index=1","pop","width=570,height=420, scrollbars=yes, resizable=yes,left=400,top=300");
+	}
+	function prefer2(){
+		var pop = window.open("jusoPopup.do?index=2","pop","width=570,height=420, scrollbars=yes, resizable=yes,left=400,top=300");
+	}
+	
+	function jusoCallBack(roadAddrPart1,addrDetail,index){ 
+		console.log(roadAddrPart1 + "," + addrDetail + "," +index);
+		switch (index) {
+		case "0":
+			document.getElementById("useraddr").value = roadAddrPart1;    
+			document.getElementById("useraddrDetail").value = addrDetail;    
+			break;
+		case "1":
+			document.getElementById("preferaddr").value = roadAddrPart1;    
+			break;
+		case "2":
+			document.getElementById("preferaddr2").value = roadAddrPart1;    
+			break;
+		}
+	}
+	
+	function addTag(){ //태그 추가
+		var tagVal = $('#ttag').val();
+		var checkVal = $('#themeTag_'+tagVal).length;
+		var tagStatus = $('#ttag option:checked').prop('disabled');
+		if(checkVal){
+			alert('중복된 태그 입니다. 다시 선택해주세요');
+		}else{
+			var tagText = $('#ttag option:checked').text();
+			var tagList = $('#themeTag').text();
+			var deleteBtn = '<span style="margin-left:20px;" id="themeTag_'+tagVal+'">';
+			deleteBtn += '<input type="hidden" name="mtag" value="'+tagVal+'">'+tagText;
+			deleteBtn += '<button class="delBtn" type="button" onClick="delTag('+tagVal+')"><img class="cancelImg" src="/jsp/cancel.png"></button>';
+			deleteBtn += '</span>';
+			$('#tagDiv').append(deleteBtn);
+		}
+	}
+	
+	function delTag(val){ //태그 삭제
+		$('#themeTag_'+val).remove();
+	}
+	
+	function modMember(){//회원 수정
+		if(($('#pwd').val()!="") 
+			&& ($('#isPwdSame').text() =="비밀번호가 일치합니다")
+			&& ($('#mphone').val()!="")
+			&&($('#address').val()!="")){
+						
+			$('#modify').attr("action","modifyMember.do");
+			$('#modify').submit();
+		}else{
+			$('#modify').attr("action","");
+			alert("필수항목을 입력해주세요.");
+		}
+	}
+	
+	function delMember(){//회원 탈퇴
+		var result = confirm('정말로 탈퇴하시겠습니까?');
+		if(result) { 
+			$('#modify').attr('action','removeMember.do');
+			$('#modify').submit();
+		}
+	}
 </script>
 
 </head>
 <body>
-	<jsp:include page="../jsp/header.jsp" />
+<jsp:include page="../jsp/header.jsp" />
 	<div class="main">
 		<div class="nav">
 			<ul class="nav nav-pills nav-stacked">
@@ -275,119 +269,121 @@ $(document).ready(function(){
 				<li class="nav"><a class="nav" href="reserveState.do">예약현황</a></li>
 			</ul>
 		</div>
-
-		<div class="modifyFormContent">
-			<form action="modifyMember.do" enctype="multipart/form-data"
-				method="post" id="modify">
-				<p class="modifyFormTitle">(${mid})님의 회원정보</p>
+		<div class="container">
+			<div class="contentsTitGroup">
+				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">(${mid})님의 회원정보</h2>
+			</div>
+			<form action="modifyMember.do" enctype="multipart/form-data" method="post" id="modify">
+				<input type="hidden" name="mtype" value="user">
 				<table class="modifyFormList">
+					<colgroup>
+						<col width="30%">
+						<col width="*">
+						<col width="30%">
+					</colgroup>
+					<tbody>
 					<tr>
 						<td><span style="color:red">* </span>아이디</td>
 						<td colspan="2">
-							<input type="text" class="inputText" id="mid" name="mid" value="${mid}" readonly="readonly">
+							<input type="text" class="inputText w300" id="mid" name="mid" value="${mid}" readonly="readonly">
 						</td>
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>비밀번호</td>
-						<td colspan="2">
-							<input type="password" class="inputText" id="pwd" name="mpw">
-						</td>
+						<td colspan="2"><input type="password" class="inputText w300" id="pwd" name="mpw" maxlength="13" placeholder="공백없이 13자이내" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>비밀번호 확인</td>
-						<td colspan="2"><input type="password" class="inputText" id="pwdCheck"></td>
+						<td colspan="2"><input type="password" class="inputText w300" id="pwdCheck" maxlength="13" placeholder="공백없이 13자이내"></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
-						<td id="isPwdSame" class="inputText" colspan="2"></td>
+						<td id="isPwdSame" colspan="2"></td>
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>전화번호</td>
 						<td colspan="2">
-							<input type="text" class="inputText" placeholder="(-)제외  11자리를 입력하세요" maxlength="11" id="mphone" name="mphone" value="${Member.mphone}">
+							<input type="text" class="inputText w300" placeholder="(-)제외  11자리이내" maxlength="11" id="mphone" name="mphone" value="${Member.mphone}" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 						</td>
 					<tr>
 						<td><span style="color:red">* </span>주소</td>
 						<td>
-							<input type="text" id="useraddr" value="${Member.maddress}" name="maddress" class="inputText" required="required" readonly="readonly">
+							<input type="text" id="useraddr" value="${Member.maddress}" name="maddress" class="inputText w300" required="required" readonly="readonly">
 						</td>
 						<td>
-							<button type="button" class="addressBtn" onclick="goPopup()">주소검색</button>
+							<button type="button" class="btn-view btn-mint" onclick="goPopup()" style="width:100px;">주소검색</button>
 						</td>
 					</tr>
 					<tr>
 						<td>상세주소</td>
-						<td colspan="2"><input type="text" id="useraddrDetail" value="${Member.maddress_d}" name="maddress" class="inputText"></td>
+						<td colspan="2"><input type="text" id="useraddrDetail" value="${Member.maddress_d}" name="maddress_d" class="inputText w300"></td>
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>성별</td>
 						<td colspan="2">
-						<c:choose>
-							<c:when test="${Member.mgender == 'm'}">
-								<input type="radio" class="inputRadio" name="mgender" checked="checked" value="m">남  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<input type="radio" class="inputRadio" name=mgender value="f">여
-							</c:when>
-							<c:otherwise>
-								<input type="radio" class="inputRadio" name="mgender" value="m">남 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<input type="radio" class="inputRadio" name="mgender" checked="checked" value="f"> 여
-							</c:otherwise>
-						</c:choose>
+							<div class="formArea">
+								<ul>
+									<li>
+										<input class="inputRadio" type="radio" name="mgender" id="mgender-m" value="m" <c:if test="${Member.mgender == 'm'}">checked</c:if>>
+										<label for="mgender-m">남</label>
+									</li>
+									<li>
+										<input class="inputRadio" type="radio" name="mgender" id="mgender-f" value="f" <c:if test="${Member.mgender != 'm'}">checked</c:if>>
+										<label for="mgender-f">여</label>
+									</li>
+								</ul>
+							</div>
 						</td>
 					</tr>
 					<tr>
 						<td>직업</td>
-						<td colspan="2"><input type="text" class="inputText" name="mjob" id="mjob" value="${Member.mjob}"></td>
+						<td colspan="2"><input type="text" class="inputText w300" name="mjob" id="mjob" value="${Member.mjob}"></td>
 					</tr>
 					<tr>
 						<td>선호지역</td>
 						<td>
-							<input type="text" id="preferaddr" value="${Member.marea1}" name="marea1" class="inputText" readonly="readonly">
+							<input type="text" id="preferaddr" value="${Member.marea1}" name="marea1" class="inputText w300" readonly="readonly">
 						</td>
 						<td>
-							<button type="button" class="addressBtn" onclick="prefer1()">주소검색</button>
+							<button type="button" class="btn-view btn-mint" onclick="prefer1()" style="width:100px;">주소검색</button>
 						</td> 
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
 						<td>
-							<input type="text" id="preferaddr2" value="${Member.marea2}" name="marea2" class="inputText" readonly="readonly">
+							<input type="text" id="preferaddr2" value="${Member.marea2}" name="marea2" class="inputText w300" readonly="readonly">
 						</td>
 						<td>
-							<button type="button" class="addressBtn" onclick="prefer2()">주소검색</button>
+							<button type="button" class="btn-view btn-mint" onclick="prefer2()" style="width:100px;">주소검색</button>
 						</td>
 					</tr>
 					<tr>
 						<td>해시태그</td>
 						<td>
-							<select id="tag" class="Tag">
-							<c:if test="${!empty themeList}">
-								<option id="click" selected disabled>#해시태그</option>
-								<c:forEach var="themeList" items="${themeList}">
-									<option id="taglist" value="${themeList.avalue}">#${themeList.avalue}</option>
-								</c:forEach>
-							</c:if>
+							<select id="ttag" class="inputText w300">
+							<c:forEach var="themeTag" items="${themeList}">
+								<option value="${themeTag.anum}">#${themeTag.avalue}</option>
+							</c:forEach>
 							<c:if test="${empty themeList}">
-								<option id="click" selected disabled>태그 없음</option>
+								<option selected disabled>태그 없음</option>
 							</c:if>
 							</select>
+						</td> 
+						<td>
+							<button class="btn-view btn-mint" type="button" onclick="addTag()" style="width:100px;">추가</button>
 						</td>
-						<td><input type="button" id="addTag" value="추가"></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
 						<td colspan="2">
-							<table id="addLine">
-							<c:forEach var="mtag" items="${mtagList}">
-								<tr>
-									<td>#
-										<input type="text" name="mtag" class="addTag" value="${mtag.avalue}" readonly="readonly">
-									</td>
-									<td>
-										<button class="delBtn"><img class="cancelImg" src="jsp/cancel.png" ></button>
-									</td>
-								</tr>
-							</c:forEach>
-							</table>
+							<div id="tagDiv">
+								<c:forEach var="mtag" items="${mtagList}">
+								<span style="margin-left:20px;" id="themeTag_${mtag.anum}">
+									<input type="hidden" name="mtag" value="${mtag.anum}">${mtag.avalue}
+									<button class="delBtn" type="button" onClick="delTag('${mtag.anum}')"><img class="cancelImg" src="jsp/cancel.png" ></button>
+								</span>
+								</c:forEach>
+							</div>
 						</td>
 					</tr>
 					<tr>
@@ -410,26 +406,23 @@ $(document).ready(function(){
 					</tr>
 					<tr>
 						<td>회원이미지</td>
-						<td colspan="2"><input id="file" type="file" name="mfile" class="addImg"></td>
-					</tr>
-					<tr>
-						<td colspan="3"><p class="text">*표시는 필수 입력 사항입니다.</p></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-							<input style="margin-bottom: 0px;" type="submit" class="actionBtn" id="modifyBtn" value="수정하기"> 
+						<td colspan="2">
+							<input id="file" type="file" name="mfile">
+							<input type="hidden" name="mimage" value="${Member.mimage}">
 						</td>
 					</tr>
-					<tr>
-						<td colspan="3">
-							<input style="margin-top: 0px;" type="button" class="actionBtn" id="deleteBtn" value="탈퇴하기">
-						</td>
-					</tr>
+					</tbody>
 				</table>
-				
+				<div class="contentsTitGroup">
+					<h4 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);"><span style="color:red">* </span>표시는 필수 입력 사항입니다.</h4>
+				</div>
+				<div class="btn-wrap">
+					<button class="btn-view btn-mint" onclick="modMember()" type="button">수정하기</button>
+					<button class="btn-view btn-mint" onclick="delMember()" type="button">탈퇴하기</button>
+				</div>
 			</form>
 		</div>
 	</div>
-	<jsp:include page="../jsp/footer.jsp" />
+<jsp:include page="../jsp/footer.jsp" />
 </body>
 </html> 

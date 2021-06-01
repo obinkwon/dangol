@@ -12,15 +12,13 @@ import model.Mtag;
 import model.Store;
 
 public interface IMyPageDao {
-
-	public Member selectMember(String mid);
-	public List<Mtag> selectMtag (String mid);
-	public void updateMemberOne (Member member);
-	public Admin selectAvalue(int anum);
-	public void deleteMtag(int mtnum);
-	public int countMtag(String mid);
-	public void updateMtag (Mtag mtag);
-	public void deleteMemberOne (String mid);
+	//회원 수정
+	public int updateMemberOne (Member member);
+	//회원 태그 삭제
+	public int deleteMtag(Member member);
+	//회원 삭제
+	public int deleteMemberOne (Member member);
+	
 	public List<Grade> selectGlikeList(String mid);
 	public Store selectStoreBySnum(int snum);
 	public List<Details> recentlyVisited(int gnum);

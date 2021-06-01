@@ -40,13 +40,14 @@ public class MyPageController {
 	@Autowired
 	private AdminService aService;
 
+	//마이페이지
 	@RequestMapping("myPage.do")
 	public ModelAndView myPage(HttpSession session) throws Exception{
 		String mid = (String) session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
 		Admin admin = new Admin();
 		admin.setAtype("theme");
-		if (!mid.equals("") && mid != null) {
+		if (mid != null) {
 			Member member = new Member();
 			member.setMid(mid);
 			mav.addObject("Member", mService.selectMember(member));
@@ -58,79 +59,92 @@ public class MyPageController {
 		}
 		return mav;
 	}
-
+	//회원 수정
 	@RequestMapping("modifyMember.do")
-	public String modifyMember(HttpServletResponse resp, Member member
-		, @RequestParam(required = false) String[] tag
+	public String modifyMember(HttpServletResponse resp
+		, Member member
 		, @RequestParam(value = "mfile", required = false) MultipartFile mfile) throws Exception {
-		System.out.println(member.getMphone());
-		mypageService.updateMemberOne(member, tag, mfile);
-
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
 		String str = "";
+		int result = mypageService.updateMemberOne(member, mfile);
+		if(member.getMtag() != null) {
+			mypageService.updateMtag(member);
+		}
 		str = "<script language='javascript'>";
-		str += "alert('회원정보가 수정되었습니다.');";
+		if(result > 0) {
+			str += "alert('회원정보가 수정되었습니다.');";
+		}else {
+			str += "alert('수정에 실패하였습니다.');";
+		}
 		str += "location.href='myPage.do'";
 		str += "</script>";
 		pw.print(str);
 		return null;
 
 	}
-
+	//회원 탈퇴
 	@RequestMapping("removeMember.do")
-	public String removeMember(HttpSession session) {
+	public String removeMember(HttpSession session
+		, Member member) throws Exception {
 		String mid = (String) session.getAttribute("mid");
-		mypageService.deleteMemberOne(mid);
-		session.invalidate();
+		if(member.getMid().equals("")) {
+			member.setMid(mid);
+		}
+		mypageService.deleteMemberOne(member);
+		session.invalidate(); //세션 초기화
 		return "redirect:main.do";
 	}
-
+	//즐겨찾기
 	@RequestMapping("bookmark.do")
 	public ModelAndView bookmark(HttpSession session) {
-		String mid = (String) session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
-		List<HashMap<String, Object>> bookmarkList = new ArrayList<HashMap<String, Object>>();
-		List<List<Details>> detailslist = mypageService.selectGlikeList(mid);
+		String mid = (String) session.getAttribute("mid");
+		if (mid != null) {
+			List<HashMap<String, Object>> bookmarkList = new ArrayList<HashMap<String, Object>>();
+			List<List<Details>> detailslist = mypageService.selectGlikeList(mid);
 
-		if(detailslist!=null) {
-			for (List<Details> dlist : detailslist) {
-				if(dlist.size()!=0) {	
-					HashMap<String, Object> bookmark = new HashMap<String, Object>();
-					Grade grade = mypageService.selectgradeByGnum(dlist.get(0).getGnum());
-					Store store = mypageService.selectStoreBySnum(grade.getSnum());
-					bookmark.put("snum", store.getSnum());
-					bookmark.put("simage", store.getSimage());
-					bookmark.put("sname", store.getSname());
-					bookmark.put("saddress", store.getSaddress());
-					Grade grades = mypageService.selectgrade(grade.getMid(),grade.getSnum());
-					bookmark.put("glevel", grades.getGlevel());
-					bookmark.put("glike", grades.getGlike());
-					Date date = dlist.get(0).getDdate();
-					bookmark.put("ddate", date);
-					List<Details> details= mypageService.selectdcount(grade.getMid(), grade.getSnum());
-					int dcount = details.get(0).getDcount();
-					
-					Object count = null;
-					if (dcount < 12) {
-						count = (12 - dcount);
-					} else if (dcount < 24) {
-						count = (24 - dcount);
-					} else if (dcount < 48) {
-						count = (48 - dcount);
-					} else {
-						count = ("최고등급입니다.");
+			if(detailslist!=null) {
+				for (List<Details> dlist : detailslist) {
+					if(dlist.size()!=0) {	
+						HashMap<String, Object> bookmark = new HashMap<String, Object>();
+						Grade grade = mypageService.selectgradeByGnum(dlist.get(0).getGnum());
+						Store store = mypageService.selectStoreBySnum(grade.getSnum());
+						bookmark.put("snum", store.getSnum());
+						bookmark.put("simage", store.getSimage());
+						bookmark.put("sname", store.getSname());
+						bookmark.put("saddress", store.getSaddress());
+						Grade grades = mypageService.selectgrade(grade.getMid(),grade.getSnum());
+						bookmark.put("glevel", grades.getGlevel());
+						bookmark.put("glike", grades.getGlike());
+						Date date = dlist.get(0).getDdate();
+						bookmark.put("ddate", date);
+						List<Details> details= mypageService.selectdcount(grade.getMid(), grade.getSnum());
+						int dcount = details.get(0).getDcount();
+						
+						Object count = null;
+						if (dcount < 12) {
+							count = (12 - dcount);
+						} else if (dcount < 24) {
+							count = (24 - dcount);
+						} else if (dcount < 48) {
+							count = (48 - dcount);
+						} else {
+							count = ("최고등급입니다.");
+						}
+						bookmark.put("dcount", count);
+						
+						bookmarkList.add(bookmark);
 					}
-					bookmark.put("dcount", count);
-					
-					bookmarkList.add(bookmark);
 				}
-			}
-				
-			}
+					
+				}
 
-		mav.addObject("bookmarkList", bookmarkList);
-		mav.setViewName("mypage/bookmark");
+			mav.addObject("bookmarkList", bookmarkList);
+			mav.setViewName("mypage/bookmark");
+		}else {
+			mav.setViewName("jsp/loginForm");
+		}
 		return mav;
 	}
 

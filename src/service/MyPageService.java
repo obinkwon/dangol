@@ -36,106 +36,38 @@ public class MyPageService {
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 
-	public Member selectMember(String mid) {
-		return mypagedao.selectMember(mid);
-	}
-
-	public void updateMemberOne(Member member, String[] tag, MultipartFile mfile) throws Exception{
-
+	public int updateMemberOne(Member member, MultipartFile mfile) throws Exception{//회원 수정
 		String path = imagePath+"member\\";
 		File dir = new File(path);
-		if (!dir.exists())
-			dir.mkdirs();
+		if (!dir.exists()) dir.mkdirs();
+		
 		String mimage = mfile.getOriginalFilename();
-		File attachFile = new File(path + mimage);
-
-		try {
+		if(!mimage.equals("")){
+			File attachFile = new File(path + mimage);
 			mfile.transferTo(attachFile); // 웹으로 받아온 파일을 복사
-			if (mfile != null) {
-				member.setMimage(mimage); // db에 파일 정보 저장을 하기위해 모델객체에 setting하기
-			} else {
-				member.setMimage("");
-			}
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			member.setMimage(mimage);
 		}
-
-		String str = member.getMaddress();
-
-		StringTokenizer tokens = new StringTokenizer(str, ",");
-		String maddress = "";
-		String[] ss = new String[2];
-		for (int x = 0; tokens.hasMoreElements(); x++) {
-			ss[x] = tokens.nextToken();
+		return mypagedao.updateMemberOne(member);
+	}
+	
+	public int updateMtag(Member member) {//회원 태그 수정
+		int result = 0;
+		String mtag = member.getMtag();
+		String mid = member.getMid();
+		String[] mtagArr = mtag.split(",");
+		//회원 태그 초기화
+		mypagedao.deleteMtag(member);
+		for(String mt : mtagArr) {
+			Member mem = new Member();
+			mem.setMid(mid);
+			mem.setAnum(mt);
+			result += mdao.insertMtag(mem);
 		}
-		maddress = ss[0] + " " + ss[1];
-
-		String str1 = member.getMarea1();
-		StringTokenizer tokens1 = new StringTokenizer(str1, ",");
-		String marea1 = "";
-		for (int x = 0; tokens1.hasMoreElements(); x++) {
-			ss[x] = tokens1.nextToken();
-		}
-		marea1 = ss[0] + " " + ss[1];
-
-		String str2 = member.getMarea2();
-		StringTokenizer tokens2 = new StringTokenizer(str2, ",");
-		String marea2 = "";
-		for (int x = 0; tokens2.hasMoreElements(); x++) {
-			ss[x] = tokens2.nextToken();
-		}
-		marea2 = ss[0] + " " + ss[1];
-
-		member.setMaddress(maddress);
-		member.setMarea1(marea1);
-		member.setMarea2(marea2);
-		member.setMtype("user");
-
-		mypagedao.updateMemberOne(member);
-
-		// 태그 수정
-		String mtag = "";
-		Mtag mt = new Mtag();
-
-		if (tag != null) {
-			List<Mtag> mtnum = mypagedao.selectMtag(member.getMid());
-			if (mypagedao.countMtag(member.getMid()) == tag.length) {
-
-				for (int i = 0; i < tag.length; i++) {
-					mtag = tag[i];
-					mt.setMtnum(mtnum.get(i).getMtnum());
-					mt.setAnum(mdao.selectAnumByMtag(mtag));
-					mt.setMid(member.getMid());
-
-					mypagedao.updateMtag(mt);
-				}
-			} else {
-				for (Mtag m : mtnum) {
-					mypagedao.deleteMtag(m.getMtnum());
-
-				}
-				for (int i = 0; i < tag.length; i++) {
-					member.setAnum(mdao.selectAnumByMtag(tag[i])+"");
-					mdao.insertMtag(member);
-				}
-
-			}
-
-		}else { System.out.println("여기"); 	
-			List<Mtag> mtnum = mypagedao.selectMtag(member.getMid());
-		for (Mtag m : mtnum) {
-			mypagedao.deleteMtag(m.getMtnum());
-
-		}
-		}
+		return result;
 	}
 
-	public void deleteMemberOne(String mid) {
-		mypagedao.deleteMemberOne(mid);
+	public int deleteMemberOne(Member member) {//회원 탈퇴
+		return mypagedao.deleteMemberOne(member);
 	}
 
 	public List<List<Details>> selectGlikeList(String mid) {

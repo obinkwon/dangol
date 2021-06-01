@@ -46,47 +46,31 @@
 		</choose>
 	</sql>
     
-	<select id="selectMember" parameterType="String" resultType="member">
-		SELECT 
-			 MID
-			 ,MPW
-			 ,MPHONE
-			 ,MADDRESS
-			 ,MADDRESS_D
-			 ,MGENDER
-			 ,MJOB
-			 ,MAREA1
-			 ,MAREA2
-			 ,MIMAGE
-		FROM 
-			MEMBERS 
-		WHERE
-			MID = #{mid}
-	</select>
-
 	<update id="updateMemberOne" parameterType="member">
-	update members set mpw=#{mpw}, mphone=#{mphone}, maddress=#{maddress}, mgender=#{mgender},mjob=<include refid="mjob"/>,
-	marea1=<include refid="marea1"/>, marea2=<include refid="marea2"/>, mimage=<include refid="mimage"/> where mid=#{mid}
+		UPDATE 
+			MEMBERS 
+		SET 
+			MPW = #{mpw}
+			, MPHONE = #{mphone}
+			, MADDRESS = #{maddress}
+			, MADDRESS_D = #{maddress_d}
+			, MGENDER = #{mgender}
+			, MJOB = <include refid="mjob"/>
+			, MAREA1 = <include refid="marea1"/>
+			, MAREA2 = <include refid="marea2"/>
+			, MIMAGE = <include refid="mimage"/> 
+		WHERE 
+			MID = #{mid}
 	</update> 
 	
-	<select id="selectMtag" parameterType="String" resultType="mtag">
-	select*from mtag where mid=#{mid}
-	</select>
-	<select id="selectAvalue" parameterType="int" resultType="admin">
-	select*from admins where anum=#{anum}
-	</select>
-	<delete id="deleteMtag" parameterType="int">
-	delete from mtag where mtnum=#{mtnum}
+	<delete id="deleteMtag" parameterType="member">
+		DELETE FROM MTAG WHERE MID = #{mid}
 	</delete>
-	<select id="countMtag" parameterType="String" resultType="int">
-	select count(*) from mtag where mid = #{mid}
-	</select>
-	<update id="updateMtag" parameterType="mtag">
-	update mtag set anum=#{anum} where mtnum=#{mtnum}
-	</update>
-	<delete id="deleteMemberOne" parameterType="String">
-	delete from members where mid = #{mid}
+	
+	<delete id="deleteMemberOne" parameterType="member">
+		DELETE FROM MEMBERS WHERE MID = #{mid}
 	</delete>
+	
 	<select id="selectGlikeList" parameterType="String" resultType="grade">
 	select * from grades where mid=#{mid} and gcurrent='yes' and glike = 1
 	</select>
