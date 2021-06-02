@@ -32,7 +32,7 @@ public class MyPageService {
 	@Autowired
 	private IMemberDao mdao;
 	@Autowired
-	private IOwnerDao odao;
+	private IOwnerDao oDao;
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 
@@ -151,7 +151,7 @@ public class MyPageService {
 
 	// 파일 경로 생성
 	public File getAttachedFile(Store vo) {
-		Store store = odao.selectStore(vo);
+		Store store = oDao.selectStoreOne(vo);
 		String fileName = store.getSimage();
 		String path = imagePath+"store\\";
 		return new File(path + fileName);

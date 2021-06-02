@@ -18,6 +18,7 @@ import model.Event;
 import model.Store;
 import service.CategoryService;
 import service.MainService;
+import service.OwnerService;
 
 @Controller
 public class MainController {
@@ -27,6 +28,9 @@ public class MainController {
 	
 	@Autowired
 	private CategoryService cservice;
+	
+	@Autowired
+	private OwnerService oService;
 	
 	//메인 페이지 요청부분
 	@RequestMapping("main.do")
@@ -126,8 +130,10 @@ public class MainController {
 		Collections.reverse(yearStoreList);
 		int yearStore = 127255;
 		if(yearStoreList.size()!=0) {
+			Store store = new Store();
 			int snum = (int)yearStoreList.get(0).get("snum");
-			yearStore = mservice.selectStore(snum).getSnum();
+			store.setSnum(snum);
+			yearStore = oService.selectStoreOne(store).getSnum();
 		}	
 		//이달의 매장
 		List<HashMap<String, Object>> monthStoreList = mservice.selectMonthStore();
@@ -136,8 +142,10 @@ public class MainController {
 		Collections.reverse(monthStoreList);
 		int monthStore = 127255;
 		if(monthStoreList.size()!=0) {
+			Store store = new Store();
 			int snum = (int)monthStoreList.get(0).get("snum");
-			monthStore = mservice.selectStore(snum).getSnum();
+			store.setSnum(snum);
+			monthStore = oService.selectStoreOne(store).getSnum();
 		}
 		mav.addObject("bestStore",mservice.selectBestStore());
 		mav.addObject("monthStore",monthStore);

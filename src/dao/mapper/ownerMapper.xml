@@ -325,7 +325,7 @@
 		)
 	</insert>
 	
-	<select id="selectStore" parameterType="store" resultType="store">
+	<select id="selectStoreOne" parameterType="store" resultType="store">
 		SELECT 
 			A.SNUM AS snum
 			,A.BID AS bid

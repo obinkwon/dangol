@@ -309,8 +309,8 @@ public class OwnerService {
 		return oDao.selectStag(vo);
 	}
 
-	public Store selectStore(Store vo) {
-		return oDao.selectStore(vo);
+	public Store selectStoreOne(Store vo) {
+		return oDao.selectStoreOne(vo);
 	}
 	
 	public int updateStore(Store store

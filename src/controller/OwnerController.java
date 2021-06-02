@@ -39,7 +39,7 @@ public class OwnerController {
 	@Autowired
 	private CategoryService cService;
 	
-	//점장 정보
+	//사장님 회원가입 폼
 	@RequestMapping("signUpBossForm.do")
 	public String signUpBossForm() {
 		return "jsp/signUpBossForm";
@@ -58,7 +58,7 @@ public class OwnerController {
 		}
 	}
 	
-	//지점장 회원가입	
+	//사장님 회원가입	
 	@RequestMapping("insertBoss.do")
 	public String insertBoss(Store store
 			, HttpSession session
@@ -78,7 +78,7 @@ public class OwnerController {
 		return null;
 	}	
 	
-	//점장 정보 페이지 불러오기
+	//사장님 정보 페이지 불러오기
 	@RequestMapping("ownerInfoForm.do")
 	public ModelAndView ownerInfoForm(HttpSession session
 			,HttpServletResponse resp
@@ -112,8 +112,7 @@ public class OwnerController {
 		resp.setContentType("text/html; charset=UTF-8");
 		int result = -1;
 		PrintWriter pw = resp.getWriter();
-		String str = "";
-		str = "<script language='javascript'>";
+		String str = "<script language='javascript'>";
 		if(store.getBid() != null && !store.getBid().equals("")) {
 			result = oService.updateOwner(store);
 		}
@@ -137,8 +136,7 @@ public class OwnerController {
 		resp.setContentType("text/html; charset=UTF-8");
 		int result = -1;
 		PrintWriter pw = resp.getWriter();
-		String str = "";
-		str = "<script language='javascript'>";
+		String str = "<script language='javascript'>";
 		if(!store.getBpw().equals("") && !store.getBid().equals("")) {
 			result = oService.deleteOwner(store);
 		}
@@ -319,7 +317,7 @@ public class OwnerController {
 			admin.setAtype("theme");
 			mav.addObject("themeTagList",aService.selectAdminTypeList(admin));
 			if(mode.equals("MOD")){
-				store = oService.selectStore(store);
+				store = oService.selectStoreOne(store);
 				String[] stime = new String[4];
 				stime[0] = store.getStime_start().substring(0,2);
 				stime[1] = store.getStime_start().substring(2,4);
@@ -426,13 +424,11 @@ public class OwnerController {
 	//가게 정보 페이지로 이동하기
 	@RequestMapping("ownerStore.do")
 	public ModelAndView	ownerStore(HttpSession session
-			,HttpServletResponse resp) throws Exception{
-		//session에 저장된 아이디 추출
-		String bid = (String) session.getAttribute("bid");
-		Store store = new Store();
-		store.setBid(bid);
+			,HttpServletResponse resp
+			,Store store) throws Exception{
 		ModelAndView mav = new ModelAndView();
-		//bid에 일치하는 stores 정보 추출
+		String bid = (String) session.getAttribute("bid");
+		store.setBid(bid);
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
 		String str = "";
@@ -487,19 +483,16 @@ public class OwnerController {
 			, @RequestParam("ofile") MultipartFile ofile) throws Exception{
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
-		String str = "";
+		String str = "<script language='javascript'>";
 		int result = oService.insertMenu(order,ofile);
 		if(result > 0) {
-			str = "<script language='javascript'>";
 			str += "alert('메뉴가 추가되었습니다.');";
 			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
-			str += "</script>";
 		}else {
-			str = "<script language='javascript'>";
 			str += "alert('메뉴추가에 실패했습니다.');";
 			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
-			str += "</script>";
 		}
+		str += "</script>";
 		pw.print(str);
 		return null;
 	}
@@ -510,19 +503,16 @@ public class OwnerController {
 			, HttpServletResponse resp) throws Exception{
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
-		String str = "";
+		String str = "<script language='javascript'>";
 		int result = oService.deleteMenu(order);
 		if(result > 0) {
-			str = "<script language='javascript'>";
 			str += "alert('메뉴가 삭제되었습니다.');";
 			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
-			str += "</script>";
 		}else {
-			str = "<script language='javascript'>";
 			str += "alert('메뉴삭제에 실패했습니다.');";
 			str += "location.href='ownerMenu.do?snum="+order.getSnum()+"'";
-			str += "</script>";
 		}
+		str += "</script>";
 		pw.print(str);
 		return null;
 	}

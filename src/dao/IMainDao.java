@@ -19,8 +19,6 @@ public interface IMainDao {
 	public List<Store> selectSearchStoreAll(HashMap<String, Object> searchMap);
 	public List<Store> selectStoreAll();
 	public int[] selectStoreMemberBySnum();
-	//가게 정보 하나 검색
-	public Store selectStoreOne(Store store);
 	public int[] selectCommentMonth();
 	public List<Grade> selectGradeBySnum(int snum);
 	public List<Details> selectDetailAllByGnum(int gnum);

@@ -32,6 +32,7 @@ import service.EventService;
 import service.MainService;
 import service.MemberService;
 import service.MyPageService;
+import service.OwnerService;
 
 @Controller
 public class CategoryController {
@@ -50,6 +51,9 @@ public class CategoryController {
 	
 	@Autowired
 	private EventService eService;
+	
+	@Autowired
+	private OwnerService oService;
 	
 	@RequestMapping("foodSort.do")//음식별 요청부분
 	public ModelAndView foodSort(@RequestParam(defaultValue="new") String type
@@ -281,7 +285,7 @@ public class CategoryController {
 			grade.setMid(mid);
 			g = cservice.selectMyGradeInfo(grade);
 		}
-		Store s = mservice.selectStoreOne(store);
+		Store s = oService.selectStoreOne(store);
 		
 		//휴무일 쪼개서 보내기
 		List<String> hoList = new ArrayList<String>();
@@ -373,7 +377,9 @@ public class CategoryController {
 			g.setSnum(snum);
 			cservice.insertBeginGrade(g);
 		}
-		Store s = mservice.selectStore(snum);
+		Store store = new Store();
+		store.setSnum(snum);
+		Store s = oService.selectStoreOne(store);
 		//System.out.println(detail);
 		List<Details> dList = cservice.todayReserve(snum, detail.getDdate());
 		detail.setGnum(g.getGnum());
@@ -424,7 +430,9 @@ public class CategoryController {
 		String[] menuList = null;
 		if(d.getDmenu()!=null) menuList = d.getDmenu().split(",");
 		Grade g = cservice.commentMid(d.getDnum());
-		Store s = mservice.selectStore(g.getSnum());
+		Store store = new Store();
+		store.setSnum(g.getSnum());
+		Store s = oService.selectStoreOne(store);
 		List<Admin> tasteTag = cservice.selectTasteTagList();
 		if(dnum==0) mav.addObject("type","m");
 		else mav.addObject("type","h");

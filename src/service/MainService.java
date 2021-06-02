@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import dao.ICategoryDao;
 import dao.IMainDao;
+import dao.IOwnerDao;
 import model.Admin;
 import model.Comment;
 import model.Details;
@@ -21,6 +22,9 @@ public class MainService {
 	
 	@Autowired
 	private IMainDao imdao;
+	
+	@Autowired
+	private IOwnerDao oDao;
 	
 	public HashMap<String, Integer> infoStoreCount() {
 		HashMap<String, Integer> infoMap = new HashMap<String, Integer>();
@@ -60,7 +64,7 @@ public class MainService {
 		if(snumList.length!=0) {
 			Store store = new Store();
 			store.setSnum(snumList[0]);
-			Store s = imdao.selectStoreOne(store);
+			Store s = oDao.selectStoreOne(store);
 			if(s.getSimage()==null) return 758059;
 			else return s.getSnum();
 		}
@@ -138,16 +142,6 @@ public class MainService {
 		result.put("last", getLastPage(storesPerPage,imdao.getSearchStoreAllCount(params)));
 		result.put("totalBoard", imdao.getSearchStoreAllCount(params));
 		return result;
-	}
-	
-	public Store selectStore(int snum) {
-		Store store = new Store();
-		store.setSnum(snum);
-		return imdao.selectStoreOne(store);
-	}
-	
-	public Store selectStoreOne(Store store) {
-		return imdao.selectStoreOne(store);
 	}
 	
 	public HashMap<String, String> selectMainTag(){

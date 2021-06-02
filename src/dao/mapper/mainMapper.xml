@@ -26,33 +26,6 @@
 		(select rownum as rn ,e.* from (select snum from grades where gcurrent = 'yes' and glevel != 0 group by snum order by count(snum) desc) e) 
 		where rn = 1 
 	</select>
-	<!-- 가게 정보 하나 검색 -->
-	<select id="selectStoreOne" parameterType="store" resultType="store">
-		SELECT  
-			SNUM AS snum
-			,BID AS bid
-			,SINTRO AS sintro
-			,SNAME AS sname
-			,SADDRESS AS saddress
-			,SDETAILADDR AS sdetailaddr
-			,SPHONE AS sphone
-			,STIME_START AS stime_start
-			,STIME_END AS stime_end
-			,SPARKING AS sparking
-			,SIMAGE AS simage
-			,STYPE AS stype
-			,SHOLIDAY AS sholiday
-			,SDATE AS sdate
-			,SRATELV0 AS sratelv0
-			,SRATELV1 AS sratelv1
-			,SRATELV2 AS sratelv2
-			,SRATELV3 AS sratelv3
-			,SLIMIT AS slimit
-		FROM 
-			STORES 
-		WHERE 
-			SNUM = #{snum}
-	</select>
 	<!-- 내용검색 -->
 	<select id="selectSearchStoreAll" parameterType="java.util.HashMap" resultType="store">
 		select * from
