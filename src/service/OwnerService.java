@@ -31,6 +31,44 @@ public class OwnerService {
 	private IEventDao eDao;
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
+	
+	//점장 로그인
+	public int loginBoss(String id, String pwd) {
+		Store store = new Store();
+		store.setBid(id);
+		store = oDao.selectBossOne(store);
+		if (store != null) {
+			if (store.getBpw().equals(pwd)) {
+				return 0; // 로그인 성공
+			} else {
+				return 1; // 비밀번호 불일치
+			}
+		} else {
+			return 2;
+		}
+	}
+	
+	//점장 ID 조회
+	public List<Store> findId(String phone) {
+		Store store = new Store();
+		store.setBphone(phone);
+		return oDao.findId(store);
+	}
+	
+	//점장 PWD 조회
+	public Store findPw(Store store) {
+		return oDao.findPw(store);
+	}
+	
+	//점장 정보 조회
+	public Store selectBossOne(Store store) {
+		return oDao.selectBossOne(store);
+	}
+	
+	//점장 회원가입
+	public int insertOwner(Store store) { 
+		return oDao.insertOwner(store);
+	}
 
 	//내 정보
 	public Store ownerInfo(Store store) {

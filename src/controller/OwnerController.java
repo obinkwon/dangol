@@ -24,7 +24,6 @@ import model.Member;
 import model.Order;
 import model.Store;
 import service.AdminService;
-import service.BossService;
 import service.CategoryService;
 import service.OwnerService;
 
@@ -33,10 +32,10 @@ public class OwnerController {
 
 	@Autowired
 	private OwnerService oService;
-	@Autowired
-	private BossService bService;
+	
 	@Autowired
 	private AdminService aService;
+	
 	@Autowired
 	private CategoryService cService;
 	
@@ -52,7 +51,7 @@ public class OwnerController {
 	public boolean checkId(String id) {
 		Store store = new Store();
 		store.setBid(id);
-		if(bService.selectBossOne(store) == null) {
+		if(oService.selectBossOne(store) == null) {
 			return true;
 		}else {
 			return false;
@@ -64,11 +63,10 @@ public class OwnerController {
 	public String insertBoss(Store store
 			, HttpSession session
 			, HttpServletResponse response) throws Exception {
-		int result = bService.insertBoss(store);
+		int result = oService.insertOwner(store);
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = response.getWriter();
-		String str = "";
-		str = "<script language='javascript'>";
+		String str = "<script language='javascript'>";
 		if(result > 0) {
 			str += "alert('가입이 완료되었습니다.');";
 		}else {
@@ -94,7 +92,7 @@ public class OwnerController {
 		String str = "";
 		
 		if(bid != null && !bid.equals("") ) {
-			mav.addObject("boss", bService.selectBossOne(store));
+			mav.addObject("boss", oService.selectBossOne(store));
 			mav.setViewName("Owner/ownerInfoForm");
 			return mav;
 		}else {
@@ -440,7 +438,7 @@ public class OwnerController {
 		String str = "";
 		
 		if(bid != null && !bid.equals("") ) {
-			mav.addObject("boss", bService.selectBossOne(store));
+			mav.addObject("boss", oService.selectBossOne(store));
 			mav.addObject("stores", oService.selectStoreList(store));
 			mav.setViewName("Owner/ownerStore");
 			return mav;
@@ -468,7 +466,7 @@ public class OwnerController {
 		PrintWriter pw = resp.getWriter();
 		String str = "";
 		if(bid != null && !bid.equals("") ) {
-			mav.addObject("boss", bService.selectBossOne(store));
+			mav.addObject("boss", oService.selectBossOne(store));
 			mav.addObject("menuList", cService.selectOrderList(store));
 			mav.setViewName("Owner/ownerMenu");
 			return mav;
