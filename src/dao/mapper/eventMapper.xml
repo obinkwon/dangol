@@ -83,7 +83,7 @@
 	</select>
 	
    	<!-- (사장님)가게 목록 드롭다운-->
-  	<select id="selectStoresByBid" resultType="store" parameterType="boss">
+  	<select id="selectStoresByBid" resultType="store" parameterType="store">
 		SELECT 
 			* 
 		FROM 

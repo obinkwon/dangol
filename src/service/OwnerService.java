@@ -52,12 +52,12 @@ public class OwnerService {
 	public List<Store> findId(String phone) {
 		Store store = new Store();
 		store.setBphone(phone);
-		return oDao.findId(store);
+		return oDao.findOwnerId(store);
 	}
 	
 	//점장 PWD 조회
 	public Store findPw(Store store) {
-		return oDao.findPw(store);
+		return oDao.findOwnerPw(store);
 	}
 	
 	//점장 정보 조회

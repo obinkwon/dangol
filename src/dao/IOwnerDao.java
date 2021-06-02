@@ -12,13 +12,13 @@ import model.Store;
 public interface IOwnerDao {
 	/* 점장 */
 	//점장 정보 조회
-	public Store selectBossOne (Store store);
+	public Store selectBossOne(Store store);
 	//점장 ID 조회
-	public List<Store> findId (Store store);
+	public List<Store> findOwnerId(Store store);
 	//점장 PWD 조회
-	public Store findPw (Store store);
+	public Store findOwnerPw(Store store);
 	//점장 가입
-	public int insertOwner (Store store);
+	public int insertOwner(Store store);
 	//점장 탈퇴
 	public int deleteOwner(Store store);
 	//점장 수정

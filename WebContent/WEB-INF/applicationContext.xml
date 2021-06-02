@@ -56,7 +56,6 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
 	
-		
 	<!-- AdminDAO -->
 	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IAdminDao">
 		<property name="mapperInterface" value="dao.IAdminDao"></property>

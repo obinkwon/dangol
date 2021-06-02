@@ -29,7 +29,9 @@ public class EventService {
 	
 	//(사장님)가게 목록 드롭다운
 	public List<Store> selectStoresByBid(String bid){
-		return eDao.selectStoresByBid(bid);
+		Store store = new Store();
+		store.setBid(bid);
+		return eDao.selectStoresByBid(store);
 	}
 	
 	//일반 사용자의 이벤트 보기
@@ -101,7 +103,9 @@ public class EventService {
 	
 	//사장님에 따라 수정, 삭제 버튼생성
 	public boolean checkAuthority(String bid, int eid) {
-		List<Store> stores = eDao.selectStoresByBid(bid);
+		Store st = new Store();
+		st.setBid(bid);
+		List<Store> stores = eDao.selectStoresByBid(st);
 		int snum= eDao.selectOneEvent(eid).getSnum();
 		boolean authority = false;
 		//사장님 권한 확인

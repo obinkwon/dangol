@@ -16,7 +16,7 @@
 			BID = #{bid}
 	</select>
 	<!-- 점장 ID 조회 -->
-	<select id="findId" parameterType="store" resultType="store">
+	<select id="findOwnerId" parameterType="store" resultType="store">
 		SELECT
 			BID AS bid
 		FROM
@@ -25,7 +25,7 @@
 			BPHONE = #{bphone}
 	</select>
 	<!-- 점장 PWD 조회 -->
-	<select id="findPw" parameterType="store" resultType="store">
+	<select id="findOwnerPw" parameterType="store" resultType="store">
 		SELECT 
 		FROM 
 			BOSS 
@@ -34,7 +34,7 @@
 			AND BPHONE = #{bphone}
 	</select>
 	<!-- 점장 가입 -->
-	<insert id="insertBoss" parameterType="store">
+	<insert id="insertOwner" parameterType="store">
 		INSERT INTO BOSS(
 			BID
 			,BPW
@@ -47,16 +47,32 @@
 	</insert>
 	<!-- 메뉴 등록 -->
 	<insert id="insertOrder" parameterType="order">
-		insert into orders values(orders_seq.nextval, #{snum},#{oname},#{oprice},<include refid="oimage"/>)
+		INSERT INTO ORDERS(
+			ORD
+			,SNUM
+			,ONAME
+			,OPRICE
+			<if test="oimage != null">
+			,OIMAGE
+			</if>
+		)VALUES(
+			ORDERS_SEQ.NEXTVAL
+			,#{snum}
+			,#{oname}
+			,#{oprice}
+			<if test="oimage != null">
+			,#{oimage}
+			</if>
+		)
 	</insert>
 	<!-- 점장 정보 삭제 -->
-	<delete id="deleteOwner" parameterType="boss">
+	<delete id="deleteOwner" parameterType="store">
 		DELETE FROM BOSS 
 		WHERE BID = #{bid}
 		AND BPW = #{bpw}
 	</delete>
 	<!-- 점장 정보 수정 -->
-	<update id="updateOwner" parameterType="boss">
+	<update id="updateOwner" parameterType="store">
 		UPDATE BOSS SET 
 			BPW = #{bpw}
 			, BPHONE = #{bphone} 

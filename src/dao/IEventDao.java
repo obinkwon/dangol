@@ -16,7 +16,7 @@ public interface IEventDao {
 	public List<Event> selectEdEventsBySnums(HashMap<String, int[]> hm);
 	public Event selectOneEvent(int eid);
 	
-	public List<Store> selectStoresByBid(String bid);
+	public List<Store> selectStoresByBid(Store store);
 	public Store selectStoreBySnum(int snum);
 	public List<Store> selectStoresBySnums(HashMap<String, int[]> hm);
 	

@@ -464,12 +464,5 @@ public class CategoryService {
 			icdao.insertStores(s);
 			count++;
 		}
-//		for(int i=1;i<76000;i++) {
-//			Boss b = new Boss();
-//			b.setBid("boss"+i);
-//			b.setBphone("010-1234-1234");
-//			b.setBpw("1234");
-//			bdao.insertBoss(b);
-//		}
 	}
 }
