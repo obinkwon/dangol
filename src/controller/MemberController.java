@@ -21,16 +21,18 @@ import model.Admin;
 import model.Member;
 import model.Store;
 import service.AdminService;
-import service.BossService;
 import service.MemberService;
+import service.OwnerService;
 
 @Controller
 public class MemberController {
 
 	@Autowired
 	private MemberService mService;
+	
 	@Autowired
-	private BossService bService;
+	private OwnerService oService;
+	
 	@Autowired
 	private AdminService aService;
 	
@@ -95,7 +97,7 @@ public class MemberController {
 				return null;
 			}
 		} else { //점장 로그인일때
-			if (bService.loginBoss(id, pwd) == 0) {
+			if (oService.loginBoss(id, pwd) == 0) {
 				session.setAttribute("bid", id);
 				return "redirect:main.do";
 			} else {
@@ -124,7 +126,7 @@ public class MemberController {
 				}
 			}
 		} else { //점장 일때
-			List<Store> blist = bService.findId(phone);
+			List<Store> blist = oService.findId(phone);
 			if (blist.size() > 0) {
 				for (int i = 0; i < blist.size(); i++) {
 					str.add(blist.get(i).getBid());
@@ -155,7 +157,7 @@ public class MemberController {
 			Store store = new Store();
 			store.setBid(id);
 			store.setBphone(phone);
-			store = bService.findPw(store);
+			store = oService.findPw(store);
 			if (store != null) {
 				result = store.getBid();
 			}
