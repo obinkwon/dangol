@@ -32,7 +32,6 @@ public class OwnerService {
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 
-	
 	//점장 로그인
 	public int loginBoss(String id, String pwd) {
 		Store store = new Store();

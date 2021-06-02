@@ -38,12 +38,6 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
 	
-	<!-- BossDAO -->
-	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IBossDao">
-		<property name="mapperInterface" value="dao.IBossDao"></property>
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	
 	<!-- OwnerDAO -->
 	<bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="IOwnerDao">
 		<property name="mapperInterface" value="dao.IOwnerDao"></property>
