@@ -101,8 +101,11 @@ public class MyPageController {
 		ModelAndView mav = new ModelAndView();
 		String mid = (String) session.getAttribute("mid");
 		if (mid != null) {
+			Member member = new Member();
+			member.setMid(mid);
 			List<HashMap<String, Object>> bookmarkList = new ArrayList<HashMap<String, Object>>();
-			List<List<Details>> detailslist = mypageService.selectGlikeList(mid);
+			List<List<Details>> detailslist = mypageService.selectGlikeList(member);
+//			List<Details> bookmarkList =mypageService. selectBookmarkList(member);
 
 			if(detailslist!=null) {
 				for (List<Details> dlist : detailslist) {

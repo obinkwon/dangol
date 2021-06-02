@@ -290,7 +290,7 @@ $(document).ready(function(){
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>비밀번호</td>
-						<td colspan="2"><input type="password" class="inputText w300" id="pwd" name="mpw" maxlength="13" placeholder="공백없이 13자이내" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
+						<td colspan="2"><input type="password" class="inputText w300" id="pwd" name="mpw" value="${Member.mpw}" maxlength="13" placeholder="공백없이 13자이내" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
 					</tr>
 					<tr>
 						<td><span style="color:red">* </span>비밀번호 확인</td>

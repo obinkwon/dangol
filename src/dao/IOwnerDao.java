@@ -3,7 +3,6 @@ package dao;
 import java.util.HashMap;
 import java.util.List;
 
-import model.Boss;
 import model.Details;
 import model.Grade;
 import model.Member;
@@ -11,9 +10,21 @@ import model.Order;
 import model.Store;
 
 public interface IOwnerDao {
-	//내 정보
-	public int deleteOwner(Boss boss);
-	public int updateOwner(Boss boss);
+	/* 점장 */
+	//점장 정보 조회
+	public Store selectBossOne (Store store);
+	//점장 ID 조회
+	public List<Store> findId (Store store);
+	//점장 PWD 조회
+	public Store findPw (Store store);
+	//점장 가입
+	public int insertOwner (Store store);
+	//점장 탈퇴
+	public int deleteOwner(Store store);
+	//점장 수정
+	public int updateOwner(Store store);
+	//메뉴 등록
+	public void insertOrder(Order order);
 	
 	//예약현황
 	public List<Member> selectMembersByKeyword(String keyword);

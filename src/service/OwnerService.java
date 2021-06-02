@@ -1,7 +1,6 @@
 package service;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import dao.IBossDao;
 import dao.IEventDao;
 import dao.IMemberDao;
 import dao.IOwnerDao;
-import model.Boss;
 import model.Details;
 import model.Grade;
 import model.Member;
@@ -31,24 +28,21 @@ public class OwnerService {
 	private IMemberDao mDao;
 	
 	@Autowired
-	private IBossDao bDao;
-
-	@Autowired
 	private IEventDao eDao;
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 
 	//내 정보
-	public Boss ownerInfo(Boss boss) {
-		return bDao.selectBossOne(boss);
+	public Store ownerInfo(Store store) {
+		return oDao.selectBossOne(store);
 	}
 
-	public int deleteOwner(Boss boss) {
-		return oDao.deleteOwner(boss);
+	public int deleteOwner(Store store) {
+		return oDao.deleteOwner(store);
 	}
 	//사장님 정보 수정
-	public int updateOwner(Boss boss) {
-		return oDao.updateOwner(boss);
+	public int updateOwner(Store store) {
+		return oDao.updateOwner(store);
 	}
 	
 	//사장님 가게 목록 조회

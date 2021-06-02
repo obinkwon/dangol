@@ -4,6 +4,51 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.IOwnerDao">
+	<!-- 점장 정보 조회 -->
+	<select id="selectBossOne" parameterType="store" resultType="store">
+		SELECT 
+			BID AS bid
+			,BPW AS bpw
+			,BPHONE AS bphone
+		FROM 
+			BOSS 
+		WHERE 
+			BID = #{bid}
+	</select>
+	<!-- 점장 ID 조회 -->
+	<select id="findId" parameterType="store" resultType="store">
+		SELECT
+			BID AS bid
+		FROM
+			BOSS 
+		WHERE 
+			BPHONE = #{bphone}
+	</select>
+	<!-- 점장 PWD 조회 -->
+	<select id="findPw" parameterType="store" resultType="store">
+		SELECT 
+		FROM 
+			BOSS 
+		WHERE 
+			BID = #{bid} 
+			AND BPHONE = #{bphone}
+	</select>
+	<!-- 점장 가입 -->
+	<insert id="insertBoss" parameterType="store">
+		INSERT INTO BOSS(
+			BID
+			,BPW
+			,BPHONE
+		) VALUES (
+			#{bid}
+			, #{bpw}
+			, #{bphone}
+		)
+	</insert>
+	<!-- 메뉴 등록 -->
+	<insert id="insertOrder" parameterType="order">
+		insert into orders values(orders_seq.nextval, #{snum},#{oname},#{oprice},<include refid="oimage"/>)
+	</insert>
 	<!-- 점장 정보 삭제 -->
 	<delete id="deleteOwner" parameterType="boss">
 		DELETE FROM BOSS 

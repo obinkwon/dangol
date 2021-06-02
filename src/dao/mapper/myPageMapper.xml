@@ -71,9 +71,70 @@
 		DELETE FROM MEMBERS WHERE MID = #{mid}
 	</delete>
 	
-	<select id="selectGlikeList" parameterType="String" resultType="grade">
-	select * from grades where mid=#{mid} and gcurrent='yes' and glike = 1
+	<select id="selectBookmarkList" parameterType="member" resultType="details">
+		SELECT 
+	 		D.DNUM AS dnum
+            ,G.SNUM AS snum 
+			,D.GNUM AS gnum 
+			,D.DDATE AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+	 	FROM 
+	 		DETAILS D
+	 		INNER JOIN GRADES G ON D.GNUM = G.GNUM
+	 	WHERE 
+			G.MID = #{mid}
+            AND G.GCURRENT = 'yes' 
+            AND G.GLIKE = 1
+	 		AND D.DCHECK = 'yes' 
+	 	ORDER BY D.DDATE DESC
 	</select>
+	
+	<select id="selectGlikeList" parameterType="member" resultType="grade">
+		SELECT 
+			GNUM AS gnum
+			MID AS mid
+			SNUM AS snum
+			GLEVEL AS glevel
+			GCURRENT AS gcurrent
+			GLIKE AS glike
+		FROM 
+			GRADES 
+		WHERE 
+				MID = #{mid} 
+			AND GCURRENT = 'yes' 
+			AND GLIKE = 1
+	</select>
+	
+	<select id="selectHistoryOne" parameterType="details" resultType="details">
+	 	SELECT 
+	 		D.DNUM AS dnum
+			,D.GNUM AS gnum 
+			,D.DDATE AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+	 	FROM 
+	 		DETAILS D
+	 		INNER JOIN GRADES G ON D.GNUM = G.GNUM
+	 	WHERE 
+			G.MID = #{mid} 
+			AND G.SNUM = #{snum}
+	 		AND D.DCHECK = 'yes' 
+	 	ORDER BY D.DDATE DESC
+	</select>
+	
 	<select id="selectStoreBySnum" parameterType="int" resultType="store">
 	select * from stores where snum = #{snum}
 	</select>
@@ -89,9 +150,7 @@
 	<update id="insertLikes" parameterType="java.util.HashMap">
 	update  grades set glike=1 where mid = #{mid} and snum =#{snum} and gcurrent='yes'
 	</update>
-	<select id="selectHistoryOne" parameterType="java.util.HashMap" resultType="details">
-	 select * from details where gnum in (select gnum from grades where mid = #{mid} and snum =#{snum}) and dcheck ='yes' order by ddate desc
-	</select>
+	
 	<select id="selectcomments" parameterType="int" resultType="comment">
 	select * from comments  where dnum=#{dnum}
 	</select>

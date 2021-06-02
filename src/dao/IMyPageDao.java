@@ -18,14 +18,18 @@ public interface IMyPageDao {
 	public int deleteMtag(Member member);
 	//회원 삭제
 	public int deleteMemberOne (Member member);
+	//즐겨찾기 리스트
+	public List<Grade> selectGlikeList(Member member);
+	//내역 리스트
+	public List<Details> selectHistoryOne(Details details);
+	//즐겨찾기 리스트
+	public List<Details> selectBookmarkList(Member member);
 	
-	public List<Grade> selectGlikeList(String mid);
 	public Store selectStoreBySnum(int snum);
 	public List<Details> recentlyVisited(int gnum);
 	public void deleteLikes(HashMap<String, Object> param);
 	public List<Grade> selectHistoryAll(String mid);
 	public void insertLikes (HashMap<String, Object> param);
-	public List<Details> selectHistoryOne (HashMap<String, Object> param);
 	public Comment selectcomments (int dnum);
 	public List<Details> selectReserveState (String mid);
 	public Grade selectgradeByGnum (int gnum);

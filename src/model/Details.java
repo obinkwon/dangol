@@ -14,6 +14,8 @@ public class Details {
 	private String dtime;
 	private int dcount;
 	private int dlimit;
+	private String mid;
+	private int snum;
 	public int getDnum() {
 		return dnum;
 	}
@@ -79,6 +81,18 @@ public class Details {
 	}
 	public void setDlimit(int dlimit) {
 		this.dlimit = dlimit;
+	}
+	public String getMid() {
+		return mid;
+	}
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
+	public int getSnum() {
+		return snum;
+	}
+	public void setSnum(int snum) {
+		this.snum = snum;
 	}
 	public Details() {}
 	public Details(int dnum, int gnum, Date ddate, int dperson, String dmenu, String dtype, String dask, String dcheck,

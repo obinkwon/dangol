@@ -29,6 +29,8 @@ public class Store {
 	private String stag;
 	private String avalue;
 	private String anum;
+	private String bpw;
+	private String bphone;
 	
 	public int getSnum() {
 		return snum;
@@ -185,6 +187,18 @@ public class Store {
 	}
 	public void setAnum(String anum) {
 		this.anum = anum;
+	}
+	public String getBpw() {
+		return bpw;
+	}
+	public void setBpw(String bpw) {
+		this.bpw = bpw;
+	}
+	public String getBphone() {
+		return bphone;
+	}
+	public void setBphone(String bphone) {
+		this.bphone = bphone;
 	}
 	@Override
 	public String toString() {

@@ -69,17 +69,21 @@ public class MyPageService {
 	public int deleteMemberOne(Member member) {//회원 탈퇴
 		return mypagedao.deleteMemberOne(member);
 	}
+	
+	public List<Details> selectBookmarkList(Member member){
+		return mypagedao.selectBookmarkList(member);
+	}
 
-	public List<List<Details>> selectGlikeList(String mid) {
-		List<Grade> grade = mypagedao.selectGlikeList(mid);
-		List<List<Details>> details = new ArrayList<List<Details>>();
+	public List<List<Details>> selectGlikeList(Member member) {
+		List<Grade> grade = mypagedao.selectGlikeList(member);
+		List<List<Details>> detailList = new ArrayList<List<Details>>();
 		for (Grade g : grade) {
-			HashMap<String, Object> param= new HashMap<String, Object>();
-			param.put("mid", g.getMid());
-			param.put("snum", g.getSnum());
-			details.add(mypagedao.selectHistoryOne(param));
+			Details det = new Details();
+			det.setMid(g.getMid());
+			det.setSnum(g.getSnum());
+			detailList.add(mypagedao.selectHistoryOne(det));
 		}
-		return details;
+		return detailList;
 	}
 
 	public void deleteLikes(String mid, int snum) {
@@ -102,11 +106,10 @@ public class MyPageService {
 		List<List<Details>>details = new ArrayList<>();
 		
 		for (Grade g : grade) {
-			HashMap<String, Object> param= new HashMap<String, Object>();
-			param.put("mid", g.getMid());
-			param.put("snum", g.getSnum());
-			
-			details.add(mypagedao.selectHistoryOne(param));
+			Details det = new Details();
+			det.setMid(g.getMid());
+			det.setSnum(g.getSnum());
+			details.add(mypagedao.selectHistoryOne(det));
 		
 		}
 		return details;
@@ -126,10 +129,10 @@ public class MyPageService {
 	}
 
 	public List<Details> selectHistoryOne(String mid, int snum) {
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("mid", mid);
-		param.put("snum", snum);
-		List<Details> d = mypagedao.selectHistoryOne(param);
+		Details det = new Details();
+		det.setMid(mid);
+		det.setSnum(snum);
+		List<Details> d = mypagedao.selectHistoryOne(det);
 		return d;
 	}
 

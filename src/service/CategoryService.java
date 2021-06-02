@@ -10,15 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dao.IAdminDao;
-import dao.IBossDao;
 import dao.ICategoryDao;
 import dao.IMemberDao;
 import dao.IMyPageDao;
+import dao.IOwnerDao;
 import model.Admin;
-import model.Boss;
 import model.Comment;
 import model.Details;
-import model.Event;
 import model.Grade;
 import model.Member;
 import model.Mtag;
@@ -31,14 +29,18 @@ import model.Storedb;
 public class CategoryService {
 	@Autowired
 	private ICategoryDao icdao;
+	
 	@Autowired
 	private IMemberDao mdao;
+	
 	@Autowired
 	private IMyPageDao mydao;
-	@Autowired
-	private IBossDao bdao;
+	
 	@Autowired
 	private IAdminDao adao;
+	
+	@Autowired
+	private IOwnerDao oDao;
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 	
@@ -418,7 +420,7 @@ public class CategoryService {
 			o.setOname("스파이시 치킨랜치(L) 피자");
 			o.setOprice(27500);
 			o.setOimage("spicychickenranch.png");
-			bdao.insertOrder(o);
+			oDao.insertOrder(o);
 		}
 	}
 	

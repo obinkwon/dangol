@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import model.Admin;
-import model.Boss;
 import model.Details;
 import model.Grade;
 import model.Member;
@@ -42,24 +41,60 @@ public class OwnerController {
 	private CategoryService cService;
 	
 	//점장 정보
+	@RequestMapping("signUpBossForm.do")
+	public String signUpBossForm() {
+		return "jsp/signUpBossForm";
+	}
+	
+	//사장님 회원가입시 id 중복체크
+	@RequestMapping("checkId.do")
+	@ResponseBody
+	public boolean checkId(String id) {
+		Store store = new Store();
+		store.setBid(id);
+		if(bService.selectBossOne(store) == null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	//지점장 회원가입	
+	@RequestMapping("insertBoss.do")
+	public String insertBoss(Store store
+			, HttpSession session
+			, HttpServletResponse response) throws Exception {
+		int result = bService.insertBoss(store);
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = response.getWriter();
+		String str = "";
+		str = "<script language='javascript'>";
+		if(result > 0) {
+			str += "alert('가입이 완료되었습니다.');";
+		}else {
+			str += "alert('가입이 실패하였습니다.');";
+		}
+		str += "location.href='loginForm.do'";
+		str += "</script>";
+		pw.print(str);
+		return null;
+	}	
+	
 	//점장 정보 페이지 불러오기
 	@RequestMapping("ownerInfoForm.do")
 	public ModelAndView ownerInfoForm(HttpSession session
-			,HttpServletResponse resp) throws Exception{
+			,HttpServletResponse resp
+			,Store store) throws Exception{
+		ModelAndView mav = new ModelAndView();
 		String bid = (String) session.getAttribute("bid");
-		Boss boss = new Boss();
-		Store store = new Store();
-		boss.setBid(bid);
 		store.setBid(bid);
 		
-		ModelAndView mav = new ModelAndView();
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
 		String str = "";
 		
 		if(bid != null && !bid.equals("") ) {
-			mav.addObject("boss", bService.selectBossOne(boss));
-			mav.addObject("stores", oService.selectStoreList(store));
+			mav.addObject("boss", bService.selectBossOne(store));
 			mav.setViewName("Owner/ownerInfoForm");
 			return mav;
 		}else {
@@ -74,15 +109,15 @@ public class OwnerController {
 	
 	//사장님 정보 수정하기
 	@RequestMapping("updateOwner.do")
-	public String updateOwner(Boss boss
+	public String updateOwner(Store store
 			,HttpServletResponse resp) throws Exception{
 		resp.setContentType("text/html; charset=UTF-8");
 		int result = -1;
 		PrintWriter pw = resp.getWriter();
 		String str = "";
 		str = "<script language='javascript'>";
-		if(boss.getBid() != null && !boss.getBid().equals("")) {
-			result = oService.updateOwner(boss);
+		if(store.getBid() != null && !store.getBid().equals("")) {
+			result = oService.updateOwner(store);
 		}
 		
 		if(result > 0) {
@@ -99,15 +134,15 @@ public class OwnerController {
 	//사장님 정보 탈퇴하기
 	@RequestMapping("deleteOwner.do")
 	public String deleteOwner(HttpSession session
-			,Boss boss
+			,Store store
 			,HttpServletResponse resp) throws Exception{
 		resp.setContentType("text/html; charset=UTF-8");
 		int result = -1;
 		PrintWriter pw = resp.getWriter();
 		String str = "";
 		str = "<script language='javascript'>";
-		if(!boss.getBpw().equals("") && !boss.getBid().equals("")) {
-			result = oService.deleteOwner(boss);
+		if(!store.getBpw().equals("") && !store.getBid().equals("")) {
+			result = oService.deleteOwner(store);
 		}
 		if(result > 0) {
 			str += "alert('그동안 단골의 희열 서비스를 \\n이용해주셔서 감사합니다');";
@@ -396,9 +431,7 @@ public class OwnerController {
 			,HttpServletResponse resp) throws Exception{
 		//session에 저장된 아이디 추출
 		String bid = (String) session.getAttribute("bid");
-		Boss boss = new Boss();
 		Store store = new Store();
-		boss.setBid(bid);
 		store.setBid(bid);
 		ModelAndView mav = new ModelAndView();
 		//bid에 일치하는 stores 정보 추출
@@ -407,7 +440,7 @@ public class OwnerController {
 		String str = "";
 		
 		if(bid != null && !bid.equals("") ) {
-			mav.addObject("boss", bService.selectBossOne(boss));
+			mav.addObject("boss", bService.selectBossOne(store));
 			mav.addObject("stores", oService.selectStoreList(store));
 			mav.setViewName("Owner/ownerStore");
 			return mav;
@@ -428,8 +461,6 @@ public class OwnerController {
 			,Store store) throws Exception{
 		//session에 저장된 아이디 추출
 		String bid = (String) session.getAttribute("bid");
-		Boss boss = new Boss();
-		boss.setBid(bid);
 		store.setBid(bid);
 		ModelAndView mav = new ModelAndView();
 		//bid에 일치하는 stores 정보 추출
@@ -437,7 +468,7 @@ public class OwnerController {
 		PrintWriter pw = resp.getWriter();
 		String str = "";
 		if(bid != null && !bid.equals("") ) {
-			mav.addObject("boss", bService.selectBossOne(boss));
+			mav.addObject("boss", bService.selectBossOne(store));
 			mav.addObject("menuList", cService.selectOrderList(store));
 			mav.setViewName("Owner/ownerMenu");
 			return mav;

@@ -1,10 +1,8 @@
 package controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
 import model.Admin;
-import model.Boss;
 import model.Member;
+import model.Store;
 import service.AdminService;
 import service.BossService;
 import service.MemberService;
@@ -126,7 +124,7 @@ public class MemberController {
 				}
 			}
 		} else { //점장 일때
-			List<Boss> blist = bService.findId(phone);
+			List<Store> blist = bService.findId(phone);
 			if (blist.size() > 0) {
 				for (int i = 0; i < blist.size(); i++) {
 					str.add(blist.get(i).getBid());
@@ -154,12 +152,12 @@ public class MemberController {
 				result = member.getMpw();
 			}
 		} else { //점장 일때
-			Boss boss = new Boss();
-			boss.setBid(id);
-			boss.setBphone(phone);
-			boss = bService.findPw(boss);
-			if (boss != null) {
-				result = boss.getBid();
+			Store store = new Store();
+			store.setBid(id);
+			store.setBphone(phone);
+			store = bService.findPw(store);
+			if (store != null) {
+				result = store.getBid();
 			}
 		}
 		return result;

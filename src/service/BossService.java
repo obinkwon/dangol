@@ -1,36 +1,30 @@
 package service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dao.IAdminDao;
-import dao.IBossDao;
+import dao.IOwnerDao;
 import model.Admin;
-import model.Boss;
-
-import model.Order;
-import model.Stag;
 import model.Store;
 
 @Service
 public class BossService {
 
 	@Autowired
-	private IBossDao bdao;
+	private IOwnerDao odao;
 	
 	@Autowired
 	private IAdminDao adao;
 	
 	public int loginBoss(String id, String pwd) {
-		Boss boss = new Boss();
-		boss.setBid(id);
-		Boss b = bdao.selectBossOne(boss);
-		if (b != null) {
-			if (b.getBpw().equals(pwd)) {
+		Store store = new Store();
+		store.setBid(id);
+		store = odao.selectBossOne(store);
+		if (store != null) {
+			if (store.getBpw().equals(pwd)) {
 				return 0; // 로그인 성공
 			} else {
 				return 1; // 비밀번호 불일치
@@ -40,18 +34,18 @@ public class BossService {
 		}
 	}
 
-	public List<Boss> findId(String phone) {
-		Boss boss = new Boss();
-		boss.setBphone(phone);
-		return bdao.findId(boss);
+	public List<Store> findId(String phone) {
+		Store store = new Store();
+		store.setBphone(phone);
+		return odao.findId(store);
 	}
 
-	public Boss findPw(Boss boss) {
-		return bdao.findPw(boss);
+	public Store findPw(Store store) {
+		return odao.findPw(store);
 	}
 	//점장 정보 하나만 검색
-	public Boss selectBossOne(Boss boss) {
-		return bdao.selectBossOne(boss);
+	public Store selectBossOne(Store store) {
+		return odao.selectBossOne(store);
 	}
 	public List<Admin> showFoodTagList(){
 		Admin admin = new Admin();
@@ -59,9 +53,9 @@ public class BossService {
 		List<Admin> foodTagList = adao.selectAdminTypeList(admin);
 		return foodTagList;
 	}
-	//지점장 회원가입
-	public int insertBoss(Boss boss) { 
-		return bdao.insertBoss(boss);
+	//점장 회원가입
+	public int insertBoss(Store store) { 
+		return odao.insertOwner(store);
 	}
 
 	
