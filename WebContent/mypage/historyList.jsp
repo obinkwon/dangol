@@ -162,27 +162,23 @@ a.dcount {
 							</c:choose></td>
 						<td class="storeClick" width=50%><p class="sname">${history.sname}</p></td>
 						<td rowspan="4" width=20% class="right">
-						
-						<c:if test="${history.glevel==0}">범골<br></c:if>
-						<c:if test="${history.glevel==1}">진골<br></c:if>
-						<c:if test="${history.glevel==2}">성골<br></c:if>
-						<c:if test="${history.glevel==3}">단골<br></c:if>
+							<c:if test="${history.glevel==0}">범골<br></c:if>
+							<c:if test="${history.glevel==1}">진골<br></c:if>
+							<c:if test="${history.glevel==2}">성골<br></c:if>
+							<c:if test="${history.glevel==3}">단골<br></c:if>
 			
-							<c:choose>
-								<c:when test="${history.glike ==1}">
-									<button class="likesBtn"
-										onclick="location.href='deleteLikesHistory.do?mid=${mid}&snum=${history.snum}'">
-										<img class="likes" src="mypage/likes.png">
-									</button>
-								</c:when>
-								<c:otherwise>
-									<button class="likesBtn"
-										onclick="location.href='insertLikes.do?mid=${mid}&snum=${history.snum}'">
-										<img class="likes" src="mypage/dislike.png">
-									</button>
-								</c:otherwise>
-							</c:choose> <br> <a href="storeView.do?snum=${history.snum}"
-							class="viewStore">가게상세보기</a>
+							<c:if test="${history.glike == 1}">
+								<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=0'">
+									<img class="likes" src="mypage/likes.png">
+								</button>
+							</c:if>
+							<c:if test="${history.glike != 1}">
+								<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=1'">
+									<img class="likes" src="mypage/dislike.png">
+								</button>
+							</c:if>
+							<br /> 
+							<a href="storeView.do?snum=${history.snum}" class="viewStore">가게상세보기</a>
 						</td>
 					</tr>
 

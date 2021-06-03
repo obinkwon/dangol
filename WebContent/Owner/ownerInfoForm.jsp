@@ -112,8 +112,8 @@ function updateBtn(){ //수정하기
 function deleteBtn(){ //탈퇴하기
 	var chk1 = $('#pwd_checkpw1').val();
 	if (confirm("정말로 탈퇴하시겠습니까?")) {
-			var password = prompt('개인정보 확인을 위해 \n비밀번호를 한 번 더 입력해주세요','');
-			if (password == chk1) {
+		var password = prompt('개인정보 확인을 위해 \n비밀번호를 한 번 더 입력해주세요','');
+		if (password == chk1) {
 			$('#frmList').attr('action','deleteOwner.do');
 			$('#frmList').submit();
 		}

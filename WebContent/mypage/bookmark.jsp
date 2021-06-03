@@ -168,7 +168,7 @@ a.dcount {
 						<c:if test="${bookmark.glevel==3}">단골<br></c:if>
 						
 							<button class="likesBtn"
-								onclick="location.href='deleteLikes.do?mid=${mid}&snum=${bookmark.snum}'">
+								onclick="location.href='bookmarkLikes.do?mid=${mid}&snum=${bookmark.snum}&glike=0'">
 								<img class="likes" src="mypage/likes.png">
 							</button> <br> <a href="storeView.do?snum=${bookmark.snum}"
 							class="viewStore">가게상세보기</a>
