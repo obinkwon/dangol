@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -172,9 +173,9 @@ public class CategoryService {
 			String stag= "";
 			int total = icdao.selectCommentTotal(store); //가게별 리뷰 총점
 			int totalCnt = icdao.selectCommentTotalCnt(store); //가게별 리뷰 갯수
-			List<Admin> stagList = icdao.selectStagList(store);
-			for(Admin admin : stagList) {
-				stag = stag+" #"+admin.getAvalue();
+			List<Store> stagList = oDao.selectStagList(store);
+			for(Store st : stagList) {
+				stag = stag+" #"+st.getAvalue();
 			}
 			store.setStag(stag);
 			if(total > 0 && totalCnt > 0) {
@@ -186,41 +187,30 @@ public class CategoryService {
 		return sList;
 	}
 	
-	public List<Admin> selectStagList1(Store store) {
-		return icdao.selectStagList(store);
-	}
-	
 	public List<Order> selectOrderList(Store store) {
 		return icdao.selectOrderList(store);
 	}
 	
-	public Grade selectMyGradeInfo1(int snum,String mid) {
-		Grade grade = new Grade();
-		grade.setMid(mid);
-		grade.setSnum(snum);
-		return icdao.selectGradeBySnumAndMid(grade);
-	}
-	
 	public Grade selectMyGradeInfo(Grade grade) {
-		return icdao.selectGradeBySnumAndMid(grade);
+		return icdao.selectGradeAtStore(grade);
 	}
 	
-	public HashMap<String, Object> selectDangolList(Store store) {
-		List<HashMap<String, Object>> dangolList = icdao.selectGlevelBySnum(store);
+	public Map<String, Object> selectDangolList(Store store) {
+		List<Grade> dangolList = icdao.selectStoreGlevel(store);
 		HashMap<String, Object> dangolMap = new HashMap<String, Object>();
 		dangolMap.put("glevel0", 0);
 		dangolMap.put("glevel1", 0);
 		dangolMap.put("glevel2", 0);
 		dangolMap.put("glevel3", 0);
-		for(HashMap<String, Object> dangol : dangolList) {
-			if(String.valueOf(dangol.get("GLEVEL")).equals("0")) {
-				dangolMap.put("glevel0", dangol.get("DANGOL"));
-			}else if(String.valueOf(dangol.get("GLEVEL")).equals("1")) {
-				dangolMap.put("glevel1", dangol.get("DANGOL"));
-			}else if(String.valueOf(dangol.get("GLEVEL")).equals("2")) {
-				dangolMap.put("glevel2", dangol.get("DANGOL"));
+		for(Grade dangol : dangolList) {
+			if(dangol.getGlevel() == 0) {
+				dangolMap.put("glevel0", dangol.getDangolCnt());
+			}else if(dangol.getGlevel() == 1) {
+				dangolMap.put("glevel1", dangol.getDangolCnt());
+			}else if(dangol.getGlevel() == 2) {
+				dangolMap.put("glevel2", dangol.getDangolCnt());
 			}else {
-				dangolMap.put("glevel3", dangol.get("DANGOL"));
+				dangolMap.put("glevel3", dangol.getDangolCnt());
 			}
 		}
 		return dangolMap;
@@ -229,7 +219,7 @@ public class CategoryService {
 	public List<String[]> selectStagList(List<Store> sList) {//해당 가게 태그 리스트
 		List<String[]> stagList = new ArrayList<String[]>();
 		for(Store s : sList) {
-			List<Admin> stList = icdao.selectStagList(s);
+			List<Store> stList = oDao.selectStagList(s);
 			String[] stag = new String[3]; 
 			if(stList.size()<3) {
 				for(int i=0;i<stList.size();i++) {
@@ -399,11 +389,15 @@ public class CategoryService {
 		return file;
 	}
 	
-	public File getAttachedFileMenu(Order order) {
-		Order o = icdao.selectOrderOne(order);
-		String fileName = o.getOimage();
-		String path = imagePath+"order\\";
-		return new File(path+fileName);
+	public File getAttachedFileMenu(Order order) throws Exception{
+		Order ord = icdao.selectOrderOne(order);
+		File file = null;
+		if(ord != null) {
+			String fileName = ord.getOimage();
+			String path = imagePath+"order\\";
+			file = new File(path+fileName);
+		}
+		return file;
 	}
 	
 	public Order selectOrderOne(Order order) {

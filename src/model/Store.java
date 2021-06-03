@@ -28,7 +28,7 @@ public class Store {
 	private int commentTotal;
 	private String stag;
 	private String avalue;
-	private String anum;
+	private int anum;
 	private String bpw;
 	private String bphone;
 	
@@ -182,10 +182,10 @@ public class Store {
 	public void setAvalue(String avalue) {
 		this.avalue = avalue;
 	}
-	public String getAnum() {
+	public int getAnum() {
 		return anum;
 	}
-	public void setAnum(String anum) {
+	public void setAnum(int anum) {
 		this.anum = anum;
 	}
 	public String getBpw() {

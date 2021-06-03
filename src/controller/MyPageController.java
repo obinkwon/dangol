@@ -151,9 +151,9 @@ public class MyPageController {
 		return mav;
 	}
 
-	@RequestMapping("deleteLikes.do") // 즐겨찾기 목록
-	public String deleteLikes(String mid, int snum) {
-		mypageService.deleteLikes(mid, snum);
+	@RequestMapping("bookmarkLikes.do") //즐겨찾기 목록에서 즐겨찾기 제거
+	public String bookmarkLikes(Member member) {
+		mypageService.updateLike(member);
 		return "redirect:bookmark.do";
 	}
 
@@ -209,15 +209,9 @@ public class MyPageController {
 
 	}
 
-	@RequestMapping("insertLikes.do")
-	public String insertLikes(String mid, int snum) {
-		mypageService.insertLikes(mid, snum);
-		return "redirect:historyList.do";
-	}
-
-	@RequestMapping("deleteLikesHistory.do") // 방문내역 목록
-	public String deleteLikesHistory(String mid, int snum) {
-		mypageService.deleteLikes(mid, snum);
+	@RequestMapping("historyLike.do")
+	public String insertLikes(Member member) {//방문 내역 즐겨찾기 추가
+		mypageService.updateLike(member);
 		return "redirect:historyList.do";
 	}
 

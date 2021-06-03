@@ -14,6 +14,17 @@ import model.Store;
 import model.Storedb;
 
 public interface ICategoryDao {
+	//해당가게 내 등급
+	public Grade selectGradeAtStore(Grade grade);
+	//해당가게 메뉴 리스트
+	public List<Order> selectOrderList(Store store);
+	//해당가게 리뷰 리스트
+	public List<Comment> selectCommentListBySnum(Store store);
+	//해당가게 단골 정보
+	public List<Grade> selectStoreGlevel(Store store);
+	
+	
+	
 	public List<Admin> selectAdminAllByFood();
 	public List<Admin> selectAdminAllByTheme();
 	//음식종류별 가게 리스트 가져오기
@@ -30,23 +41,17 @@ public interface ICategoryDao {
 	public List<Details> selectDetailsListGnum(Grade grade);
 	public List<Details> selectDetailAllByGnum(int gnum);
 	public Comment selectCommentOneByDnum(int dnum);
-	//가게 태그 리스트
-	public List<Admin> selectStagList(Store store);
+	
 	public List<Stag> selectStagByAnum(int anum);
 	//
 	public Admin selectAdminOne(int anum);
 	public List<Mtag> selectMtagByMid(String mid);
 	public Store selectStoreOneByRecommend(HashMap<String, Object> rMap);
 	public Store selectStoreOneByRecommendPre(HashMap<String, Object> rMap);
-	//메뉴 리스트
-	public List<Order> selectOrderList(Store store);
+	
 	public Order selectOrderOne(Order order);
-	//
-	public Grade selectGradeBySnumAndMid(Grade grade);
-	//
-	public List<HashMap<String, Object>> selectGlevelBySnum(Store store);
-	//
-	public List<Comment> selectCommentListBySnum(Store store);
+	
+	
 	//내 리뷰 가져오기
 	public List<Comment> selectMyCommentListByGrade(Grade grade);
 	public List<Details> selectDetailReserveByDdate(HashMap<String, Object> dMap);

@@ -65,6 +65,10 @@ public class MyPageService {
 		}
 		return result;
 	}
+	
+	public int updateLike(Member member) {//즐겨찾기 수정
+		return mypagedao.updateLike(member);
+	}
 
 	public int deleteMemberOne(Member member) {//회원 탈퇴
 		return mypagedao.deleteMemberOne(member);
@@ -84,20 +88,6 @@ public class MyPageService {
 			detailList.add(mypagedao.selectHistoryOne(det));
 		}
 		return detailList;
-	}
-
-	public void deleteLikes(String mid, int snum) {
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("mid", mid);
-		param.put("snum", snum);
-		mypagedao.deleteLikes(param);
-	}
-
-	public void insertLikes(String mid, int snum) {
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("mid", mid);
-		param.put("snum", snum);
-		mypagedao.insertLikes(param);
 	}
 
 	public List<List<Details>> selectdcountHistory(String mid) {

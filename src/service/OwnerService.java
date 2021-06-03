@@ -305,14 +305,17 @@ public class OwnerService {
 		return result;
 	}
 	
-	public List<Store> selectStag(Store vo) {
-		return oDao.selectStag(vo);
+	//가게 태그 리스트 조회
+	public List<Store> selectStagList(Store vo) {
+		return oDao.selectStagList(vo);
 	}
 
+	//가게 정보 조회
 	public Store selectStoreOne(Store vo) {
 		return oDao.selectStoreOne(vo);
 	}
 	
+	//가게 정보 수정
 	public int updateStore(Store store
 		, MultipartFile sfile) throws Exception{
 		String path = imagePath +"store\\";
@@ -327,6 +330,7 @@ public class OwnerService {
 		return oDao.updateStore(store);
 	}
 
+	//가게 정보 삭제
 	public int deleteStore(Store store) {
 		oDao.deleteStag(store); //가게 태그 삭제
 		return oDao.deleteStore(store);

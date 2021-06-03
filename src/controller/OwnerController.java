@@ -328,7 +328,7 @@ public class OwnerController {
 				for(String hol : sholiday) {
 					holiMap.put(hol, true);
 				}
-				mav.addObject("stagList",oService.selectStag(store));
+				mav.addObject("stagList",oService.selectStagList(store));
 				mav.addObject("stime",stime);
 				mav.addObject("sholiday",holiMap);
 				mav.addObject("store",store);

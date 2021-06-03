@@ -164,22 +164,6 @@
 		WHERE 
 			DNUM = #{dnum}
 	</select>
-	<select id="selectStagList" parameterType="store" resultType="admin">
-		SELECT 
-			AVALUE AS avalue
-		FROM 
-			ADMINS 
-		WHERE 
-			ANUM IN (
-				SELECT 
-					ANUM
-				FROM 
-					STAG 
-				WHERE 
-					SNUM = #{snum}
-			)
-		ORDER BY ANUM
-	</select>
 	<select id="selectAdminOne" parameterType="int" resultType="admin">
 		SELECT * 
 		FROM 
@@ -214,6 +198,7 @@
 	<select id="selectStoreOneByRecommendPre" parameterType="java.util.HashMap" resultType="store">
 		select * from stores where snum = #{snum} and (saddress = #{marea1} or saddress = #{marea2})
 	</select>
+	<!-- 해당가게 메뉴 리스트 -->
 	<select id="selectOrderList" parameterType="store" resultType="order">
 		SELECT 
 			ORD AS ord
@@ -239,7 +224,8 @@
 			ORD = #{ord}
 			AND SNUM = #{snum}
 	</select>
-	<select id="selectGradeBySnumAndMid" parameterType="grade" resultType="grade">
+	<!-- 해당가게 내 등급 -->
+	<select id="selectGradeAtStore" parameterType="grade" resultType="grade">
 		SELECT
 			GNUM AS gnum
 			,MID AS mid
@@ -254,10 +240,10 @@
 			AND MID = #{mid} 
 			AND GCURRENT = 'yes'
 	</select>
-	<select id="selectGlevelBySnum" parameterType="store" resultType="java.util.HashMap">
+	<select id="selectStoreGlevel" parameterType="store" resultType="grade">
 		SELECT 
-			GLEVEL
-			,COUNT(*) AS dangol 
+			GLEVEL AS glevel
+			,COUNT(*) AS dangolCnt 
 		FROM 
 			GRADES 
 		WHERE 

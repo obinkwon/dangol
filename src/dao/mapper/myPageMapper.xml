@@ -135,21 +135,27 @@
 	 	ORDER BY D.DDATE DESC
 	</select>
 	
+	<update id="updateLike" parameterType="member">
+		UPDATE 
+			GRADES 
+		SET 
+			GLIKE = #{glike}
+		WHERE 
+			MID = #{mid}
+			AND SNUM = #{snum}
+			AND GCURRENT = 'yes'
+	</update>
+	
 	<select id="selectStoreBySnum" parameterType="int" resultType="store">
 	select * from stores where snum = #{snum}
 	</select>
 	<select id="recentlyVisited" parameterType="int" resultType="details">
 	select * from details where gnum = #{gnum} and dcheck ='yes' order by ddate desc
 	</select>
-	<update id="deleteLikes" parameterType="java.util.HashMap">
-	update  grades set glike=0 where mid = #{mid} and snum =#{snum} and gcurrent='yes'
-	</update>
 	<select id="selectHistoryAll" parameterType="String" resultType="grade">
 	select * from grades where mid = #{mid} and gcurrent like 'yes'	
 	</select>
-	<update id="insertLikes" parameterType="java.util.HashMap">
-	update  grades set glike=1 where mid = #{mid} and snum =#{snum} and gcurrent='yes'
-	</update>
+	
 	
 	<select id="selectcomments" parameterType="int" resultType="comment">
 	select * from comments  where dnum=#{dnum}

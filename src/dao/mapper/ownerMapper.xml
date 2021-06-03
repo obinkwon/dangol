@@ -171,7 +171,7 @@
 		DELETE FROM STAG WHERE SNUM = #{snum} 
 	</delete>
 	<!-- 가게 태그 조회 -->
-	<select id="selectStag" parameterType="store" resultType="store">
+	<select id="selectStagList" parameterType="store" resultType="store">
 		SELECT
 			SNUM AS snum
 			,A.ANUM AS anum
@@ -333,7 +333,7 @@
 			,A.SNAME AS sname
 			,A.SADDRESS AS saddress
 			,A.SDETAILADDR AS sdetailaddr
-			,A.SPHONE AS sphone
+			,REGEXP_REPLACE(A.SPHONE, '(.{3})(.+)(.{4})', '\1-\2-\3') AS sphone
 			,A.STIME_START AS stime_start
 			,A.STIME_END AS stime_end
 			,A.SPARKING AS sparking

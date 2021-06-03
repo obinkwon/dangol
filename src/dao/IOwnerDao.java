@@ -36,7 +36,7 @@ public interface IOwnerDao {
 	public int insertStore(Store store); //가게 등록
 	public int insertStag(Store store); //가게 태그 등록
 	public int deleteStag(Store store); //가게 태그 등록
-	public List<Store> selectStag(Store store); //가게 태그 가져오기
+	public List<Store> selectStagList(Store store); //가게 태그 리스트
 	public Store selectStoreOne(Store store); //가게 정보 가져오기
 	public int updateStore(Store store); //가게 수정하기
 	public int deleteStore(Store store); //가게 삭제하기

@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -279,17 +281,15 @@ public class CategoryController {
 			, HttpSession session) throws Exception{
 		String mid = (String)session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
-		Grade g = null;
-		int snum = grade.getSnum();
-		if(mid != null && mid.equals("")) { //로그인 되어있을때
+		if(mid != null && mid.equals("")) { //일반 사용자 로그인 되어있을때
 			grade.setMid(mid);
-			g = cservice.selectMyGradeInfo(grade);
+			grade = cservice.selectMyGradeInfo(grade);//내 등급 정보
 		}
-		Store s = oService.selectStoreOne(store);
+		store = oService.selectStoreOne(store);//가게 정보
 		
-		//휴무일 쪼개서 보내기
+		//휴무일 쪼개서 보내기(ing)
 		List<String> hoList = new ArrayList<String>();
-		String[] holiday = s.getSholiday().split(",");
+		String[] holiday = store.getSholiday().split(",");
 		for(String h : holiday) {
 			switch (h) {
 			case "mon":
@@ -315,50 +315,49 @@ public class CategoryController {
 				break;
 			}
 		}
+		
 		//메뉴 가져오기
-		List<Order> menuList = cservice.selectOrderList(s);
+		List<Order> menuList = cservice.selectOrderList(store);
 		//현재 날짜
-		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.sql.Date(System.currentTimeMillis()));
-		//후기가져오기
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+		//후기가져오기(ing)
 		List<Comment> cList = null;
 		if(type.equals("new")){ //전체 리뷰
-			cList = cservice.storeCommentList(s);
+			cList = cservice.storeCommentList(store);
 		}else if(type.equals("my")) { //내 리뷰
 			if(mid.equals("")) {
-				cList = cservice.storeMyCommentList(g);
+				cList = cservice.storeMyCommentList(grade);
 			}
 		}
-		//메뉴 개수
-		mav.addObject("menuSize",menuList.size());
-		//리뷰 리스트 갯수
-		mav.addObject("listSize",cList.size());
-		//리뷰 리스트 가져오기
-		mav.addObject("commentMapList",cList);
-		//단골수 가져오기
-		mav.addAllObjects(cservice.selectDangolList(s));
-		//등급 정보
-		mav.addObject("grade",g);
-		//거게 정보
-		mav.addObject("store",s);
-		//휴일 정보
-		mav.addObject("hoList",hoList);
-		//메뉴 리스트 가져오기
-		mav.addObject("menuList",menuList);
+		//가게 단골 정보(ing)
+		Map<String, Object> dangolMap = cservice.selectDangolList(store);
 		//가게 태그 가져오기
-		mav.addObject("tagList",cservice.selectStagList1(s));
-		//현재 날짜
-		mav.addObject("currentDate",currentDate);
+		List<Store> tagList = oService.selectStagList(store);
+		
+		mav.addObject("menuSize",menuList.size());//메뉴 개수
+		mav.addObject("listSize",cList.size());//리뷰 리스트 갯수
+		mav.addObject("commentMapList",cList);//리뷰 리스트 가져오기
+		mav.addObject("dangolMap",dangolMap);//단골 정보
+		mav.addObject("grade",grade);//등급 정보
+		mav.addObject("store",store);//가게 정보
+		mav.addObject("hoList",hoList);//휴일 정보
+		mav.addObject("menuList",menuList);//메뉴 리스트 가져오기
+		mav.addObject("tagList",tagList);//가게 태그 리스트 가져오기
+		mav.addObject("currentDate",currentDate);//현재 날짜
 		mav.setViewName("category/storeView");
 		return mav;
 	}
 	
-	@RequestMapping("likes.do")//가게 상세보기 요청 부분
-	public String likes(@RequestParam(required=false) String mid,@RequestParam(required=false) String like,int snum) {
-		if(!like.equals("")) {
-			if(like.equals("0")) mypageService.insertLikes(mid, snum);
-			else mypageService.deleteLikes(mid, snum);
+	@RequestMapping("likes.do")//가게 즐겨찾기 등록
+	public String likes(Member member
+		,@RequestParam(defaultValue="0") String like) {
+		if(like.equals("0")) {
+			member.setGlike(1);
+		}else {
+			member.setGlike(0);
 		}
-		return "redirect:storeView.do?snum="+snum;
+		mypageService.updateLike(member);
+		return "redirect:storeView.do?snum="+member.getSnum();
 	}
 	
 	@RequestMapping("reserveStore.do")
@@ -366,11 +365,14 @@ public class CategoryController {
 			HttpServletResponse resp) throws IOException {
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
-		String str = "";
+		String str = "<script language='javascript'>";
 		
 		String mid = (String)session.getAttribute("mid");
 		int result = 0;
-		Grade g = cservice.selectMyGradeInfo1(snum, mid);
+		Grade grade = new Grade();
+		grade.setMid(mid);
+		grade.setSnum(snum);
+		Grade g = cservice.selectMyGradeInfo(grade);
 		if(g==null) {
 			g= new Grade();
 			g.setMid(mid);
@@ -398,7 +400,7 @@ public class CategoryController {
 				result = cservice.insertDetailOne(detail);//예약하기
 			}else {}//예약 불가능
 		}
-		str = "<script language='javascript'>";
+		
 		if(result==1) {
 			str += "alert('예약이 완료 되었습니다.');";
 			str += "location.href='storeView.do?snum="+snum+"'";
@@ -468,8 +470,8 @@ public class CategoryController {
 	}
 	
 	@RequestMapping("downloadStoreMenuImg.do")
-	public View downloadStoreMenuImg(Order order) {
-		File attachFile= cservice.getAttachedFileMenu(order);
+	public View downloadStoreMenuImg(Order order) throws Exception{
+		File attachFile = cservice.getAttachedFileMenu(order);
 		View view = null;
 		if(attachFile != null) {
 			view = new DownloadView(attachFile);

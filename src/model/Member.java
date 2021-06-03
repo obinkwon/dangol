@@ -16,6 +16,8 @@ public class Member {
     private String mtag;
     private String avalue;
 	private String anum;
+	private int snum;
+	private int glike;
 	public String getMid() {
 		return mid;
 	}
@@ -105,6 +107,18 @@ public class Member {
 	}
 	public void setAnum(String anum) {
 		this.anum = anum;
+	}
+	public int getSnum() {
+		return snum;
+	}
+	public void setSnum(int snum) {
+		this.snum = snum;
+	}
+	public int getGlike() {
+		return glike;
+	}
+	public void setGlike(int glike) {
+		this.glike = glike;
 	}
 	public Member() {}
 	

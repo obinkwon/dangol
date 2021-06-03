@@ -24,12 +24,12 @@ public interface IMyPageDao {
 	public List<Details> selectHistoryOne(Details details);
 	//즐겨찾기 리스트
 	public List<Details> selectBookmarkList(Member member);
+	//즐겨찾기 수정
+	public int updateLike(Member member);
 	
 	public Store selectStoreBySnum(int snum);
 	public List<Details> recentlyVisited(int gnum);
-	public void deleteLikes(HashMap<String, Object> param);
 	public List<Grade> selectHistoryAll(String mid);
-	public void insertLikes (HashMap<String, Object> param);
 	public Comment selectcomments (int dnum);
 	public List<Details> selectReserveState (String mid);
 	public Grade selectgradeByGnum (int gnum);
