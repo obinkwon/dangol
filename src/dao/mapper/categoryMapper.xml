@@ -82,6 +82,123 @@
 		ORDER BY A.SDATE DESC
 		<include refid="btmPaging"/>
 	</select>
+	<!-- 등급 정보 등록 -->
+	<insert id="insertGrade" parameterType="grade" keyProperty="gnum" useGeneratedKeys="true">
+		<selectKey keyProperty="gnum" order="BEFORE" resultType="int">SELECT GRADES_SEQ.NEXTVAL FROM DUAL</selectKey>
+		INSERT INTO GRADES(
+			GNUM
+			,MID
+			,SNUM
+			,GLEVEL
+			,GCURRENT
+			,GLIKE
+		)VALUES(
+			#{gnum}
+			,#{mid}
+			,#{snum}
+			,0
+			,'yes'
+			,0
+		)
+	</insert>
+	<!-- 해당가게 내 등급 -->
+	<select id="selectGradeAtStore" parameterType="grade" resultType="grade">
+		SELECT
+			GNUM AS gnum
+			,MID AS mid
+			,SNUM AS snum
+			,GLEVEL AS glevel
+			,GCURRENT AS gcurrent
+			,GLIKE AS glike
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			AND MID = #{mid} 
+			AND GCURRENT = 'yes'
+	</select>
+	<!-- 해당가게 메뉴 리스트 -->
+	<select id="selectOrderList" parameterType="store" resultType="order">
+		SELECT 
+			ORD AS ord
+			,SNUM AS snum
+			,ONAME AS oname
+			,OPRICE AS oprice
+			,OIMAGE AS oimage
+		FROM 
+			ORDERS 
+		WHERE 
+			SNUM = #{snum}
+	</select>
+	<!-- 해당가게 단골 정보 -->
+	<select id="selectStoreGlevel" parameterType="store" resultType="grade">
+		SELECT 
+			GLEVEL AS glevel
+			,COUNT(*) AS dangolCnt 
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			AND GCURRENT = 'yes' 
+		GROUP BY GLEVEL 
+		ORDER BY GLEVEL
+	</select>
+	<!-- 예약 리스트 가져오기 -->
+	<select id="selectDetailReserveByDdate" parameterType="details" resultType="details">
+		SELECT 
+			D.DNUM AS dnum
+			,D.GNUM AS gnum
+			,D.DDATE AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+		FROM 
+			DETAILS D
+			INNER JOIN GRADES G ON D.GNUM = G.GNUM
+		WHERE 
+			G.SNUM = #{snum}
+			AND TO_CHAR(D.DDATE,'YYYY-MM-DD') = #{ddate} 
+			AND D.DTYPE = 'yes'
+	</select>
+	<!-- 예약하기 -->
+	<insert id="insertDetail" parameterType="details">
+		INSERT INTO DETAILS(
+			DNUM
+			,GNUM
+			,DDATE
+			,DPERSON
+			,DMENU
+			,DTYPE
+			<if test="dask != '' and dask != null">
+			,DASK
+			</if>
+			,DCHECK
+			,DTIME
+			,DCOUNT
+			,DLIMIT
+		)VALUES(
+			DETAILS_SEQ.NEXTVAL
+			,#{gnum}
+			,#{ddate}
+			,#{dperson}
+			,#{dmenu}
+			,'yes'
+			<if test="dask != '' and dask != null">
+			,#{dask}
+			</if>
+			,'no'
+			,#{dtime}
+			,0
+			,#{dlimit}
+		)
+	</insert>
+	
+	
 	<select id="selectGradeCountBySnum" parameterType="int" resultType="int">
 		SELECT 
 			COUNT(*) 
@@ -198,19 +315,7 @@
 	<select id="selectStoreOneByRecommendPre" parameterType="java.util.HashMap" resultType="store">
 		select * from stores where snum = #{snum} and (saddress = #{marea1} or saddress = #{marea2})
 	</select>
-	<!-- 해당가게 메뉴 리스트 -->
-	<select id="selectOrderList" parameterType="store" resultType="order">
-		SELECT 
-			ORD AS ord
-			,SNUM AS snum
-			,ONAME AS oname
-			,OPRICE AS oprice
-			,OIMAGE AS oimage
-		FROM 
-			ORDERS 
-		WHERE 
-			SNUM = #{snum}
-	</select>
+	
 	<select id="selectOrderOne" parameterType="order" resultType="order">
 		SELECT
 			ORD AS ord
@@ -224,34 +329,8 @@
 			ORD = #{ord}
 			AND SNUM = #{snum}
 	</select>
-	<!-- 해당가게 내 등급 -->
-	<select id="selectGradeAtStore" parameterType="grade" resultType="grade">
-		SELECT
-			GNUM AS gnum
-			,MID AS mid
-			,SNUM AS snum
-			,GLEVEL AS glevel
-			,GCURRENT AS gcurrent
-			,GLIKE AS glike
-		FROM 
-			GRADES 
-		WHERE 
-			SNUM = #{snum} 
-			AND MID = #{mid} 
-			AND GCURRENT = 'yes'
-	</select>
-	<select id="selectStoreGlevel" parameterType="store" resultType="grade">
-		SELECT 
-			GLEVEL AS glevel
-			,COUNT(*) AS dangolCnt 
-		FROM 
-			GRADES 
-		WHERE 
-			SNUM = #{snum} 
-			AND GCURRENT = 'yes' 
-		GROUP BY GLEVEL 
-		ORDER BY GLEVEL
-	</select>
+	
+	
 	<select id="selectCommentListBySnum" parameterType="store" resultType="comment">
 		SELECT 
 			C.CNUM AS cnum
@@ -299,16 +378,8 @@
 	<select id="selectGradeByDnum" parameterType="int" resultType="grade">
 		select * from grades where gnum = (select gnum from Details where dnum = #{dnum})
 	</select>
-	<select id="selectDetailReserveByDdate" parameterType="java.util.HashMap" resultType="details">
-		select * from details where gnum in (select gnum from grades where snum = #{snum}) and ddate = #{ddate} and dtype='yes'
-	</select>
-	<insert id="insertGradeBegin" parameterType="grade" keyProperty="gnum" useGeneratedKeys="true">
-		<selectKey keyProperty="gnum" order="BEFORE" resultType="int">select grades_seq.nextval from dual</selectKey>
-		insert into grades values(#{gnum},#{mid},#{snum},0,'yes',0)
-	</insert>
-	<insert id="insertReserveDetail" parameterType="details">
-		insert into details values(details_seq.nextval,#{gnum},#{ddate},#{dperson},#{dmenu},'yes',<include refid="dask"/>,'no',#{dtime},0,#{dlimit})
-	</insert>
+	
+	
 	<delete id="deleteCommentOneByCnum" parameterType="int">
 		delete from comments where cnum = #{cnum}
 	</delete>

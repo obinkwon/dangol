@@ -45,6 +45,14 @@ public class CategoryService {
 	
 	private String imagePath = "C:\\eclipse-workspace\\dangol\\WebContent\\images\\";
 	
+	public int insertGrade(Grade grade) {//등급 정보 등록
+		return icdao.insertGrade(grade);
+	}
+	
+	public int insertDetail(Details detail) {//예약하기 기능
+		return icdao.insertDetail(detail);
+	}
+	
 	public List<Admin> sortFoodList(Admin admin) {//음식태그 리스트
 		return adao.selectAdminTypeList(admin);
 	}
@@ -191,7 +199,7 @@ public class CategoryService {
 		return icdao.selectOrderList(store);
 	}
 	
-	public Grade selectMyGradeInfo(Grade grade) {
+	public Grade selectMyGradeInfo(Grade grade) {//해당가게 내 등급
 		return icdao.selectGradeAtStore(grade);
 	}
 	
@@ -309,20 +317,10 @@ public class CategoryService {
 		return icdao.selectGradeByDnum(dnum);
 	}
 	
-	public List<Details> todayReserve(int snum, Date ddate){
-		HashMap<String, Object> dMap = new HashMap<String, Object>();
-		dMap.put("snum", snum);
-		dMap.put("ddate", ddate);
-		return icdao.selectDetailReserveByDdate(dMap);
+	public List<Details> todayReserve(Details detail){//예약 리스트 가져오기
+		return icdao.selectDetailReserveByDdate(detail);
 	}
 	
-	public int insertBeginGrade(Grade grade) {
-		return icdao.insertGradeBegin(grade);
-	}
-	
-	public int insertDetailOne(Details detail) {//예약하기 기능
-		return icdao.insertReserveDetail(detail);
-	}
 	public void deleteComment(int cnum) {//후기 삭제 기능
 		Comment c = icdao.selectCommentByCnum(cnum);
 		Grade g = icdao.selectGradeByDnum(c.getDnum());

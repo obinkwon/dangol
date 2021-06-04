@@ -18,10 +18,17 @@ public interface ICategoryDao {
 	public Grade selectGradeAtStore(Grade grade);
 	//해당가게 메뉴 리스트
 	public List<Order> selectOrderList(Store store);
-	//해당가게 리뷰 리스트
+	//해당가게 리뷰 리스트(ing)
 	public List<Comment> selectCommentListBySnum(Store store);
 	//해당가게 단골 정보
 	public List<Grade> selectStoreGlevel(Store store);
+	//해당가게 등급 등록
+	public int insertGrade(Grade grade);
+	//예약 리스트 가져오기
+	public List<Details> selectDetailReserveByDdate(Details detail);
+	//예약 하기
+	public int insertDetail(Details detail);
+	
 	
 	
 	
@@ -54,9 +61,6 @@ public interface ICategoryDao {
 	
 	//내 리뷰 가져오기
 	public List<Comment> selectMyCommentListByGrade(Grade grade);
-	public List<Details> selectDetailReserveByDdate(HashMap<String, Object> dMap);
-	public int insertGradeBegin(Grade grade);
-	public int insertReserveDetail(Details detail);
 	public void deleteCommentOneByCnum(int cnum);
 	public Comment selectCommentByCnum(int cnum);
 	public Grade selectGradeByDnum(int dnum);

@@ -361,47 +361,42 @@ public class CategoryController {
 	}
 	
 	@RequestMapping("reserveStore.do")
-	public void reserveStore(Details detail,int snum,HttpSession session,
-			HttpServletResponse resp) throws IOException {
+	public void reserveStore(Details detail
+			,Grade grade 
+			,Store store
+			,HttpSession session
+			,HttpServletResponse resp) throws IOException {//예약 하기
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
 		String str = "<script language='javascript'>";
 		
 		String mid = (String)session.getAttribute("mid");
-		int result = 0;
-		Grade grade = new Grade();
 		grade.setMid(mid);
-		grade.setSnum(snum);
-		Grade g = cservice.selectMyGradeInfo(grade);
-		if(g==null) {
-			g= new Grade();
-			g.setMid(mid);
-			g.setSnum(snum);
-			cservice.insertBeginGrade(g);
-		}
-		Store store = new Store();
-		store.setSnum(snum);
-		Store s = oService.selectStoreOne(store);
-		//System.out.println(detail);
-		List<Details> dList = cservice.todayReserve(snum, detail.getDdate());
-		detail.setGnum(g.getGnum());
-		if(dList.size()==0) {//해당날짜에 예약이 없을때
-			if(s.getSlimit() >= detail.getDperson()) {
-				detail.setDlimit(s.getSlimit());
-				result = cservice.insertDetailOne(detail);//예약하기
-			}
-		}else {//해당 날짜에 예약이 있을때
-			int limit = 0;
-			for(Details d : dList) {
-				limit += d.getDperson();
-			}
-			detail.setDlimit(dList.get(0).getDlimit());
-			if((dList.get(0).getDlimit()-limit) >= detail.getDperson()) {//예약 가능
-				result = cservice.insertDetailOne(detail);//예약하기
-			}else {}//예약 불가능
+		int snum = detail.getSnum();
+		int result = 0;
+		store = oService.selectStoreOne(store);//가게정보 가져오기
+		grade = cservice.selectMyGradeInfo(grade);//등급정보 가져오기
+		if(grade == null) {
+			grade = new Grade();
+			grade.setMid(mid);
+			grade.setSnum(snum);
+			cservice.insertGrade(grade);
 		}
 		
-		if(result==1) {
+		List<Details> dList = cservice.todayReserve(detail);//예약 리스트 가져오기
+		int maxPerson = 0;
+		int todayLimit = store.getSlimit();//하루 예약 가능한 최대 인원수
+		for(Details dd : dList) { //하루 총 예약한 인원수
+			maxPerson += dd.getDperson();
+		}
+		
+		if(todayLimit >= maxPerson && todayLimit >= detail.getDperson()) {//예약 가능 인원 체크
+			detail.setGnum(grade.getGnum());
+			detail.setDlimit(store.getSlimit());
+			result = cservice.insertDetail(detail);//예약하기
+		}
+		
+		if(result > 0) {
 			str += "alert('예약이 완료 되었습니다.');";
 			str += "location.href='storeView.do?snum="+snum+"'";
 		}else {
