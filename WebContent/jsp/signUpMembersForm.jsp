@@ -6,14 +6,9 @@
 <meta charset="UTF-8">
 <title>회원가입_사용자</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/template.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
-	div.main {
-		margin : auto;
-		margin-top: 50px;
-		margin-bottom:100px;
-		width: 100%;
-	}
 	table.signForm {	
 		margin : auto;		
 		font-size: 15px;
@@ -21,49 +16,6 @@
 	table.signForm td {
 		padding : 10px;
 		height: 30px;
-	}
-	.inputText {
-		height: 40px;
-	    line-height: 40px;
-	    color: #7b6e66;
-	    padding: 0 7px;
-	    border: 1px solid #7b6e66;
-	    background-color: transparent;
-	    vertical-align: middle;
-	    float: left;
-	}
-	.btn-view {
-	    width: 200px;
-        font-size: 1.4rem;
-        background-color: #fff;
-		color: #000000;
-	    height: 4rem;
-	    margin: 0 auto;
-	    line-height: 3.9rem;
-		font-weight: 600;
-	    letter-spacing: 0.5px;
-	    transition-duration: .5s;
-        border: 0.1rem solid #66ccff;
-	}
-	.btn-mint{
-		background-color: #66ccff;
-		color: #fff;
-	}
-	.btn-wrap {
-		display: block;
-		text-align: center;
-	    width: 100%;
-	    margin: 0 auto;
-	    margin-bottom : 30px;
-		padding-top: 4.5rem;
-	}
-	.contentsTitGroup{
-		padding-top: 2.0rem;
-	    text-align: center;
-	    display: block;
-	}
-	.w300{
-		width: 300px;
 	}
 	.tagText {
 		text-align: center;
@@ -89,37 +41,6 @@
 		margin-top: 20px;
 		width: 120px;
 		height: 120px;
-	}
-	.formArea{
-		vertical-align: middle;
-		height: 40px;
-    	line-height: 40px;
-	}
-	.formArea label{
-		margin-left: 10px;
-		vertical-align: middle;
-    	line-height: 40px;
-	}
-	.formArea ul {
-	    padding-inline-start: 0px;
-	    overflow: hidden;
-	    height: 100%;
-	    width: 100%;
-	    margin-bottom : 0px;
-	}
-	.formArea li {
-	    vertical-align: middle;
-	    display: block;
-	    float: left;
-	    overflow: hidden;
-	    margin-right: 25px;
-	}
-	.inputRadio{
-	    margin: 0;
-	    width: 15px;
-	    height: 15px;
-	    border: 0;
-	    margin-right: 20px;
 	}
 </style>
 <script type="text/javascript">
