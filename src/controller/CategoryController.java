@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
@@ -349,15 +350,18 @@ public class CategoryController {
 	}
 	
 	@RequestMapping("likes.do")//가게 즐겨찾기 등록
-	public String likes(Member member
+	@ResponseBody
+	public int likes(Member member
 		,@RequestParam(defaultValue="0") String like) {
+		int glike = 0;
 		if(like.equals("0")) {
-			member.setGlike(1);
+			glike = 1;
 		}else {
-			member.setGlike(0);
+			glike = 0;
 		}
+		member.setGlike(glike);
 		mypageService.updateLike(member);
-		return "redirect:storeView.do?snum="+member.getSnum();
+		return glike;
 	}
 	
 	@RequestMapping("reserveStore.do")

@@ -5,10 +5,10 @@
 <html>
 <head>
 <link rel="icon" href="favicon.png">
-<link rel="stylesheet" href="/css/template.css" />
 <meta charset="UTF-8">
 <title>가게 상세보기</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/template.css" />
 <style type="text/css">
 	div.storeViewTop{
 		width: 100%;
@@ -184,10 +184,34 @@
 	}
 	
 	function likeBtn(loc){//좋아요 버튼 클릭시 이벤트
+		var glike = $('#glike').val();
 		var snum = $('#snum').val();
 		var like = $(loc).find('img');
-		if('${grade.glike}' != '') {
-			location.href='likes.do?mid=${mid}&snum='+snum+'&like=${grade.glike}';
+		if(glike != '') {
+			$.ajax({
+				url: '/likes.do',
+				type: 'GET',
+				dataType: 'json',
+				data: {
+					mid : '${mid}',
+					snum : snum,
+					like : glike,
+				},
+				success: function(data){
+					if(data == 1){
+						alert('즐겨찾기에 등록되었습니다');
+						$('#likeImg').children('img').attr('src','mypage/likes.png');
+					}else{
+						alert('즐겨찾기에서 제거되었습니다');
+						$('#likeImg').children('img').attr('src','mypage/dislike.png');
+					}
+					$('#glike').val(data);
+				},
+				error: function(){
+					alert('오류 발생');
+				}
+			});
+			//location.href='likes.do?mid=${mid}&snum='+snum+'&like='+glike;
 		}else{
 			if('${mid}' == '') {
 				alert('일반 사용자 로그인후 이용해주세요');
@@ -223,7 +247,7 @@
 	        hourList.push({nm : halfNm, cd : halfCd});
 	    }
 	    return hourList;
-	};
+	}
 	
 	function getHours(selector, cd) {
 	    if (cd == '') {
@@ -242,7 +266,7 @@
 	        $(selector).append(option);
 	    }
 	    $(selector).closest('.storeSpan').find('.select-indi').text(nm);
-	};
+	}
 	
 	function validationCheck(menuList){
 		var reservePerson = $('#dperson').val();//예약 인원
@@ -292,8 +316,6 @@
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
-	getHours('#dtime', '<c:out value="${store.stime_start}"/>');
-	
 	switch ('${param.type}') {//선택 타입 유지
 	case "my":
 		$('#my').prop('selected','true');
@@ -327,8 +349,6 @@ $(document).ready(function(){
 		location.href='storeView.do?snum='+snum+'&type='+this.value;
 	});
 	
-	
-	
 	$('a#commentUpdate').click(function(){
 		var cnum = $(this).siblings('input[type=hidden]').val();
 		location.href="modifyCommentForm.do?cnum="+cnum;
@@ -343,6 +363,8 @@ $(document).ready(function(){
 		}
 	});
 	
+	getHours('#dtime', '<c:out value="${store.stime_start}"/>');
+	
 });
 </script>
 </head>
@@ -356,6 +378,7 @@ $(document).ready(function(){
 			</div>
 			<form id="frmView" name="frmView" enctype="multipart/form-data" method="post">
 			<input id="snum" name="snum" type="hidden" value="${store.snum}">
+			<input id="glike" name="glike" type="hidden" value="${grade.glike}">
 			<div class="storeViewBottom">
 				<div class="storeViewMain">
 					<div class="storeLeft">
@@ -367,9 +390,9 @@ $(document).ready(function(){
 						<span class="storeSpan">
 							<span class="glyphicon glyphicon-earphone" ></span>
 							${store.sphone}  
-							<a href="javascript:likeBtn(this);" class="imgBtn">
-								<c:if test="${grade.glike == 1}"><img class="img50" src="mypage/likes.png"></c:if>
-								<c:if test="${grade.glike != 1}"><img class="img50" src="mypage/dislike.png"></c:if>
+							<a href="javascript:likeBtn(this);" id="likeImg" class="imgBtn">
+								<c:if test="${grade.glike == 1}"><img class="img50" src="/image/likes.png"></c:if>
+								<c:if test="${grade.glike != 1}"><img class="img50" src="/image/dislike.png"></c:if>
 							좋아요
 							</a>
 						</span><br />

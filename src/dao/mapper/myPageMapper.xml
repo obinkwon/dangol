@@ -99,11 +99,11 @@
 	<select id="selectGlikeList" parameterType="member" resultType="grade">
 		SELECT 
 			GNUM AS gnum
-			MID AS mid
-			SNUM AS snum
-			GLEVEL AS glevel
-			GCURRENT AS gcurrent
-			GLIKE AS glike
+			,MID AS mid
+			,SNUM AS snum
+			,GLEVEL AS glevel
+			,GCURRENT AS gcurrent
+			,GLIKE AS glike
 		FROM 
 			GRADES 
 		WHERE 

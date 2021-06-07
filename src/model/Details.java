@@ -14,6 +14,7 @@ public class Details {
 	private String dtime;
 	private int dcount;
 	private int dlimit;
+	private String dpermit;
 	private String mid;
 	private int snum;
 	public int getDnum() {
@@ -88,6 +89,12 @@ public class Details {
 	public void setMid(String mid) {
 		this.mid = mid;
 	}
+	public String getDpermit() {
+		return dpermit;
+	}
+	public void setDpermit(String dpermit) {
+		this.dpermit = dpermit;
+	}
 	public int getSnum() {
 		return snum;
 	}
@@ -96,7 +103,7 @@ public class Details {
 	}
 	public Details() {}
 	public Details(int dnum, int gnum, Date ddate, int dperson, String dmenu, String dtype, String dask, String dcheck,
-			String dtime, int dcount, int dlimit) {
+			String dtime, int dcount, int dlimit, String dpermit) {
 		this.dnum = dnum;
 		this.gnum = gnum;
 		this.ddate = ddate;
@@ -108,11 +115,12 @@ public class Details {
 		this.dtime = dtime;
 		this.dcount = dcount;
 		this.dlimit = dlimit;
+		this.dpermit = dpermit;
 	}
 	@Override
 	public String toString() {
 		return "Details [dnum=" + dnum + ", gnum=" + gnum + ", ddate=" + ddate + ", dperson=" + dperson + ", dmenu="
 				+ dmenu + ", dtype=" + dtype + ", dask=" + dask + ", dcheck=" + dcheck + ", dtime=" + dtime
-				+ ", dcount=" + dcount + ", dlimit=" + dlimit + "]";
+				+ ", dcount=" + dcount + ", dlimit=" + dlimit + ", dpermit=" + dpermit + "]";
 	}
 }
