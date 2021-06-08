@@ -5,6 +5,12 @@ div.main {
 	margin-bottom:100px;
 	width: 100%;
 }
+div.nav {
+	margin-top: 50px;
+	float: left;
+	width: 10%;
+	margin-left: 50px;
+}
 .contentsTitGroup{
 	padding-top: 2.0rem;
     text-align: center;
@@ -53,6 +59,7 @@ div.main {
 	transition-duration: .5s;
 	border: 0.1rem solid #66ccff;
 }
+
 .btn-mint{background-color: #66ccff;color: #fff;}
 .imgBtn{
 	text-decoration: none;
@@ -63,8 +70,12 @@ div.main {
 .imgBtn:hover{
 	color : #000000;
 	text-decoration: none;
+	text-decoration: none;
 	cursor : pointer;
 	color : gray;
+}
+.imgBtn:visited{
+	text-decoration: none;
 }
 
 /* img css */
@@ -148,4 +159,26 @@ div.main {
 	font-size : 24px;
 	font-weight : bold;
 	margin-left : 20px;
+}
+
+/* table css */
+.signForm {margin : auto;font-size: 15px;}
+.signForm td {padding : 10px;height: 30px;}
+
+
+/* ul,li css */
+li.navTitle {background-color: #d9d9d9;}
+li.active {background-color: #66ccff;}
+
+/* a css */
+a.navTitle {
+	font-size: 15px;
+	font-weight: bold;
+	color: #000000;
+	text-align: center;
+}
+a.nav {
+	text-align: center;
+	font-size: 14px;
+	color: #000000;
 }

@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>마이페이지</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/template.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
 	div.main {
@@ -13,14 +14,6 @@
 		margin-top: 50px;
 		margin-bottom:100px;
 		width: 100%;
-	}
-	table.modifyFormList {
-		margin : auto;
-		font-size: 15px;
-	}
-	table.modifyFormList td {
-		padding : 10px;
-		height: 30px;
 	}
 	.inputText {
 		height: 40px;
@@ -275,7 +268,7 @@ $(document).ready(function(){
 			</div>
 			<form action="modifyMember.do" enctype="multipart/form-data" method="post" id="modify">
 				<input type="hidden" name="mtype" value="user">
-				<table class="modifyFormList">
+				<table class="signForm">
 					<colgroup>
 						<col width="30%">
 						<col width="*">

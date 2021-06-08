@@ -7,6 +7,7 @@ public class Grade {
 	private int glevel;
 	private String gcurrent;
 	private int glike;
+	private int gcount;
 	private int dangolCnt;
 	
 	public int getGnum() {
@@ -50,6 +51,12 @@ public class Grade {
 	}
 	public void setDangolCnt(int dangolCnt) {
 		this.dangolCnt = dangolCnt;
+	}
+	public int getGcount() {
+		return gcount;
+	}
+	public void setGcount(int gcount) {
+		this.gcount = gcount;
 	}
 	public Grade() {}
 	public Grade(int gnum, String mid, int snum, int glevel, String gcurrent, int glike) {

@@ -70,32 +70,7 @@
 	<delete id="deleteMemberOne" parameterType="member">
 		DELETE FROM MEMBERS WHERE MID = #{mid}
 	</delete>
-	
-	<select id="selectBookmarkList" parameterType="member" resultType="details">
-		SELECT 
-	 		D.DNUM AS dnum
-            ,G.SNUM AS snum 
-			,D.GNUM AS gnum 
-			,D.DDATE AS ddate
-			,D.DPERSON AS dperson
-			,D.DMENU AS dmenu
-			,D.DTYPE AS dtype
-			,D.DASK AS dask
-			,D.DCHECK AS dcheck
-			,D.DTIME AS dtime
-			,D.DCOUNT AS dcount
-			,D.DLIMIT AS dlimit
-	 	FROM 
-	 		DETAILS D
-	 		INNER JOIN GRADES G ON D.GNUM = G.GNUM
-	 	WHERE 
-			G.MID = #{mid}
-            AND G.GCURRENT = 'yes' 
-            AND G.GLIKE = 1
-	 		AND D.DCHECK = 'yes' 
-	 	ORDER BY D.DDATE DESC
-	</select>
-	
+	<!-- 좋아요리스트 -->
 	<select id="selectGlikeList" parameterType="member" resultType="grade">
 		SELECT 
 			GNUM AS gnum
@@ -111,8 +86,8 @@
 			AND GCURRENT = 'yes' 
 			AND GLIKE = 1
 	</select>
-	
-	<select id="selectHistoryOne" parameterType="details" resultType="details">
+	<!-- 방문내역 -->
+	<select id="selectHistoryList" parameterType="details" resultType="details">
 	 	SELECT 
 	 		D.DNUM AS dnum
 			,D.GNUM AS gnum 
@@ -134,6 +109,107 @@
 	 		AND D.DCHECK = 'yes' 
 	 	ORDER BY D.DDATE DESC
 	</select>
+	<!-- 즐겨찾기 리스트 -->
+	<select id="selectBookmarkList" parameterType="details" resultType="details">
+	 	SELECT 
+	        G.MID AS mid
+	        ,G.GLEVEL AS glevel
+	        ,G.GLIKE AS glike
+	        ,D.DDATE AS ddate
+	        ,D.DCOUNT AS dcount
+	        ,S.SNUM AS snum
+	        ,S.SIMAGE AS simage
+	        ,S.SNAME AS sname
+	        ,S.SADDRESS AS saddress
+	        ,S.SDETAILADDR AS sdetailaddr
+	    FROM 
+	        DETAILS D
+	        INNER JOIN GRADES G ON D.GNUM = G.GNUM
+	        INNER JOIN STORES S ON G.SNUM = S.SNUM
+	    WHERE 
+	        G.MID = #{mid}
+	        AND G.GCURRENT = 'yes' 
+	        AND G.GLIKE = 1
+	        AND D.DCHECK = 'yes' 
+	    ORDER BY D.DDATE DESC
+	</select>
+	<!-- 나의 등급 정보 리스트 -->
+	<select id="selectGradeList" parameterType="member" resultType="grade">
+		SELECT 
+			GNUM AS gnum
+			,MID AS mid
+			,SNUM AS snum
+			,GLEVEL AS glevel
+			,GCURRENT AS gcurrent
+			,GLIKE AS glike
+			,GCOUNT AS gcount
+		FROM
+			GRADES
+		WHERE
+			MID = #{mid} 
+			<!-- AND GCURRENT = 'yes' -->
+	</select>
+	<!-- 등급 강등 -->
+	<update id="updateGrade" parameterType="grade">
+		UPDATE
+			GRADES
+		SET 
+			<if test="glevel != null and glevel != ''">
+			GLEVEL = #{glevel} 
+			</if>
+			<if test="gcount != null and gcount != ''">
+			,GCOUNT = #{gcount}
+			</if>
+		WHERE 
+			GNUM = #{gnum} 
+			<!-- AND GCURRENT = 'yes' -->
+	</update>
+	<!-- 예약 리스트 -->
+	<select id="selectReserveState" parameterType="member" resultType="details">
+		SELECT 
+	        G.MID AS mid
+	        ,D.DNUM AS dnum
+	        ,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
+	        ,D.DTIME AS dtime
+	        ,D.DPERSON AS dperson
+	        ,D.DMENU AS dmenu
+	        ,S.SNUM AS snum
+	        ,S.SIMAGE AS simage
+	        ,S.SNAME AS sname
+	    FROM 
+	        DETAILS D
+	        INNER JOIN GRADES G ON D.GNUM = G.GNUM
+	        INNER JOIN STORES S ON G.SNUM = S.SNUM
+	    WHERE 
+	        G.MID = #{mid}
+	        AND D.DTYPE = 'yes'
+	        AND D.DCHECK = 'no'  
+	    ORDER BY D.DDATE ASC
+	</select>
+	
+	<select id="selectddate" parameterType="details" resultType="details">
+		SELECT
+			DNUM
+			,GNUM
+			,DDATE
+			,DPERSON
+			,DMENU
+			,DTYPE
+			,DASK
+			,DCHECK
+			,DTIME
+			,DCOUNT
+			,DLIMIT
+		FROM
+			DETAILS
+		WHERE
+			DDATE LIKE SYSDATE 
+			AND DNUM = #{dnum}
+	</select>
+	
+	<delete id="deleteReserve" parameterType="details">
+		DELETE FROM DETAILS WHERE DNUM = #{dnum}
+	</delete>
 	
 	<update id="updateLike" parameterType="member">
 		UPDATE 
@@ -152,23 +228,17 @@
 	<select id="recentlyVisited" parameterType="int" resultType="details">
 	select * from details where gnum = #{gnum} and dcheck ='yes' order by ddate desc
 	</select>
-	<select id="selectHistoryAll" parameterType="String" resultType="grade">
-	select * from grades where mid = #{mid} and gcurrent like 'yes'	
-	</select>
+	
 	
 	
 	<select id="selectcomments" parameterType="int" resultType="comment">
 	select * from comments  where dnum=#{dnum}
 	</select>
-	<select id="selectReserveState" parameterType="String" resultType="details">
-	select * from details where gnum in (select gnum from grades where mid = #{mid}) and dtype = 'yes' and dcheck ='no' order by ddate
-	</select>
+	
 	<select id="selectgradeByGnum" parameterType="int" resultType="grade">
 	select* from grades where gnum=#{gnum}
 	</select>
-	<delete id="deleteReserve" parameterType="int">
-	delete from details where dnum=#{dnum}
-	</delete>
+	
 	<select id="selectDetailsByDnum" parameterType="int" resultType="details">
 	select*from details where dnum =#{dnum}
 	</select>
@@ -193,16 +263,10 @@
 	<select id="selectgrade" parameterType="java.util.HashMap" resultType="grade">
 	select * from grades where mid=#{mid} and snum=#{snum} and gcurrent='yes'
 	</select>
-	<select id="selectddate" parameterType="int" resultType="details">
-	select * from details where ddate like sysdate and dnum=#{dnum}
-	</select>
+	
 	<update id="updatedetails" parameterType="details">
 	update details set dcount=#{dcount} where dnum=#{dnum}
 	</update>
-	<update id="deletegrade" parameterType="int">
-	update grades set glevel=glevel-1 where gnum=#{gnum} and gcurrent='yes'
-	</update>
-	<select id="selectDetailsByGnum" parameterType="int" resultType="details">
-	select* from details where gnum=#{gnum}
-	</select>
+	
+	
     </mapper> 

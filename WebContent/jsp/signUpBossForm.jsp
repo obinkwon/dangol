@@ -6,14 +6,9 @@
 <meta charset="UTF-8">
 <title>사장님_회원가입</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/template.css" />
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
-	div.main {
-		margin : auto;
-		margin-top: 50px;
-		margin-bottom:100px;
-		width: 100%;
-	}
 	table.signForm {	
 		margin : auto;		
 		font-size: 15px;

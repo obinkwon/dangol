@@ -21,19 +21,27 @@ public interface IMyPageDao {
 	//즐겨찾기 리스트
 	public List<Grade> selectGlikeList(Member member);
 	//내역 리스트
-	public List<Details> selectHistoryOne(Details details);
+	public List<Details> selectHistoryList(Details details);
 	//즐겨찾기 리스트
 	public List<Details> selectBookmarkList(Member member);
 	//즐겨찾기 수정
 	public int updateLike(Member member);
+	//예약 날짜 조회
+	public Details selectddate(Details details);
+	//예약 삭제
+	public int deleteReserve(Details details);
+	//나의 등급 정보 리스트
+	public List<Grade> selectGradeList(Member member);
+	//등급 강등 and  포인트 절감
+	public int updateGrade(Grade grade);
+	//예약 리스트
+	public List<Details> selectReserveState (Member member);
+	
 	
 	public Store selectStoreBySnum(int snum);
 	public List<Details> recentlyVisited(int gnum);
-	public List<Grade> selectHistoryAll(String mid);
 	public Comment selectcomments (int dnum);
-	public List<Details> selectReserveState (String mid);
 	public Grade selectgradeByGnum (int gnum);
-	public void deleteReserve(int dnum);
 	public Details selectDetailsByDnum (int dnum);
 	public void insertComment(Comment comment);
 	public List<Details> selectdetailslist(HashMap<String, Object> param);
@@ -42,9 +50,6 @@ public interface IMyPageDao {
 	public void updateNewGrade(Grade grade);
 	public List<Details>selectdcount(HashMap<String, Object> param);
 	public Grade selectgrade(HashMap<String, Object> param);
-	public Details selectddate(int dnum);
 	public void updatedetails(Details details);
-	public void deletegrade(int gnum);
-	public List<Details> selectDetailsByGnum(int gnum);
 	
 }

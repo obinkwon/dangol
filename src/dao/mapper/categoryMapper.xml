@@ -197,7 +197,25 @@
 			,#{dlimit}
 		)
 	</insert>
-	
+	<!-- 예약 정보 가져오기 -->
+	<select id="selectDetail" parameterType="details" resultType="details">
+		SELECT
+			DNUM AS dnum
+			,GNUM AS gnum
+			,TO_CHAR(DDATE,'YYYYMMDD') AS ddate
+			,DPERSON AS dperson
+			,DMENU AS dmenu
+			,DTYPE AS dtype
+			,DASK AS dask
+			,DCHECK AS dcheck
+			,DTIME AS dtime
+			,DCOUNT AS dcount
+			,DLIMIT AS dlimit
+		FROM
+			DETAILS
+		WHERE
+			DNUM = #{dnum}
+	</select>
 	
 	<select id="selectGradeCountBySnum" parameterType="int" resultType="int">
 		SELECT 
@@ -271,7 +289,7 @@
 			DETAILS 
 		WHERE 
 			GNUM = #{gnum} 
-			AND DCOUNT <![CDATA[>]]> 0
+			<!-- AND DCOUNT <![CDATA[>]]> 0 -->
 	</select>
 	<select id="selectCommentOneByDnum" parameterType="int" resultType="comment">
 		SELECT
@@ -398,9 +416,7 @@
 	<update id="updateDcountMinusByDnum" parameterType="int">
 		update details set dcount = dcount - 1 where dnum = #{dnum} 
 	</update>
-	<select id="selectDetailByDnum" parameterType="int" resultType="details">
-		select * from details where dnum = #{dnum}
-	</select>
+	
 	<select id="selectAdminTasteTag" resultType="admin">
 		select * from admins where atype= 'taste'
 	</select>

@@ -344,8 +344,8 @@ public class CategoryService {
 		else return icdao.selectCommentByDnum(dnum);
 	}
 	
-	public Details selectDetail(int dnum) {
-		return icdao.selectDetailByDnum(dnum);
+	public Details selectDetail(Details details) {
+		return icdao.selectDetail(details);
 	}
 	
 	public List<Admin> selectTasteTagList() {

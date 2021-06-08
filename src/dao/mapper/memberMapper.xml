@@ -139,10 +139,11 @@ select anum from admins  where avalue=#{tag} and atype='theme'
 		WHERE
 			MID = #{mid}
 	</select>
-<update id="updateMpenalty" parameterType="String">
-update members set mpenalty = mpenalty+1 where mid = #{mid}
-</update>
-<update id="resetMpenalty" parameterType="String">
-update members set mpenalty=0 where mid=#{mid}
-</update>
+	<update id="updateMpenalty" parameterType="member">
+		UPDATE 
+			MEMBERS
+		SET
+			MPENALTY = #{mpenalty}
+		WHERE MID = #{mid}
+	</update>
 </mapper>

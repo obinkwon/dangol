@@ -27,8 +27,9 @@ public interface ICategoryDao {
 	//예약 리스트 가져오기
 	public List<Details> selectDetailReserveByDdate(Details detail);
 	//예약 하기
-	public int insertDetail(Details detail);
-	
+	public int insertDetail(Details details);
+	//예약 정보 가져오기
+	public Details selectDetail(Details details);
 	
 	
 	
@@ -68,7 +69,6 @@ public interface ICategoryDao {
 	public List<Details> selectDetailByMidSnum(HashMap<String, Object> dMap);
 	public void updateDcountMinusByDnum(int dnum);
 	public int selectDetailMaxDcount(Grade grade);
-	public Details selectDetailByDnum(int dnum);
 	public List<Admin> selectAdminTasteTag();
 	public void updateCommentOne(Comment comment);
 	public Comment selectCommentByDnum(int dnum);

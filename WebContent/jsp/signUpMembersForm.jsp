@@ -9,14 +9,6 @@
 <link rel="stylesheet" href="/css/template.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <style type="text/css">
-	table.signForm {	
-		margin : auto;		
-		font-size: 15px;
-	}
-	table.signForm td {
-		padding : 10px;
-		height: 30px;
-	}
 	.tagText {
 		text-align: center;
 		height: 10px;

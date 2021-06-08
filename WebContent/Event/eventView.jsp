@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>이벤트상세보기_이벤트/행사</title>
+<link rel="stylesheet" href="/css/template.css" />
 <style>
 	.contentsTitGroup{
 		padding-top: 9.5rem;
@@ -55,31 +56,8 @@
 	    padding: 0 7px;
 	    background-color: transparent;
 	}
-	.btn-view {
-	    width: 200px;
-        font-size: 1.4rem;
-        background-color: #fff;
-		color: #000000;
-	    height: 4rem;
-	    margin: 0 auto;
-	    line-height: 3.9rem;
-		margin-top: 4.5rem;
-		font-weight: 600;
-	    letter-spacing: 0.5px;
-	    transition-duration: .5s;
-        border: 0.1rem solid #66ccff;
-	}
-	.btn-wrap{
-		margin: 0 auto;
-		text-align: center;
-		margin-bottom : 200px;
-	}
 	.btn-basic{
 		backgroud-color: #ffcc99;
-	}
-	.btn-mint{
-		background-color: #66ccff;
-		color: #fff;
 	}
 </style>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -134,8 +112,8 @@
 	<!-- 사장님 전용 단추 -->
 	<c:if test="${Authority eq true}">
 		<div class="btn-wrap">
-			<button type="button" class="btn-view btn-mint" id="update_event" onclick="updateEvent('${event.eid}'); return false;">수정</button>
-			<button type="button" class="btn-view" onClick="deleteEvent('${event.eid}'); return false;">삭제</button>
+			<button type="button" class="btn-view btn-mint" id="update_event" onclick="updateEvent('${event.eid}'); return false;" style="margin-top: 4.5rem;">수정</button>
+			<button type="button" class="btn-view" onClick="deleteEvent('${event.eid}'); return false;" style="margin-top: 4.5rem;">삭제</button>
 	 	</div>
 	</c:if>
 	</div>

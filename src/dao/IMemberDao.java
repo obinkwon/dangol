@@ -19,8 +19,8 @@ public interface IMemberDao {
 	public List<Member> selectMtag(Member member);
 	//회원 정보 조회
 	public Member selectMember(Member member);
-	
-	public void updateMpenalty(String mid) throws Exception;
+	//패널티 추가
+	public int updateMpenalty(Member member) throws Exception;
 	
 	public void resetMpenalty(String mid) throws Exception;
 }

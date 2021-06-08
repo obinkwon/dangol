@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +29,7 @@ import model.Member;
 import model.Mtag;
 import model.Store;
 import service.AdminService;
+import service.CategoryService;
 import service.MemberService;
 import service.MyPageService;
 
@@ -39,6 +42,8 @@ public class MyPageController {
 	private MemberService mService;
 	@Autowired
 	private AdminService aService;
+	@Autowired
+	private CategoryService cService;
 
 	//마이페이지
 	@RequestMapping("myPage.do")
@@ -47,7 +52,7 @@ public class MyPageController {
 		ModelAndView mav = new ModelAndView();
 		Admin admin = new Admin();
 		admin.setAtype("theme");
-		if (mid != null) {
+		if(mid != null) {
 			Member member = new Member();
 			member.setMid(mid);
 			mav.addObject("Member", mService.selectMember(member));
@@ -95,53 +100,31 @@ public class MyPageController {
 		session.invalidate(); //세션 초기화
 		return "redirect:main.do";
 	}
+	
 	//즐겨찾기
 	@RequestMapping("bookmark.do")
-	public ModelAndView bookmark(HttpSession session) {
+	public ModelAndView bookmark(HttpSession session
+			,Member member) {
 		ModelAndView mav = new ModelAndView();
 		String mid = (String) session.getAttribute("mid");
 		if (mid != null) {
-			Member member = new Member();
 			member.setMid(mid);
-			List<HashMap<String, Object>> bookmarkList = new ArrayList<HashMap<String, Object>>();
-			List<List<Details>> detailslist = mypageService.selectGlikeList(member);
-//			List<Details> bookmarkList =mypageService. selectBookmarkList(member);
+			List<Details> bookmarkList = mypageService.selectBookmarkList(member);
 
-			if(detailslist!=null) {
-				for (List<Details> dlist : detailslist) {
-					if(dlist.size()!=0) {	
-						HashMap<String, Object> bookmark = new HashMap<String, Object>();
-						Grade grade = mypageService.selectgradeByGnum(dlist.get(0).getGnum());
-						Store store = mypageService.selectStoreBySnum(grade.getSnum());
-						bookmark.put("snum", store.getSnum());
-						bookmark.put("simage", store.getSimage());
-						bookmark.put("sname", store.getSname());
-						bookmark.put("saddress", store.getSaddress());
-						Grade grades = mypageService.selectgrade(grade.getMid(),grade.getSnum());
-						bookmark.put("glevel", grades.getGlevel());
-						bookmark.put("glike", grades.getGlike());
-						Date date = dlist.get(0).getDdate();
-						bookmark.put("ddate", date);
-						List<Details> details= mypageService.selectdcount(grade.getMid(), grade.getSnum());
-						int dcount = details.get(0).getDcount();
-						
-						Object count = null;
-						if (dcount < 12) {
-							count = (12 - dcount);
-						} else if (dcount < 24) {
-							count = (24 - dcount);
-						} else if (dcount < 48) {
-							count = (48 - dcount);
-						} else {
-							count = ("최고등급입니다.");
-						}
-						bookmark.put("dcount", count);
-						
-						bookmarkList.add(bookmark);
-					}
+			for (Details detail : bookmarkList) {
+				int dcount = detail.getDcount();
+				int count = 0;
+				if (dcount < 12) {
+					count = (12 - dcount);
+				} else if (dcount < 24) {
+					count = (24 - dcount);
+				} else if (dcount < 48) {
+					count = (48 - dcount);
+				} else {
+					count = 100;
 				}
-					
-				}
+				detail.setDcount(count);
+			}
 
 			mav.addObject("bookmarkList", bookmarkList);
 			mav.setViewName("mypage/bookmark");
@@ -181,7 +164,7 @@ public class MyPageController {
 				Grade grades = mypageService.selectgrade(grade.getMid(),grade.getSnum());
 				history.put("glevel", grades.getGlevel());
 				history.put("glike", grades.getGlike());
-				Date date = dlist.get(0).getDdate();
+				String date = dlist.get(0).getDdate();
 				history.put("ddate", date);
 				List<Details> details= mypageService.selectdcount(grade.getMid(), grade.getSnum());
 				int dcount = details.get(0).getDcount();
@@ -219,7 +202,7 @@ public class MyPageController {
 	public ModelAndView historyView(HttpSession session, int snum) {
 		String mid=(String)session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
-		List<Details> detailslist = mypageService.selectHistoryOne(mid, snum);
+		List<Details> detailslist = mypageService.selectHistoryList(mid, snum);
 		List<String> commentlist = new ArrayList<String>();
 		for (int i = 0; i < detailslist.size(); i++) {
 			Comment comments = mypageService.selectcomments(detailslist.get(i).getDnum());
@@ -278,37 +261,21 @@ public class MyPageController {
 		return mav;
 	}
 
+	//예약 현황
 	@RequestMapping("reserveState.do")
-	public ModelAndView reserveState(HttpSession session) {
-		String mid = (String) session.getAttribute("mid");
-
+	public ModelAndView reserveState(HttpSession session
+			, Details details
+			, Member member) {
 		ModelAndView mav = new ModelAndView();
-		List<Details> details = mypageService.selectReserveState(mid);
-
-		List<HashMap<String, Object>> reservationList = new ArrayList<HashMap<String, Object>>();
-		for (int i = 0; i < details.size(); i++) {
-			HashMap<String, Object> param = new HashMap<String, Object>();
-			param.put("ddate", details.get(i).getDdate());
-			param.put("dtime", details.get(i).getDtime());
-			param.put("dperson", details.get(i).getDperson());
-			param.put("dmenu", details.get(i).getDmenu());
-			param.put("dtype", details.get(i).getDtype());
-			param.put("dask", details.get(i).getDask());
-			param.put("dnum", details.get(i).getDnum());
-			Grade g = mypageService.selectgradeByGnum(details.get(i).getGnum());
-			param.put("glevel", g.getGlevel());
-			Store store = mypageService.selectStoreBySnum(g.getSnum());
-			param.put("snum", store.getSnum());
-			param.put("simage", store.getSimage());
-			param.put("sname", store.getSname());
-			param.put("sratelv0", store.getSratelv0());
-			param.put("sratelv1", store.getSratelv1());
-			param.put("sratelv2", store.getSratelv2());
-			param.put("sratelv3", store.getSratelv3());
-			reservationList.add(param);
+		String mid = (String) session.getAttribute("mid");
+		if(mid != null) {
+			member.setMid(mid);
+			List<Details> reserveList = mypageService.selectReserveState(member);//예약 리스트
+			mav.addObject("reserveList", reserveList);
+			mav.setViewName("mypage/reserveState");
+		}else {
+			mav.setViewName("jsp/loginForm");
 		}
-		mav.addObject("reservationList", reservationList);
-		mav.setViewName("mypage/reserveState");
 
 		return mav;
 	}
@@ -323,38 +290,45 @@ public class MyPageController {
 		return view;
 	}
 
+	//예약 취소
 	@RequestMapping("cancelReserve.do")
-	public String cancelReserve(HttpServletResponse resp, int dnum, HttpSession session) throws Exception {
-		String mid=(String)session.getAttribute("mid");
-		int num=mypageService.deleteReserve(dnum,mid);
+	public String cancelReserve(HttpServletResponse resp
+			, Details detail
+			, Member member 
+			, HttpSession session) throws Exception {
+		String date = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());//현재 날짜
+		String mid = (String)session.getAttribute("mid");
+		
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
-		String str = "";
-		if(num==1) {
-			str = "<script language='javascript'>";
-			str += "alert('예약이 취소되었습니다.');";
-			str += "location.href='reserveState.do'";
-			str += "</script>";
-			pw.print(str);
-			return null;	
-		}else if(num==3) {
-			str = "<script language='javascript'>";
-			str += "alert('당일 취소로 인해 패널티가 부과되었습니다.');";
-			str += "location.href='reserveState.do'";
-			str += "</script>";
-			pw.print(str);
-			return null;
-		}else {
-			str = "<script language='javascript'>";
-			str += "alert('최대  패널티가 부과되어 등급이 강등됩니다.');";
-			str += "location.href='reserveState.do'";
-			str += "</script>";
-			pw.print(str);
-			return null;
+		String str = "<script language='javascript'>";
+		
+		detail.setMid(mid);
+		int ddate = Integer.parseInt(detail.getDdate());
+		int today = Integer.parseInt(date);
+		detail = cService.selectDetail(detail);//예약 정보 조회
+		if(ddate <= today) {//예약 날짜가 당일인 경우
+			member.setMid(detail.getMid());
+			member = mService.checkId(member);
 			
+			int penalty = member.getMpenalty();
+			member.setMpenalty(penalty+1);
+			str += "alert('당일 취소로 인해 패널티가 부과되었습니다.');";
+			if (penalty >= 3) {//패널티 3번이상인경우
+				mypageService.updateGrade(member);//등급 강등 및 포인트 절감
+				member.setMpenalty(0);
+				str += "alert('최대  패널티가 부과되어 등급이 강등됩니다.');";
+			}
+			mypageService.updatePenalty(detail);//패널티 추가
+			mypageService.deleteReserve(detail);//예약 취소
+		}else {
+			mypageService.deleteReserve(detail);//예약 삭제
+			str += "alert('예약이 취소되었습니다.');";
 		}
-		
-		
+		str += "location.href='reserveState.do'";
+		str += "</script>";
+		pw.print(str);
+		return null;
 	}
 
 	@RequestMapping("createCommentForm.do")

@@ -1,11 +1,9 @@
 package model;
 
-import java.sql.Date;
-
 public class Details {
 	private int dnum;
 	private int gnum;
-	private Date ddate;
+	private String ddate;
 	private int dperson;
 	private String dmenu;
 	private String dtype;
@@ -17,6 +15,12 @@ public class Details {
 	private String dpermit;
 	private String mid;
 	private int snum;
+	private String simage;
+	private String sname;
+	private String saddress;
+	private String sdetailaddr;
+	private int glevel;
+	private int glike;
 	public int getDnum() {
 		return dnum;
 	}
@@ -29,10 +33,10 @@ public class Details {
 	public void setGnum(int gnum) {
 		this.gnum = gnum;
 	}
-	public Date getDdate() {
+	public String getDdate() {
 		return ddate;
 	}
-	public void setDdate(Date ddate) {
+	public void setDdate(String ddate) {
 		this.ddate = ddate;
 	}
 	public int getDperson() {
@@ -101,8 +105,44 @@ public class Details {
 	public void setSnum(int snum) {
 		this.snum = snum;
 	}
+	public String getSimage() {
+		return simage;
+	}
+	public void setSimage(String simage) {
+		this.simage = simage;
+	}
+	public String getSname() {
+		return sname;
+	}
+	public void setSname(String sname) {
+		this.sname = sname;
+	}
+	public String getSaddress() {
+		return saddress;
+	}
+	public void setSaddress(String saddress) {
+		this.saddress = saddress;
+	}
+	public String getSdetailaddr() {
+		return sdetailaddr;
+	}
+	public void setSdetailaddr(String sdetailaddr) {
+		this.sdetailaddr = sdetailaddr;
+	}
+	public int getGlevel() {
+		return glevel;
+	}
+	public void setGlevel(int glevel) {
+		this.glevel = glevel;
+	}
+	public int getGlike() {
+		return glike;
+	}
+	public void setGlike(int glike) {
+		this.glike = glike;
+	}
 	public Details() {}
-	public Details(int dnum, int gnum, Date ddate, int dperson, String dmenu, String dtype, String dask, String dcheck,
+	public Details(int dnum, int gnum, String ddate, int dperson, String dmenu, String dtype, String dask, String dcheck,
 			String dtime, int dcount, int dlimit, String dpermit) {
 		this.dnum = dnum;
 		this.gnum = gnum;

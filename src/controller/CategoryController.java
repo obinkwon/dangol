@@ -282,9 +282,10 @@ public class CategoryController {
 			, HttpSession session) throws Exception{
 		String mid = (String)session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
-		if(mid != null && mid.equals("")) { //일반 사용자 로그인 되어있을때
+		if(mid != null && !mid.equals("")) { //일반 사용자 로그인 되어있을때
 			grade.setMid(mid);
 			grade = cservice.selectMyGradeInfo(grade);//내 등급 정보
+			System.out.println("grade ::: "+grade);
 		}
 		store = oService.selectStoreOne(store);//가게 정보
 		
@@ -427,7 +428,9 @@ public class CategoryController {
 		member.setMid(mid);
 		Member m = memservice.selectMember(member);
 		Comment c = cservice.selectComment(cnum,dnum);
-		Details d = cservice.selectDetail(c.getDnum());
+		Details detail = new Details();
+		detail.setDnum(c.getDnum());
+		Details d = cservice.selectDetail(detail);
 		String[] menuList = null;
 		if(d.getDmenu()!=null) menuList = d.getDmenu().split(",");
 		Grade g = cservice.commentMid(d.getDnum());
