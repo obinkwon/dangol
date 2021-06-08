@@ -183,12 +183,11 @@ public class MemberController {
 			, @RequestParam("mfile") MultipartFile mfile) throws Exception {
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
-		String str = "";
+		String str = "<script language='javascript'>";
 		int result = mService.insertMember(member, mfile);
 		if(member.getMtag() != null) {
 			mService.insertMtag(member);
 		}
-		str = "<script language='javascript'>";
 		if(result > 0) {
 			str += "alert('가입이 완료되었습니다.');";
 		}else {
