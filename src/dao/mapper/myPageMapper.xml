@@ -83,7 +83,7 @@
 			GRADES 
 		WHERE 
 				MID = #{mid} 
-			AND GCURRENT = 'yes' 
+			AND GCURRENT = 'Y' 
 			AND GLIKE = 1
 	</select>
 	<!-- 방문내역 -->
@@ -106,7 +106,7 @@
 	 	WHERE 
 			G.MID = #{mid} 
 			AND G.SNUM = #{snum}
-	 		AND D.DCHECK = 'yes' 
+	 		AND D.DCHECK = 'Y' 
 	 	ORDER BY D.DDATE DESC
 	</select>
 	<!-- 즐겨찾기 리스트 -->
@@ -128,9 +128,9 @@
 	        INNER JOIN STORES S ON G.SNUM = S.SNUM
 	    WHERE 
 	        G.MID = #{mid}
-	        AND G.GCURRENT = 'yes' 
+	        AND G.GCURRENT = 'Y' 
 	        AND G.GLIKE = 1
-	        AND D.DCHECK = 'yes' 
+	        AND D.DCHECK = 'Y' 
 	    ORDER BY D.DDATE DESC
 	</select>
 	<!-- 나의 등급 정보 리스트 -->
@@ -147,7 +147,7 @@
 			GRADES
 		WHERE
 			MID = #{mid} 
-			<!-- AND GCURRENT = 'yes' -->
+			<!-- AND GCURRENT = 'Y' -->
 	</select>
 	<!-- 등급 강등 -->
 	<update id="updateGrade" parameterType="grade">
@@ -162,7 +162,7 @@
 			</if>
 		WHERE 
 			GNUM = #{gnum} 
-			<!-- AND GCURRENT = 'yes' -->
+			<!-- AND GCURRENT = 'Y' -->
 	</update>
 	<!-- 예약 리스트 -->
 	<select id="selectReserveState" parameterType="member" resultType="details">
@@ -182,8 +182,8 @@
 	        INNER JOIN STORES S ON G.SNUM = S.SNUM
 	    WHERE 
 	        G.MID = #{mid}
-	        AND D.DTYPE = 'yes'
-	        AND D.DCHECK = 'no'  
+	        AND D.DTYPE = 'Y'
+	        AND D.DCHECK = 'N'  
 	    ORDER BY D.DDATE ASC
 	</select>
 	
@@ -219,7 +219,7 @@
 		WHERE 
 			MID = #{mid}
 			AND SNUM = #{snum}
-			AND GCURRENT = 'yes'
+			AND GCURRENT = 'Y'
 	</update>
 	
 	<select id="selectStoreBySnum" parameterType="int" resultType="store">

@@ -150,10 +150,10 @@
 					GRADES 
 				WHERE 
 					SNUM = #{snum} 
-					AND GCURRENT = 'yes'
+					AND GCURRENT = 'Y'
 			)
-		 	AND DTYPE = 'yes' 
-		 	AND DCHECK = 'no' 
+		 	AND DTYPE = 'Y' 
+		 	AND DCHECK = 'N' 
 		 ORDER BY DDATE
 	</select>
 	<!-- 가게 태그 등록 -->
@@ -232,7 +232,7 @@
 			GRADES 
 		WHERE 
 			SNUM = #{snum} 
-			AND GCURRENT = 'yes'
+			AND GCURRENT = 'Y'
 	</select>
 	
 	<select id="selectGradesCurrentYBysnums" parameterType="java.util.HashMap" resultType="grade">
@@ -240,7 +240,7 @@
 			<foreach collection="snums" item="snum" index="index" separator="," open="(" close=")">
 				#{snum} 
 			</foreach>
-		AND GCURRENT = 'yes'
+		AND GCURRENT = 'Y'
 	</select>
 	
 	<select id="selectDetailsByGnums" parameterType="java.util.HashMap" resultType="details">
@@ -248,7 +248,7 @@
 			<foreach collection="gnums" item="gnum" index="index" separator="," open="(" close=")">
 				#{gnum}
 			</foreach>
-		 AND DTYPE = 'yes' AND DCHECK = 'no' ORDER BY DDATE
+		 AND DTYPE = 'Y' AND DCHECK = 'N' ORDER BY DDATE
 	</select>
 	
 	<select id="selectDetailsByGnumsDdate" parameterType="java.util.HashMap" resultType="details">
@@ -256,7 +256,7 @@
 			<foreach collection="Gnums" item="gnum" index="index" separator="," open="(" close=")">
 				#{gnum}
 			</foreach>
-			AND DDATE LIKE #{Ddate} AND DTYPE = 'yes' AND DCHECK = 'no'
+			AND DDATE LIKE #{Ddate} AND DTYPE = 'Y' AND DCHECK = 'N'
 	</select>
 	
 	<select id="selectGradesCurrentYByMids" parameterType="java.util.HashMap" resultType="grade">
@@ -264,7 +264,7 @@
 			<foreach collection="mids" item="mid" index="index" separator="," open="(" close=")">
 				#{mid}
 			</foreach>
-			 AND GCURRENT = 'yes'
+			 AND GCURRENT = 'Y'
 	</select>
 	
 	<select id="selectStoresByGnums" parameterType="java.util.HashMap" resultType="store">

@@ -280,12 +280,13 @@ public class CategoryController {
 			, Grade grade
 			, Store store
 			, HttpSession session) throws Exception{
+		//현재 날짜
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 		String mid = (String)session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
 		if(mid != null && !mid.equals("")) { //일반 사용자 로그인 되어있을때
 			grade.setMid(mid);
 			grade = cservice.selectMyGradeInfo(grade);//내 등급 정보
-			System.out.println("grade ::: "+grade);
 		}
 		store = oService.selectStoreOne(store);//가게 정보
 		
@@ -320,8 +321,6 @@ public class CategoryController {
 		
 		//메뉴 가져오기
 		List<Order> menuList = cservice.selectOrderList(store);
-		//현재 날짜
-		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 		//후기가져오기(ing)
 		List<Comment> cList = null;
 		if(type.equals("new")){ //전체 리뷰
@@ -350,7 +349,8 @@ public class CategoryController {
 		return mav;
 	}
 	
-	@RequestMapping("likes.do")//가게 즐겨찾기 등록
+	//가게 즐겨찾기 등록
+	@RequestMapping("likes.do")
 	@ResponseBody
 	public int likes(Member member
 		,@RequestParam(defaultValue="0") String like) {
@@ -365,12 +365,13 @@ public class CategoryController {
 		return glike;
 	}
 	
+	//예약 하기
 	@RequestMapping("reserveStore.do")
 	public void reserveStore(Details detail
 			,Grade grade 
 			,Store store
 			,HttpSession session
-			,HttpServletResponse resp) throws IOException {//예약 하기
+			,HttpServletResponse resp) throws IOException {
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
 		String str = "<script language='javascript'>";

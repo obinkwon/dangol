@@ -72,7 +72,7 @@
 					GRADES B
 				WHERE 
 					B.SNUM = A.SNUM
-					AND B.GCURRENT = 'yes' 
+					AND B.GCURRENT = 'Y' 
 					AND B.GLEVEL <![CDATA[>]]> 0
 			) AS dancnt 
 		FROM 
@@ -92,12 +92,14 @@
 			,GLEVEL
 			,GCURRENT
 			,GLIKE
+			,GCOUNT
 		)VALUES(
 			#{gnum}
 			,#{mid}
 			,#{snum}
 			,0
-			,'yes'
+			,'Y'
+			,0
 			,0
 		)
 	</insert>
@@ -115,7 +117,7 @@
 		WHERE 
 			SNUM = #{snum} 
 			AND MID = #{mid} 
-			AND GCURRENT = 'yes'
+			AND GCURRENT = 'Y'
 	</select>
 	<!-- 해당가게 메뉴 리스트 -->
 	<select id="selectOrderList" parameterType="store" resultType="order">
@@ -139,7 +141,7 @@
 			GRADES 
 		WHERE 
 			SNUM = #{snum} 
-			AND GCURRENT = 'yes' 
+			AND GCURRENT = 'Y' 
 		GROUP BY GLEVEL 
 		ORDER BY GLEVEL
 	</select>
@@ -163,7 +165,7 @@
 		WHERE 
 			G.SNUM = #{snum}
 			AND TO_CHAR(D.DDATE,'YYYY-MM-DD') = #{ddate} 
-			AND D.DTYPE = 'yes'
+			AND D.DTYPE = 'Y'
 	</select>
 	<!-- 예약하기 -->
 	<insert id="insertDetail" parameterType="details">
@@ -187,11 +189,11 @@
 			,#{ddate}
 			,#{dperson}
 			,#{dmenu}
-			,'yes'
+			,'Y'
 			<if test="dask != '' and dask != null">
 			,#{dask}
 			</if>
-			,'no'
+			,'N'
 			,#{dtime}
 			,0
 			,#{dlimit}
@@ -224,7 +226,7 @@
 			GRADES 
 		WHERE 
 			SNUM = #{snum} 
-			AND GCURRENT = 'yes' 
+			AND GCURRENT = 'Y' 
 			AND GLEVEL <![CDATA[>]]> 0
 	</select>
 	<!-- 가게 리뷰 총점 -->
@@ -237,7 +239,7 @@
 			LEFT JOIN COMMENTS C ON B.DNUM = C.DNUM
 		WHERE 
 			A.SNUM = #{snum} 
-			AND A.GCURRENT = 'yes'
+			AND A.GCURRENT = 'Y'
 			AND B.DCOUNT <![CDATA[>]]> 0
 	</select>
 	<!-- 가게 리뷰 총 갯수 -->
@@ -250,7 +252,7 @@
 			LEFT JOIN COMMENTS C ON B.DNUM = C.DNUM
 		WHERE 
 			A.SNUM = #{snum} 
-			AND A.GCURRENT = 'yes'
+			AND A.GCURRENT = 'Y'
 			AND B.DCOUNT <![CDATA[>]]> 0
 	</select>
 	<select id="selectDetailAllByGnum" parameterType="int" resultType="details">

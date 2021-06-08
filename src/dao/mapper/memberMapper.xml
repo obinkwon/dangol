@@ -4,6 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.IMemberDao">
+
 	<!-- id 찾기 -->
 	<select id="findId" parameterType="member" resultType="member">
 		SELECT
@@ -13,6 +14,7 @@
 		WHERE 
 			MPHONE = #{mphone}
 	</select>
+	
 	<!-- 비밀번호 찾기 -->
 	<select id="findPw" parameterType="member" resultType="member">
 		SELECT
@@ -23,46 +25,7 @@
 			MID = #{mid} 
 			AND MPHONE = #{mphone} 
 	</select>
-	<sql id="mjob">
-		<choose>
-			<when test="mjob !=null and mjob != ''">
-				#{mjob}
-			</when>
-			<otherwise>
-				null
-			</otherwise>
-		</choose>
-	</sql>
-	<sql id="marea1">
-		<choose>
-			<when test="marea1 !=null and marea1 != ''">
-				#{marea1}
-			</when>
-			<otherwise>
-				null
-			</otherwise>
-		</choose>
-	</sql>
-	<sql id="marea2">
-		<choose>
-			<when test="marea2 !=null and marea2 != ''">
-				#{marea2}
-			</when>
-			<otherwise>
-				null
-			</otherwise>
-		</choose>
-	</sql>
-	<sql id="mimage">
-		<choose>
-			<when test="mimage !=null and mimage != ''">
-				#{mimage}
-			</when>
-			<otherwise>
-				null
-			</otherwise>
-		</choose>
-	</sql>
+	
 	<!-- 회원 등록 -->
 	<insert id="insertMember" parameterType="member">
 		INSERT INTO MEMBERS(
@@ -72,11 +35,19 @@
 			,MADDRESS
 			,MADDRESS_D
 			,MGENDER
+			<if test="mjob != null and mjob != ''">
 			,MJOB
+			</if>
 			,MTYPE
+			<if test="marea1 != null and marea1 != ''">
 			,MAREA1
+			</if>
+			<if test="marea2 != null and marea2 != ''">
 			,MAREA2
+			</if>
+			<if test="mimage != null and mimage != ''">
 			,MIMAGE
+			</if>
 			,MPENALTY	
 		) 
 		VALUES (
@@ -86,18 +57,23 @@
 			, 	#{maddress}
 			,	#{maddress_d}
 			, 	#{mgender}
-			, 	<include refid="mjob"/>
+			<if test="mjob != null and mjob != ''">
+			,	#{mjob}
+			</if>
 			,	'user'
-			, 	<include refid="marea1"/>
-			, 	<include refid="marea2"/>
-			,	<include refid="mimage"/>
+			<if test="marea1 != null and marea1 != ''">
+			,	#{marea1}
+			</if>
+			<if test="marea2 != null and marea2 != ''">
+			,	#{marea2}
+			</if>
+			<if test="mimage != null and mimage != ''">
+			,	#{mimage}
+			</if>
 			,	0
 		)
 	</insert>
 
-<select id="selectAnumByMtag" resultType="int" parameterType="String">
-select anum from admins  where avalue=#{tag} and atype='theme'
-</select>
 	<!-- 회원 태그 등록 -->
 	<insert id="insertMtag" parameterType="member">
 		INSERT INTO MTAG (
@@ -128,6 +104,7 @@ select anum from admins  where avalue=#{tag} and atype='theme'
 		WHERE 
 			MID = #{mid}
 	</select>
+	
 	<!-- 회원 태그 조회 -->
 	<select id="selectMtag" parameterType="member" resultType="member">
 		SELECT
@@ -139,6 +116,8 @@ select anum from admins  where avalue=#{tag} and atype='theme'
 		WHERE
 			MID = #{mid}
 	</select>
+	
+	<!-- 회원 패널티 수정 -->
 	<update id="updateMpenalty" parameterType="member">
 		UPDATE 
 			MEMBERS
