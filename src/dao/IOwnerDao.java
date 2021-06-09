@@ -21,28 +21,41 @@ public interface IOwnerDao {
 	
 	//예약현황
 	public List<Member> selectMembersByKeyword(String keyword);
-	public List<Grade> selectGradesCurrentYBySnum(int snum);
-	public List<Grade> selectGradesCurrentYBysnums(HashMap<String, int[]> hm);
+	//가게에 등록된 등급 정보
+	public List<Grade> selectGradeListBid(Store store);
+	//예약 리스트(전체)
+	public List<Details> selectDetailListTotal(Store store);
+	//예약 리스트(하나만)
+	public List<Details> selectDetailListOne(Store store);
 	public List<Grade> selectGradesCurrentYByMids(HashMap<String, String[]> hm);
-	public List<Details> selectDetailsByGnums(HashMap<String, int[]> hm);
+	public List<Details> selectDetailsCurrentYByMids(HashMap<String, String[]> hm);
 	public List<Details> selectDetailsByGnumsDdate(HashMap hm);
 	public List<Store> selectStoresBySnums(int[] snum);
-	
-	public List<Grade> selectGradeList(Grade grade);
-	public List<Details> selectDetailsList(Grade grade);
+	public List<Grade> selectGradeListSnum(Grade grade);
 	
 	/* 점장 가게*/
-	public List<Store> selectStoreList(Store store); //가게 리스트 가져오기
-	public int insertStore(Store store); //가게 등록
-	public int insertStag(Store store); //가게 태그 등록
-	public int deleteStag(Store store); //가게 태그 등록
-	public List<Store> selectStagList(Store store); //가게 태그 리스트
-	public Store selectStoreOne(Store store); //가게 정보 가져오기
-	public int updateStore(Store store); //가게 수정하기
-	public int deleteStore(Store store); //가게 삭제하기
-	public int insertMenu(Order order); //메뉴 등록
-	public int deleteMenu(Order order); //메뉴 삭제
-	public int updateMenu(Order order); //메뉴 수정
+	//가게 리스트 가져오기
+	public List<Store> selectStoreList(Store store); 
+	//가게 등록
+	public int insertStore(Store store); 
+	//가게 태그 등록
+	public int insertStag(Store store); 
+	//가게 태그 등록
+	public int deleteStag(Store store); 
+	//가게 태그 리스트
+	public List<Store> selectStagList(Store store); 
+	//가게 정보 가져오기
+	public Store selectStoreOne(Store store); 
+	//가게 수정하기
+	public int updateStore(Store store); 
+	//가게 삭제하기
+	public int deleteStore(Store store); 
+	//메뉴 등록
+	public int insertMenu(Order order); 
+	//메뉴 삭제
+	public int deleteMenu(Order order); 
+	//메뉴 수정
+	public int updateMenu(Order order); 
 
 	
 	 

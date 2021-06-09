@@ -45,6 +45,7 @@
 			, #{bphone}
 		)
 	</insert>
+	
 	<!-- 메뉴 등록 -->
 	<insert id="insertOrder" parameterType="order">
 		INSERT INTO ORDERS(
@@ -65,12 +66,14 @@
 			</if>
 		)
 	</insert>
+	
 	<!-- 점장 정보 삭제 -->
 	<delete id="deleteOwner" parameterType="store">
 		DELETE FROM BOSS 
 		WHERE BID = #{bid}
 		AND BPW = #{bpw}
 	</delete>
+	
 	<!-- 점장 정보 수정 -->
 	<update id="updateOwner" parameterType="store">
 		UPDATE BOSS SET 
@@ -79,7 +82,8 @@
 		WHERE 
 			BID = #{bid} 
 	</update> 
-	<!-- 예약현황 -->	
+	
+	<!-- 가게 리스트 -->	
 	<select id="selectStoreList" parameterType="store" resultType="store">
 		SELECT 
 			A.SNUM AS snum
@@ -110,170 +114,7 @@
 		ORDER BY SDATE DESC
 	</select>
 	
-	<select id="selectGradeList" parameterType="grade" resultType="grade">
-		SELECT 
-			GNUM AS gnum
-			,MID AS mid
-			,SNUM AS snum
-			,GLEVEL AS glevel
-			,GCURRENT AS gcurrent
-			,GLIKE AS glike
-		FROM 
-			GRADES 
-		WHERE 
-			SNUM = #{snum} 
-			<if test="gcurrent != null and gcurrent != ''">
-			AND GCURRENT = #{gcurrent}
-			</if>
-	</select>
-	
-	<select id="selectDetailsList" parameterType="grade" resultType="details">
-		SELECT 
-			DNUM AS dnum
-			,GNUM AS gnum
-			,DDATE AS ddate
-			,DPERSON AS dperson
-			,DMENU AS dmenu
-			,DTYPE AS dtype
-			,DASK AS dask
-			,DCHECK AS dcheck
-			,DTIME AS dtime
-			,DCOUNT AS dcount
-			,DLIMIT AS dlimit
-		FROM 
-			DETAILS 
-		WHERE 
-			GNUM IN(
-				SELECT 
-					GNUM
-				FROM 
-					GRADES 
-				WHERE 
-					SNUM = #{snum} 
-					AND GCURRENT = 'Y'
-			)
-		 	AND DTYPE = 'Y' 
-		 	AND DCHECK = 'N' 
-		 ORDER BY DDATE
-	</select>
-	<!-- 가게 태그 등록 -->
-	<insert id="insertStag" parameterType="store">
-		INSERT INTO STAG(
-			SNUM
-			,ANUM
-		)VALUES(
-			#{snum}
-			,#{stag}
-		)
-	</insert>
-	<!-- 가게 태그 등록 -->
-	<delete id="deleteStag" parameterType="store">
-		DELETE FROM STAG WHERE SNUM = #{snum} 
-	</delete>
-	<!-- 가게 태그 조회 -->
-	<select id="selectStagList" parameterType="store" resultType="store">
-		SELECT
-			SNUM AS snum
-			,A.ANUM AS anum
-			,B.AVALUE AS avalue
-		FROM
-			STAG A
-			LEFT JOIN ADMINS B ON A.ANUM = B.ANUM
-		WHERE
-			SNUM = #{snum}
-	</select>
-	<!-- 메뉴 등록 -->
-	<insert id="insertMenu" parameterType="order">
-		<selectKey resultType="int" keyProperty="ord" order="BEFORE">
-			SELECT COUNT(*) FROM ORDERS WHERE SNUM = #{snum}
-      	</selectKey>
-		INSERT INTO ORDERS(
-			ORD
-			,SNUM
-			,ONAME
-			,OPRICE
-			,OIMAGE
-		)VALUES(
-			#{ord}
-			,#{snum}
-			,#{oname}
-			,#{oprice}
-			,#{oimage}
-		)
-	</insert>
-	<!-- 메뉴 삭제 -->
-	<delete id="deleteMenu" parameterType="order">
-		DELETE FROM ORDERS WHERE ORD = #{ord} AND SNUM = #{snum}
-	</delete>
-	<!-- 메뉴 수정 -->
-	<insert id="updateMenu" parameterType="order">
-		UPDATE ORDERS 
-		SET
-			ONAME = #{oname}
-			,OPRICE = #{oprice}
-			,OIMAGE = #{oimage}
-		WHERE  
-			ORD = #{ord}
-			AND SNUM = #{snum}
-	</insert>
-	<select id="selectMembersByKeyword" parameterType="String" resultType="member">
-		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
-	</select>
-	
-	<select id="selectGradesCurrentYBySnum" parameterType="int" resultType="grade">
-		SELECT 
-			GNUM AS gnum
-			,MID AS mid
-			,SNUM AS snum
-			,GLEVEL AS glevel
-			,GCURRENT AS gcurrent
-			,GLIKE AS glike
-		FROM 
-			GRADES 
-		WHERE 
-			SNUM = #{snum} 
-			AND GCURRENT = 'Y'
-	</select>
-	
-	<select id="selectGradesCurrentYBysnums" parameterType="java.util.HashMap" resultType="grade">
-		SELECT * FROM GRADES WHERE SNUM IN 
-			<foreach collection="snums" item="snum" index="index" separator="," open="(" close=")">
-				#{snum} 
-			</foreach>
-		AND GCURRENT = 'Y'
-	</select>
-	
-	<select id="selectDetailsByGnums" parameterType="java.util.HashMap" resultType="details">
-		SELECT * FROM DETAILS WHERE GNUM IN
-			<foreach collection="gnums" item="gnum" index="index" separator="," open="(" close=")">
-				#{gnum}
-			</foreach>
-		 AND DTYPE = 'Y' AND DCHECK = 'N' ORDER BY DDATE
-	</select>
-	
-	<select id="selectDetailsByGnumsDdate" parameterType="java.util.HashMap" resultType="details">
-		SELECT * FROM DETAILS WHERE GNUM IN
-			<foreach collection="Gnums" item="gnum" index="index" separator="," open="(" close=")">
-				#{gnum}
-			</foreach>
-			AND DDATE LIKE #{Ddate} AND DTYPE = 'Y' AND DCHECK = 'N'
-	</select>
-	
-	<select id="selectGradesCurrentYByMids" parameterType="java.util.HashMap" resultType="grade">
-		SELECT * FROM GRADES WHERE MID IN
-			<foreach collection="mids" item="mid" index="index" separator="," open="(" close=")">
-				#{mid}
-			</foreach>
-			 AND GCURRENT = 'Y'
-	</select>
-	
-	<select id="selectStoresByGnums" parameterType="java.util.HashMap" resultType="store">
-		SELECT * FROM STORE WHERE GNUM IN
-			<foreach collection="gnums" item="gnum" index="index" separator="," open="(" close=")">
-				#{gnum}
-			</foreach>
-	</select>
-	
+	<!-- 가게 등록 -->
 	<insert id="insertStore" parameterType="store">
 		<selectKey resultType="int" keyProperty="snum" order="BEFORE">
 			SELECT STORES_SEQ.NEXTVAL FROM DUAL
@@ -325,6 +166,36 @@
 		)
 	</insert>
 	
+	<!-- 가게 태그 등록 -->
+	<insert id="insertStag" parameterType="store">
+		INSERT INTO STAG(
+			SNUM
+			,ANUM
+		)VALUES(
+			#{snum}
+			,#{stag}
+		)
+	</insert>
+	
+	<!-- 가게 태그 등록 -->
+	<delete id="deleteStag" parameterType="store">
+		DELETE FROM STAG WHERE SNUM = #{snum} 
+	</delete>
+	
+	<!-- 가게 태그 조회 -->
+	<select id="selectStagList" parameterType="store" resultType="store">
+		SELECT
+			SNUM AS snum
+			,A.ANUM AS anum
+			,B.AVALUE AS avalue
+		FROM
+			STAG A
+			LEFT JOIN ADMINS B ON A.ANUM = B.ANUM
+		WHERE
+			SNUM = #{snum}
+	</select>
+	
+	<!-- 가게 정보 가져오기 -->
 	<select id="selectStoreOne" parameterType="store" resultType="store">
 		SELECT 
 			A.SNUM AS snum
@@ -352,6 +223,7 @@
 			A.SNUM = #{snum}
 	</select>
 	
+	<!-- 가게 수정하기 -->
 	<update id="updateStore" parameterType="store">
 		UPDATE STORES 
 		SET 
@@ -375,12 +247,198 @@
 			SNUM = #{snum}
 	</update>
 	
+	<!-- 가게 삭제하기 -->
 	<delete id="deleteStore" parameterType="store">
 		DELETE FROM STORES WHERE SNUM = #{snum}
 	</delete>
-
-<!-- 	<select id="selectMembersByMphone" parameterType="String" resultType="Member">
-		SELECT * FROM MEMBERS WHERE MPHONE LIKE %#{mphone}%
-	</select> -->
-
+	
+	<!-- 메뉴 등록 -->
+	<insert id="insertMenu" parameterType="order">
+		<selectKey resultType="int" keyProperty="ord" order="BEFORE">
+			SELECT COUNT(*) FROM ORDERS WHERE SNUM = #{snum}
+      	</selectKey>
+		INSERT INTO ORDERS(
+			ORD
+			,SNUM
+			,ONAME
+			,OPRICE
+			,OIMAGE
+		)VALUES(
+			#{ord}
+			,#{snum}
+			,#{oname}
+			,#{oprice}
+			,#{oimage}
+		)
+	</insert>
+	
+	<!-- 메뉴 삭제 -->
+	<delete id="deleteMenu" parameterType="order">
+		DELETE FROM ORDERS WHERE ORD = #{ord} AND SNUM = #{snum}
+	</delete>
+	
+	<!-- 메뉴 수정 -->
+	<insert id="updateMenu" parameterType="order">
+		UPDATE ORDERS 
+		SET
+			ONAME = #{oname}
+			,OPRICE = #{oprice}
+			,OIMAGE = #{oimage}
+		WHERE  
+			ORD = #{ord}
+			AND SNUM = #{snum}
+	</insert>
+	
+	<select id="selectGradeListSnum" parameterType="grade" resultType="grade">
+		SELECT 
+			GNUM AS gnum
+			,MID AS mid
+			,SNUM AS snum
+			,GLEVEL AS glevel
+			,GCURRENT AS gcurrent
+			,GLIKE AS glike
+			,GCOUNT AS gcount
+		FROM 
+			GRADES 
+		WHERE 
+			SNUM = #{snum} 
+			<if test="gcurrent != null and gcurrent != ''">
+			AND GCURRENT = #{gcurrent}
+			</if>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 가게에 등록된 등급 정보 -->
+	<select id="selectGradeListBid" parameterType="store" resultType="grade">
+		SELECT 
+			G.GNUM AS gnum
+			,G.MID AS mid
+			,G.SNUM AS snum
+			,G.GLEVEL AS glevel
+			,G.GCURRENT AS gcurrent
+			,G.GLIKE AS glike
+			,G.GCOUNT AS gcount
+		FROM 
+			GRADES G
+			INNER JOIN BOSS B G.SNUM = B.SNUM 
+		WHERE 
+			B.BID = #{bid}
+			<!-- AND G.GCURRENT = 'Y' -->
+	</select>
+	
+	<!-- 예약 리스트 (전체) -->
+	<select id="selectDetailListTotal" parameterType="store" resultType="details">
+		SELECT 
+			D.DNUM AS dnum
+			,D.GNUM AS gnum
+			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+			,G.MID AS mid
+			,(SELECT REGEXP_REPLACE(MPHONE, '(.{3})(.+)(.{4})', '\1-\2-\3') FROM MEMBERS WHERE MID = G.MID) AS mphone
+			,S.SNUM AS snum
+		FROM 
+			DETAILS D
+			INNER JOIN GRADES G ON G.GNUM = D.GNUM
+			INNER JOIN STORES S ON G.SNUM = S.SNUM 
+		WHERE 
+			S.BID = #{bid}
+		 	AND D.DTYPE = 'Y' 
+		 	AND D.DCHECK = 'N'
+		ORDER BY DDATE
+	</select>
+	
+	<!-- 예약 리스트 (하나만) -->
+	<select id="selectDetailListOne" parameterType="store" resultType="store">
+		SELECT 
+			D.DNUM AS dnum
+			,D.GNUM AS gnum
+			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+			,G.MID AS mid
+			,(SELECT REGEXP_REPLACE(MPHONE, '(.{3})(.+)(.{4})', '\1-\2-\3') FROM MEMBERS WHERE MID = G.MID) AS mphone
+			,S.SNUM AS snum
+		FROM 
+			DETAILS D
+			INNER JOIN GRADES G ON G.GNUM = D.GNUM
+			INNER JOIN STORES S ON G.SNUM = S.SNUM 
+		WHERE 
+			S.BID = #{bid}
+		 	AND D.DTYPE = 'Y' 
+		 	AND D.DCHECK = 'N'
+		ORDER BY DDATE
+	</select>
+	
+	
+		<select id="selectMembersByKeyword" parameterType="String" resultType="member">
+		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
+	</select>
+	<select id="selectDetailsByGnumsDdate" parameterType="java.util.HashMap" resultType="details">
+		SELECT * FROM DETAILS WHERE GNUM IN
+			<foreach collection="Gnums" item="gnum" index="index" separator="," open="(" close=")">
+				#{gnum}
+			</foreach>
+			AND DDATE LIKE #{Ddate} AND DTYPE = 'Y' AND DCHECK = 'N'
+	</select>
+	
+	<select id="selectGradesCurrentYByMids" parameterType="java.util.HashMap" resultType="grade">
+		SELECT * FROM GRADES WHERE MID IN
+			<foreach collection="mids" item="mid" index="index" separator="," open="(" close=")">
+				#{mid}
+			</foreach>
+			 AND GCURRENT = 'Y'
+	</select>
+	<select id="selectDetailsCurrentYByMids" parameterType="java.util.HashMap" resultType="grade">
+		SELECT 
+			D.DNUM AS dnum
+			,D.GNUM AS gnum
+			,D.DDATE AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+		FROM 
+			DETAILS D
+			GRADES G ON G.GNUM = D.GNUM
+		WHERE 
+			G.MID IN
+			<foreach collection="mids" item="mid" index="index" separator="," open="(" close=")">
+				#{mid}
+			</foreach>
+			 AND G.GCURRENT = 'Y'
+	</select>
+	<select id="selectStoresByGnums" parameterType="java.util.HashMap" resultType="store">
+		SELECT * FROM STORE WHERE GNUM IN
+			<foreach collection="gnums" item="gnum" index="index" separator="," open="(" close=")">
+				#{gnum}
+			</foreach>
+	</select>
 </mapper>

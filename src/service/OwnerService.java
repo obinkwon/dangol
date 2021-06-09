@@ -88,64 +88,30 @@ public class OwnerService {
 		return oDao.selectStoreList(store);
 	}
 	
-	//ed snum으로 예약자의 아이디, 핸드폰 번호 구하기(gcurrent='yes')
-	public List<Member> selectReserversBySnum(int snum) throws Exception{
-		//변수 세팅
-		List<Member> Reservers = new ArrayList<Member>();
-		
-		//snum에 일치하는 Grades 출력
-		List<Grade> Grades = oDao.selectGradesCurrentYBySnum(snum);
-		
-		//Grades에 해당하는 mid와 mphone을 Reservers에 입력
-		for (Grade grade: Grades) {
-			Member member = new Member();
-			member.setMid(grade.getMid());
-			Reservers.add(mDao.selectMember(member));
-		}
-		
-		return Reservers;
+	//가게에 등록된 등급 정보
+	public List<Grade> selectGradeListBid(Store store) {
+		return oDao.selectGradeListBid(store);
 	}
 	
-	//ed snums으로 예약자의 아이디, 핸드폰 번호 구하기(gcurrent='yes')
-	public List<Member> selectReserversBySnums(int[] snums) throws Exception{
-		//snums 목록 담기
-		HashMap<String, int[]> hm = new HashMap<String, int[]>();
-		hm.put("snums", snums);
-
-		//변수 세팅
-		List<Member> Reservers = new ArrayList<Member>();
-		List<Grade> Grades = oDao.selectGradesCurrentYBysnums(hm);
-		
-		
-		//grades로 Reservers 담기
-		for (Grade grade: Grades) {
-			Member member = new Member();
-			member.setMid(grade.getMid());
-			Reservers.add(mDao.selectMember(member));
-		}
-		
-		return Reservers;
+	//예약 리스트 (전체)
+	public List<Details> selectReserveListTotal(Store store){
+		return oDao.selectDetailListTotal(store);
 	}
-	//ed snum에 일치하는 Gnums 구하기
-	public int[] selectGnumsCurrentYBySnum(int snum) {
-		//snum에 일치하는 현재등급 목록 불러오기
-		int i =0;
-		int[] Gnums = new int[oDao.selectGradesCurrentYBySnum(snum).size()];
-		List<Grade> gradeList = oDao.selectGradesCurrentYBySnum(snum);
-		
-		//Grades에서 gnum만 추출해서 Gnums에 저장
-		for (Grade grade : gradeList) {
-			Gnums[i] = grade.getGnum();
-			i++;
-		}
-		return Gnums;
+	
+	//예약 리스트 (하나만)
+	public List<Details> selectReserveListOne(Store store) {
+		return oDao.selectDetailListOne(store);
 	}
+	
+	
+	
+	
 	
 	//ed snum에 일치하는 Gnums 구하기
 	public int[] selectGnums(Grade grade) {
 		//snum에 일치하는 현재등급 목록 불러오기
 		int i =0;
-		List<Grade> gradeList = oDao.selectGradeList(grade);
+		List<Grade> gradeList = oDao.selectGradeListSnum(grade);
 		int[] Gnums = new int[gradeList.size()];
 		
 		//Grades에서 gnum만 추출해서 Gnums에 저장
@@ -156,24 +122,7 @@ public class OwnerService {
 		return Gnums;
 	}
 	
-	//ed snum에 일치하는 Gnums 구하기
-	public int[] selectGnumsCurrentYBySnums(int[] snums) {
-		//snums 목록 담기
-		HashMap<String, int[]> hm = new HashMap<String, int[]>();
-		hm.put("snums", snums);
-		
-		//snum에 일치하는 현재등급 목록 불러오기
-		int i=0;
-		int[] gnums = new int[oDao.selectGradesCurrentYBysnums(hm).size()];
-		
-		List<Grade> grades = oDao.selectGradesCurrentYBysnums(hm);
-		//Grades에서 gnum만 추출해서 Gnums에 저장
-		for (Grade grade : grades) {
-			gnums[i] = grade.getGnum();
-			i++;
-		}
-		return gnums;
-	}
+	
 	
 	public List<Grade> selectGradesCurrentYByMids(String[] mids) {
 		HashMap<String, String[]> hm = new HashMap<String, String[]>();
@@ -181,21 +130,7 @@ public class OwnerService {
 		return oDao.selectGradesCurrentYByMids(hm);
 	}
 	
-	//ed gnum에 해당하는 details 구하기
-	public List<Details> selectDetailsByGnums(int[] gnums){
-		//gnum 목록 담기
-		HashMap<String, int[]> hm = new HashMap<String, int[]>();
-		hm.put("gnums", gnums);
-
-		//gnum으로 details 조회
-		return oDao.selectDetailsByGnums(hm);
-	}
 	
-	//ed gnum에 해당하는 details 구하기
-	public List<Details> selectDetailsList(Grade grade){
-		//gnum으로 details 조회
-		return oDao.selectDetailsList(grade);
-	}
 	
 	//ed bid로 snums 구하기
 	public int[] selectsnumsByBid(String bid) {
@@ -396,16 +331,9 @@ public class OwnerService {
 
 	public List<Details> selectDetailsByMids(String[] mids) {
 		 //mid로 grades구하기
-		 List<Grade> grades = selectGradesCurrentYByMids(mids);
-		 int i = 0;
-		 int[] gnums = new int[grades.size()];
-
-		 //grades에서 gnums 구하기
-		 for (Grade grade : grades) {
-			 gnums[i] = grade.getGnum();
-			 i++;
-		 }
-		 return selectDetailsByGnums(gnums);
+		HashMap<String, String[]> hm = new HashMap<String, String[]>();
+		hm.put("mids", mids);
+		return oDao.selectDetailsCurrentYByMids(hm);
 	}
 
 	public List<Member> selectMembersByKeyword(String keyword) {

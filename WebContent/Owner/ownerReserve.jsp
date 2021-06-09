@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
@@ -10,16 +9,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>
 <link rel="stylesheet" href="/css/calendar.css">
+<link rel="stylesheet" href="/css/template.css" />
 <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src="/js/calendar.js"></script>
 <style type="text/css">
-	div.main {
-		margin : auto;
-		margin-top: 50px;
-		margin-bottom:100px;
-		width: 100%;
-	}
 	div.nav {
 		margin-top: 50px;
 		float: left;
@@ -43,23 +37,6 @@
 	li.active {
 		background-color: #66ccff;
 	}
-	.contentsTitGroup{
-		padding-top: 2.0rem;
-	    text-align: center;
-	    display: block;
-	}
-	.inputText {
-		height: 40px;
-	    line-height: 40px;
-	    color: #7b6e66;
-	    padding: 0 7px;
-	    border: 1px solid #7b6e66;
-	    background-color: transparent;
-	    float: left;
-	}
-	.w300 {
-	    width: 300px;
-	}
 	.toggle-wrap {
 		width : 100%;
 	    margin-bottom : 100px;
@@ -72,27 +49,10 @@
 		width: 100%;
 		height : 600px;
 	}
-	.btn-view {
-	    width: 200px;
-        font-size: 1.4rem;
-        background-color: #fff;
-		color: #000000;
-	    height: 4rem;
-	    margin: 0 auto;
-	    line-height: 3.9rem;
-		font-weight: 600;
-	    letter-spacing: 0.5px;
-	    transition-duration: .5s;
-        border: 0.1rem solid #66ccff;
-	}
-	.btn-mint{
-		background-color: #66ccff;
-		color: #fff;
-	}
 
-#btn_search_member:hover{
- border-color: blue;
-}
+	#btn_search_member:hover{
+		border-color: blue;
+	}
 </style>
 <script type="text/javascript">
 function search_member() {
@@ -144,23 +104,17 @@ function search_member() {
 	});
 }
 
+function report(){//신고하기 (ing)
+	if (confirm("정말로 신고하시겠습니까?")) {
+		alert("신고되었습니다");
+	}
+}
+
 $(function(){
 	$("#div_manual").hide();
 	
-	if (${bid != null} && ${Stores == "[]"}) {
-		alert("사장님 가게 등록을  먼저 해주세요");
-	}
-	
 	$("#select_store").on("change",function(){
-		location.href="selectDetailsBySnum.do?snum="+this.value;
-	});
-	
-	/* 신고기능 */
-	$("#btn_report").on("click",function(){
-		if (confirm("정말로 신고하시겠습니까?")) {
-			alert("신고되었습니다");
-/* 			location.href="deleteTag.do?anum="+$("#del_TasteTag").val(); */			
-		}
+		location.href="reserveOwner.do?snum="+this.value;
 	});
 	
 });
@@ -174,7 +128,7 @@ $(function(){
 				<li class="navTitle"><a class="navTitle">사장님 페이지</a></li>
 				<li><a class="nav" href="ownerInfoForm.do">내 정보</a></li>
 				<li><a class="nav" href="ownerStore.do">내 가게</a></li>
-				<li class="active"><a class="nav" href="selectDetailsBySnum.do">예약현황</a></li>
+				<li class="active"><a class="nav" href="reserveOwner.do">예약현황</a></li>
 			</ul>
 		</div>
 		<div class="container">
@@ -215,8 +169,8 @@ $(function(){
 					<col width="5%"/>
 					<col width="10%"/>
 					<col width="5%"/>
-					<col width="30%"/>
-					<col width="30%"/>
+					<col width="*"/>
+					<col width="*"/>
 					<col width="10%"/>
 				</colgroup>
 				<tbody>
@@ -229,18 +183,18 @@ $(function(){
 						<th>요청사항</th>
 						<th>신고하기</th>
 					</tr>
-					<c:forEach var="detail" items="${details}" varStatus="status">
+					<c:forEach var="detail" items="${detailList}" varStatus="status">
 					<tr>
 						<td>${detail.ddate}</td>
-						<td>${reservers[status.index].mid}</td>
-						<td>${reservers[status.index].mphone}</td>
-						<td>${detail.dperson}</td>
+						<td>${detail.mid}</td>
+						<td>${detail.mphone}</td>
+						<td>${detail.dperson} 명</td>
 						<td>${detail.dmenu}</td>
 						<td>${detail.dask}</td>
-						<td><input id="btn_report" type="button" value="신고"></td>
+						<td><button class="btn-view w100" type="button" onclick="report('${reserve.dnum}')">신고</button></td>
 					</tr>
 					</c:forEach>
-					<c:if test="${details eq null}">
+					<c:if test="${empty detailList}">
 					<tr>
 						<td colspan="7" style="text-align:center;">예약이 없습니다</td>
 					</tr>

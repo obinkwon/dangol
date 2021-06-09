@@ -14,6 +14,7 @@ public class Details {
 	private int dlimit;
 	private String dpermit;
 	private String mid;
+	private String mphone;
 	private int snum;
 	private String simage;
 	private String sname;
@@ -140,6 +141,12 @@ public class Details {
 	}
 	public void setGlike(int glike) {
 		this.glike = glike;
+	}
+	public String getMphone() {
+		return mphone;
+	}
+	public void setMphone(String mphone) {
+		this.mphone = mphone;
 	}
 	public Details() {}
 	public Details(int dnum, int gnum, String ddate, int dperson, String dmenu, String dtype, String dask, String dcheck,

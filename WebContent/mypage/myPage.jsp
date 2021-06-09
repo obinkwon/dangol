@@ -15,33 +15,6 @@
 		margin-bottom:100px;
 		width: 100%;
 	}
-	.inputText {
-		height: 40px;
-	    line-height: 40px;
-	    color: #7b6e66;
-	    padding: 0 7px;
-	    border: 1px solid #7b6e66;
-	    background-color: transparent;
-	    vertical-align: middle;
-	    float: left;
-	}
-	.btn-view {
-	    width: 200px;
-        font-size: 1.4rem;
-        background-color: #fff;
-		color: #000000;
-	    height: 4rem;
-	    margin: 0 auto;
-	    line-height: 3.9rem;
-		font-weight: 600;
-	    letter-spacing: 0.5px;
-	    transition-duration: .5s;
-        border: 0.1rem solid #66ccff;
-	}
-	.btn-mint{
-		background-color: #66ccff;
-		color: #fff;
-	}
 	.btn-wrap {
 		display: block;
 		text-align: center;
@@ -54,9 +27,6 @@
 		padding-top: 2.0rem;
 	    text-align: center;
 	    display: block;
-	}
-	.w300{
-		width: 300px;
 	}
 	.formArea{
 		vertical-align: middle;

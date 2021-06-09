@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Date;
-
 public class Store {
 	private int snum;
 	private String bid;

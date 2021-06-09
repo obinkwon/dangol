@@ -252,7 +252,7 @@ $(function(){
 				<li class="navTitle"><a class="navTitle">사장님 페이지</a></li>
 				<li><a class="nav" href="ownerInfoForm.do">내 정보</a></li>
 				<li class="active"><a class="nav" href="ownerStore.do">내 가게</a></li>
-				<li><a class="nav" href="selectDetailsBySnum.do">예약현황</a></li>
+				<li><a class="nav" href="reserveOwner.do">예약현황</a></li>
 			</ul>
 		</div>
 		<div class="container">
