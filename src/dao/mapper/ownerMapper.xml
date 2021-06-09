@@ -15,6 +15,7 @@
 		WHERE 
 			BID = #{bid}
 	</select>
+	
 	<!-- 점장 ID 조회 -->
 	<select id="findOwnerId" parameterType="store" resultType="store">
 		SELECT
@@ -24,6 +25,7 @@
 		WHERE 
 			BPHONE = #{bphone}
 	</select>
+	
 	<!-- 점장 PWD 조회 -->
 	<select id="findOwnerPw" parameterType="store" resultType="store">
 		SELECT 
@@ -33,6 +35,7 @@
 			BID = #{bid} 
 			AND BPHONE = #{bphone}
 	</select>
+	
 	<!-- 점장 가입 -->
 	<insert id="insertOwner" parameterType="store">
 		INSERT INTO BOSS(
@@ -45,6 +48,22 @@
 			, #{bphone}
 		)
 	</insert>
+	
+	<!-- 점장 정보 삭제 -->
+	<delete id="deleteOwner" parameterType="store">
+		DELETE FROM BOSS 
+		WHERE BID = #{bid}
+		AND BPW = #{bpw}
+	</delete>
+	
+	<!-- 점장 정보 수정 -->
+	<update id="updateOwner" parameterType="store">
+		UPDATE BOSS SET 
+			BPW = #{bpw}
+			, BPHONE = #{bphone} 
+		WHERE 
+			BID = #{bid} 
+	</update> 
 	
 	<!-- 메뉴 등록 -->
 	<insert id="insertOrder" parameterType="order">
@@ -67,21 +86,79 @@
 		)
 	</insert>
 	
-	<!-- 점장 정보 삭제 -->
-	<delete id="deleteOwner" parameterType="store">
-		DELETE FROM BOSS 
-		WHERE BID = #{bid}
-		AND BPW = #{bpw}
-	</delete>
-	
-	<!-- 점장 정보 수정 -->
-	<update id="updateOwner" parameterType="store">
-		UPDATE BOSS SET 
-			BPW = #{bpw}
-			, BPHONE = #{bphone} 
+	<!-- 가게에 등록된 등급 정보 -->
+	<select id="selectGradeListBid" parameterType="store" resultType="grade">
+		SELECT 
+			G.GNUM AS gnum
+			,G.MID AS mid
+			,G.SNUM AS snum
+			,G.GLEVEL AS glevel
+			,G.GCURRENT AS gcurrent
+			,G.GLIKE AS glike
+			,G.GCOUNT AS gcount
+		FROM 
+			GRADES G
+			INNER JOIN BOSS B G.SNUM = B.SNUM 
 		WHERE 
-			BID = #{bid} 
-	</update> 
+			B.BID = #{bid}
+			<!-- AND G.GCURRENT = 'Y' -->
+	</select>
+	
+	<!-- 예약 리스트 (전체) -->
+	<select id="selectDetailListTotal" parameterType="store" resultType="details">
+		SELECT 
+			D.DNUM AS dnum
+			,D.GNUM AS gnum
+			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+			,G.MID AS mid
+			,(SELECT REGEXP_REPLACE(MPHONE, '(.{3})(.+)(.{4})', '\1-\2-\3') FROM MEMBERS WHERE MID = G.MID) AS mphone
+			,S.SNUM AS snum
+		FROM 
+			DETAILS D
+			INNER JOIN GRADES G ON G.GNUM = D.GNUM
+			INNER JOIN STORES S ON G.SNUM = S.SNUM 
+		WHERE 
+			S.BID = #{bid}
+		 	AND D.DTYPE = 'Y' 
+		 	AND D.DCHECK = 'N'
+		ORDER BY DDATE
+	</select>
+	
+	<!-- 예약 리스트 (하나만) -->
+	<select id="selectDetailListOne" parameterType="store" resultType="details">
+		SELECT 
+			D.DNUM AS dnum
+			,D.GNUM AS gnum
+			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+			,G.MID AS mid
+			,(SELECT REGEXP_REPLACE(MPHONE, '(.{3})(.+)(.{4})', '\1-\2-\3') FROM MEMBERS WHERE MID = G.MID) AS mphone
+			,S.SNUM AS snum
+		FROM 
+			DETAILS D
+			INNER JOIN GRADES G ON G.GNUM = D.GNUM
+			INNER JOIN STORES S ON G.SNUM = S.SNUM 
+		WHERE 
+			S.SNUM = #{snum}
+		 	AND D.DTYPE = 'Y' 
+		 	AND D.DCHECK = 'N'
+		ORDER BY DDATE
+	</select>
 	
 	<!-- 가게 리스트 -->	
 	<select id="selectStoreList" parameterType="store" resultType="store">
@@ -310,92 +387,13 @@
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<!-- 가게에 등록된 등급 정보 -->
-	<select id="selectGradeListBid" parameterType="store" resultType="grade">
-		SELECT 
-			G.GNUM AS gnum
-			,G.MID AS mid
-			,G.SNUM AS snum
-			,G.GLEVEL AS glevel
-			,G.GCURRENT AS gcurrent
-			,G.GLIKE AS glike
-			,G.GCOUNT AS gcount
+	<select id="selectMembersByKeyword" parameterType="String" resultType="member">
+		SELECT * 
 		FROM 
-			GRADES G
-			INNER JOIN BOSS B G.SNUM = B.SNUM 
+			MEMBERS 
 		WHERE 
-			B.BID = #{bid}
-			<!-- AND G.GCURRENT = 'Y' -->
-	</select>
-	
-	<!-- 예약 리스트 (전체) -->
-	<select id="selectDetailListTotal" parameterType="store" resultType="details">
-		SELECT 
-			D.DNUM AS dnum
-			,D.GNUM AS gnum
-			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
-			,D.DPERSON AS dperson
-			,D.DMENU AS dmenu
-			,D.DTYPE AS dtype
-			,D.DASK AS dask
-			,D.DCHECK AS dcheck
-			,D.DTIME AS dtime
-			,D.DCOUNT AS dcount
-			,D.DLIMIT AS dlimit
-			,G.MID AS mid
-			,(SELECT REGEXP_REPLACE(MPHONE, '(.{3})(.+)(.{4})', '\1-\2-\3') FROM MEMBERS WHERE MID = G.MID) AS mphone
-			,S.SNUM AS snum
-		FROM 
-			DETAILS D
-			INNER JOIN GRADES G ON G.GNUM = D.GNUM
-			INNER JOIN STORES S ON G.SNUM = S.SNUM 
-		WHERE 
-			S.BID = #{bid}
-		 	AND D.DTYPE = 'Y' 
-		 	AND D.DCHECK = 'N'
-		ORDER BY DDATE
-	</select>
-	
-	<!-- 예약 리스트 (하나만) -->
-	<select id="selectDetailListOne" parameterType="store" resultType="store">
-		SELECT 
-			D.DNUM AS dnum
-			,D.GNUM AS gnum
-			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
-			,D.DPERSON AS dperson
-			,D.DMENU AS dmenu
-			,D.DTYPE AS dtype
-			,D.DASK AS dask
-			,D.DCHECK AS dcheck
-			,D.DTIME AS dtime
-			,D.DCOUNT AS dcount
-			,D.DLIMIT AS dlimit
-			,G.MID AS mid
-			,(SELECT REGEXP_REPLACE(MPHONE, '(.{3})(.+)(.{4})', '\1-\2-\3') FROM MEMBERS WHERE MID = G.MID) AS mphone
-			,S.SNUM AS snum
-		FROM 
-			DETAILS D
-			INNER JOIN GRADES G ON G.GNUM = D.GNUM
-			INNER JOIN STORES S ON G.SNUM = S.SNUM 
-		WHERE 
-			S.BID = #{bid}
-		 	AND D.DTYPE = 'Y' 
-		 	AND D.DCHECK = 'N'
-		ORDER BY DDATE
-	</select>
-	
-	
-		<select id="selectMembersByKeyword" parameterType="String" resultType="member">
-		SELECT * FROM MEMBERS WHERE MID LIKE '%'||#{keyword}||'%' OR MPHONE LIKE '%'||#{keyword}||'%' 
+			MID LIKE '%' || #{keyword} || '%' 
+			OR MPHONE LIKE '%' ||#{keyword}|| '%' 
 	</select>
 	<select id="selectDetailsByGnumsDdate" parameterType="java.util.HashMap" resultType="details">
 		SELECT * FROM DETAILS WHERE GNUM IN

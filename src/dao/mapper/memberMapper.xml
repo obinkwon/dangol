@@ -9,6 +9,7 @@
 	<select id="findId" parameterType="member" resultType="member">
 		SELECT
 			MID AS mid
+			,MPHONE AS mphone
 		FROM  
 			MEMBERS 
 		WHERE 

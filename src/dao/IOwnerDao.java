@@ -11,22 +11,31 @@ import model.Store;
 
 public interface IOwnerDao {
 	/* 점장 */
-	public Store selectBossOne(Store store);//점장 정보 조회
-	public List<Store> findOwnerId(Store store);//점장 ID 조회
-	public Store findOwnerPw(Store store);//점장 PWD 조회
-	public int insertOwner(Store store);//점장 가입
-	public int deleteOwner(Store store);//점장 탈퇴
-	public int updateOwner(Store store);//점장 수정
-	public void insertOrder(Order order);//메뉴 등록
+	//점장 정보 조회
+	public Store selectBossOne(Store store);
+	//점장 ID 조회
+	public List<Store> findOwnerId(Store store);
+	//점장 PWD 조회
+	public Store findOwnerPw(Store store);
+	//점장 가입
+	public int insertOwner(Store store);
+	//점장 탈퇴
+	public int deleteOwner(Store store);
+	//점장 수정
+	public int updateOwner(Store store);
+	//메뉴 등록
+	public void insertOrder(Order order);
 	
-	//예약현황
-	public List<Member> selectMembersByKeyword(String keyword);
 	//가게에 등록된 등급 정보
 	public List<Grade> selectGradeListBid(Store store);
 	//예약 리스트(전체)
 	public List<Details> selectDetailListTotal(Store store);
 	//예약 리스트(하나만)
 	public List<Details> selectDetailListOne(Store store);
+	
+	//?
+	public List<Member> selectMembersByKeyword(String keyword);
+	
 	public List<Grade> selectGradesCurrentYByMids(HashMap<String, String[]> hm);
 	public List<Details> selectDetailsCurrentYByMids(HashMap<String, String[]> hm);
 	public List<Details> selectDetailsByGnumsDdate(HashMap hm);

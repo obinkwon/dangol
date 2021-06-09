@@ -176,7 +176,6 @@ public class OwnerController {
 				if(snum > 0) { //특정 가게 하나
 					detailList = oService.selectReserveListOne(store);
 				}else { //내 가게 전체
-					//예약 리스트
 					detailList = oService.selectReserveListTotal(store);
 				}
 				mav.addObject("detailList", detailList);
@@ -200,31 +199,13 @@ public class OwnerController {
 		}
 	}
 
-//	단골 검색
-	 @RequestMapping("selectMembersByKeyword.do")
-	 public @ResponseBody HashMap<String, Object> selectMembersByKeyword(String keyword) {
-		 HashMap<String, Object> hm = new HashMap<String, Object>();
-		 
-		 //keyword에 일치하는 회원정보 구하기
-		 List<Member> members = oService.selectMembersByKeyword(keyword);
-		 hm.put("members", members);
-
-		 //members에서 mid 구하기
-		 //회원정보에 일치하는 등급 구하기
-		 String[] mids = new String[members.size()];
-		 int i = 0;
-		 for (Member member : members) {
-			mids[i] = member.getMid();
-			i++;
-		}
-		 hm.put("grades", oService.selectGradesCurrentYByMids(mids));
-
-		 //mid별 rate율 구하기
-		 hm.put("rates", oService.selectRatesByMids(mids));
-		 //mid별 rate율 구하기
-		 hm.put("details", oService.selectDetailsByMids(mids));
-		 return hm;
-	 }
+	//단골 검색
+	@RequestMapping("selectMembersByKeyword.do")
+	@ResponseBody
+	public List<Member> selectMembersByKeyword(String keyword) throws Exception{
+		//keyword에 일치하는 회원정보 구하기
+		return mService.findId(keyword);
+	}
 	 
 	
 	//가게 등록 폼으로 이동

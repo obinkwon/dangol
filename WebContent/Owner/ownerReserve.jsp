@@ -37,71 +37,45 @@
 	li.active {
 		background-color: #66ccff;
 	}
-	.toggle-wrap {
-		width : 100%;
-	    margin-bottom : 100px;
-	    margin-left :800px;
-	    width: 41.1rem;
-	    font-size: 1.6rem;
-	    display: block;
-	}
 	.contents-wrap{
 		width: 100%;
 		height : 600px;
 	}
-
-	#btn_search_member:hover{
-		border-color: blue;
-	}
 </style>
 <script type="text/javascript">
+//회원 정보 조회
 function search_member() {
-	$("#div_manual").show();
-	
-	$.ajax({
-		url : "selectMembersByKeyword.do",
-		data :{
-			keyword : $("#txt_search_member").val()
-		},
-		type : "post",
-		success : function(data){
-			var table = "";
-			$('#tbl_membership tr:gt(0)').remove();
-			
-			for( var key in data.members){
-				table += '<tr>';
-				table += '<td>' + data.members[key].mid + '</td>';
-				table += '<td>' + data.members[key].mphone + '</td>';
-					if (data.grades[key] == null) {
-						table += '<td>' + '없음' + '</td>';
-					}else{
-						table += '<td>' + data.grades[key].glevel + '</td>';
-					}
-					if (data.details[key] == null) {
-						table += '<td>' + '없음' + '</td>'; 
-					} else {
-						table += '<td>' + data.details[key].dcount + '</td>';
-					}
-					if (data.rates[key] == null) {
-						table += '<td>' + '없음' + '</td>'; 
-					} else {
-						table += '<td>' + data.rates[key] + '%</td>';
-					}
-				table += '<td><input class="btn_membership" type="button" value="적용"></td>';
-				table += '</tr>';
+	var keyword = $("#txt_search_member").val();
+	if(keyword != ''){
+		$("#div_manual").show();
+		
+		$.ajax({
+			url : "selectMembersByKeyword.do",
+			data :{
+				keyword : keyword
+			},
+			type : "post",
+			success : function(data){
+				var table = "";
+				$('#tbl_membership tr:gt(0)').remove();
+				
+				data.forEach (function (el, index) {
+					table += '<tr>';
+					table += '<td>' + el.mid + '</td>';
+					table += '<td>' + el.mphone + '</td>';
+					table += '<td><button class="btn-view w100" type="button" onclick="memberShip()">적용</button></td>';
+					table += '</tr>';
+				});
+				
+				$('#tbl_membership tr:eq(0)').after(table);
+			},
+			error :function(){
+				alert("서비스 오류입니다.\n 관리자에게 문의해주세요");
 			}
-			
-			$('#tbl_membership tr:eq(0)').after(table);
-
-			/* 멤버쉽 적용 */
-			$(".btn_membership").on("click",function(){
-					alert("멤버쉽혜택이 적용되었습니다.");
-			});
-		},
-		error :function(){
-			alert("서비스 오류입니다.\n 관리자에게 문의해주세요");
-		}
-	});
+		});
+	}else{
+		alert('전화번호를 입력해주세요');
+	}
 }
 
 function report(){//신고하기 (ing)
@@ -110,9 +84,11 @@ function report(){//신고하기 (ing)
 	}
 }
 
+function memberShip(){//멤버쉽 적용 (ing)
+	alert("멤버쉽혜택이 적용되었습니다");
+}
+
 $(function(){
-	$("#div_manual").hide();
-	
 	$("#select_store").on("change",function(){
 		location.href="reserveOwner.do?snum="+this.value;
 	});
@@ -121,7 +97,7 @@ $(function(){
 </script>
 </head>
 <body>
-	<jsp:include page="/jsp/header.jsp"/>
+<jsp:include page="/jsp/header.jsp"/>
 	<div class="main">
 		<div class="nav">
 			<ul class="nav nav-pills nav-stacked">
@@ -138,17 +114,12 @@ $(function(){
 			<!-- 가게선택 단추 -->
 			<div class="toggle-wrap">
 				<h4 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">가게선택</h4>
-				<c:if test="${not empty storeList}">
 				<select class="inputText w300" id="select_store">
 					<option value="0" <c:if test="${snum == 0}">selected</c:if>>내 모든 가게</option>
 					<c:forEach var="store" items="${storeList}">
 						<option value="${store.snum}" <c:if test="${store.snum == snum}">selected</c:if>>${store.sname}</option>
 					</c:forEach>
 				</select>
-				</c:if>
-				<c:if test="${empty storeList}">
-					<input class="inputText w300" type="text" value="등록된 가게 없음">
-				</c:if>
 			</div>	
 			<!-- calendar -->
 			<div class="contents-wrap">
@@ -162,6 +133,7 @@ $(function(){
 					<div id="calendar_content"></div>
 				</div>
 			</div>
+			
 			<!-- 예약목록 -->
 			<table class="table">
 				<colgroup>
@@ -172,6 +144,7 @@ $(function(){
 					<col width="*"/>
 					<col width="*"/>
 					<col width="10%"/>
+					<col width="15%"/>
 				</colgroup>
 				<tbody>
 					<tr>
@@ -182,6 +155,7 @@ $(function(){
 						<th>메뉴</th>
 						<th>요청사항</th>
 						<th>신고하기</th>
+						<th>멤버쉽 적용</th>
 					</tr>
 					<c:forEach var="detail" items="${detailList}" varStatus="status">
 					<tr>
@@ -191,7 +165,8 @@ $(function(){
 						<td>${detail.dperson} 명</td>
 						<td>${detail.dmenu}</td>
 						<td>${detail.dask}</td>
-						<td><button class="btn-view w100" type="button" onclick="report('${reserve.dnum}')">신고</button></td>
+						<td><button class="btn-view w100" type="button" onclick="report()">신고</button></td>
+						<td><button class="btn-view w100" type="button" onclick="memberShip()">적용</button></td>
 					</tr>
 					</c:forEach>
 					<c:if test="${empty detailList}">
@@ -202,35 +177,31 @@ $(function(){
 				</tbody>
 			</table>
 
-			<!-- 예약가능인원 변경 및 확인 -->
-			<div id="div_reservation">
-				<h4>예약 인원 / 예약 가능인원</h4>
-				<input class="inputText w300" type="text" value="test2"> / 
-				<input class="inputText w300" type="text" value="test">명
-				<button class="btn-view btn-mint" type="button">수정</button>
-			</div>
-			<div id="div_search_member">	
-				<hr>
-				<h1>단골멤버쉽 적용</h1>
-				<input class="inputText w300" id="txt_search_member" type="text" placeholder="검색할 회원의 ID 또는 핸드폰 뒷자리를 입력해주세요">
-				<input class="inputText w300" id="btn_search_member" type="image" src="images/magnifying_glass.jpg" onclick="search_member()"><br>
-				 * 핸드폰 번호 및 일치하는 아이디 입력
+			<!-- 회원 조회 -->
+			<div class="btn-wrap">
+				<h4 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0); float:left; margin-right:20px;">단골멤버쉽 적용</h4>
+				<input class="inputText w300" id="txt_search_member" type="text" placeholder="검색할 회원의 핸드폰 뒷자리를 입력해주세요">
+				<button class="btn-view w100 " type="button" onClick="search_member();" style="float:left;">검색</button>
 			</div>
 			<!-- 혜택내역 적용 -->
-			<div id="div_manual">
-				<table id="tbl_membership">
-					<tr>
-						<th>ID</th>
-						<th>핸드폰번호</th>
-						<th>등급</th>
-						<th>후기</th>
-						<th>예상혜택</th>
-						<th>멤버쉽</th>
-					</tr>
+			<div class="w50Form" id="div_manual" style="display:none;">
+				<table class="table" id="tbl_membership">
+					<colgroup>
+						<col width="20%"/>
+						<col width="*"/>
+						<col width="15%"/>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>ID</th>
+							<th>핸드폰번호</th>
+							<th>멤버쉽 적용</th>
+						</tr>
+					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
-	<jsp:include page="/jsp/footer.jsp"/>
+<jsp:include page="/jsp/footer.jsp"/>
 </body>
 </html>

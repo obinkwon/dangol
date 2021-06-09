@@ -104,9 +104,6 @@ public class OwnerService {
 	}
 	
 	
-	
-	
-	
 	//ed snum에 일치하는 Gnums 구하기
 	public int[] selectGnums(Grade grade) {
 		//snum에 일치하는 현재등급 목록 불러오기
@@ -335,7 +332,8 @@ public class OwnerService {
 		hm.put("mids", mids);
 		return oDao.selectDetailsCurrentYByMids(hm);
 	}
-
+	
+	//keyword에 일치하는 회원정보 구하기
 	public List<Member> selectMembersByKeyword(String keyword) {
 		return oDao.selectMembersByKeyword(keyword);
 	}
