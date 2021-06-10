@@ -102,32 +102,6 @@ public class OwnerService {
 	public List<Details> selectReserveListOne(Store store) {
 		return oDao.selectDetailListOne(store);
 	}
-	
-	
-	public List<Grade> selectGradesCurrentYByMids(String[] mids) {
-		HashMap<String, String[]> hm = new HashMap<String, String[]>();
-		hm.put("mids", mids);
-		return oDao.selectGradesCurrentYByMids(hm);
-	}
-	
-	
-	
-	//ed bid로 snums 구하기
-	public int[] selectsnumsByBid(String bid) {
-		//bid에 일치하는 stores 조회
-		Store store = new Store();
-		store.setBid(bid);
-		List<Store> stores = oDao.selectStoreList(store);
-		
-		int i = 0;
-		int[] snums = new int[stores.size()];
-		//stores에서 snum 추출
-		for (Store s : stores) {
-			snums[i] = s.getSnum();
-			i++;
-		}
-		return snums;
-	}
 
 	// 가게 등록
 	public int insertStore(Store store
@@ -240,17 +214,5 @@ public class OwnerService {
 		oDao.deleteStag(store); //가게 태그 삭제
 		return oDao.deleteStore(store);
 	}
-
-	public List<Details> selectDetailsByMids(String[] mids) {
-		 //mid로 grades구하기
-		HashMap<String, String[]> hm = new HashMap<String, String[]>();
-		hm.put("mids", mids);
-		return oDao.selectDetailsCurrentYByMids(hm);
-	}
 	
-	//keyword에 일치하는 회원정보 구하기
-	public List<Member> selectMembersByKeyword(String keyword) {
-		return oDao.selectMembersByKeyword(keyword);
-	}
-
 }

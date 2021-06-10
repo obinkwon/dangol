@@ -1,11 +1,9 @@
 package dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import model.Details;
 import model.Grade;
-import model.Member;
 import model.Order;
 import model.Store;
 
@@ -26,20 +24,13 @@ public interface IOwnerDao {
 	//메뉴 등록
 	public void insertOrder(Order order);
 	
+	/* 예약 */
 	//가게에 등록된 등급 정보
 	public List<Grade> selectGradeListBid(Store store);
 	//예약 리스트(전체)
 	public List<Details> selectDetailListTotal(Store store);
 	//예약 리스트(하나만)
 	public List<Details> selectDetailListOne(Store store);
-	
-	//?
-	public List<Member> selectMembersByKeyword(String keyword);
-	
-	public List<Grade> selectGradesCurrentYByMids(HashMap<String, String[]> hm);
-	public List<Details> selectDetailsCurrentYByMids(HashMap<String, String[]> hm);
-	public List<Details> selectDetailsByGnumsDdate(HashMap hm);
-	public List<Store> selectStoresBySnums(int[] snum);
 	
 	/* 점장 가게*/
 	//가게 리스트 가져오기
