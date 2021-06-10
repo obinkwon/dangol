@@ -160,6 +160,55 @@
 		ORDER BY DDATE
 	</select>
 	
+	<!-- 예약 정보 -->
+	<select id="selectDetailOne" parameterType="details" resultType="details">
+		SELECT 
+			DNUM AS dnum
+			,GNUM AS gnum
+			,TO_CHAR(DDATE,'YYYY-MM-DD') AS ddate
+			,DPERSON AS dperson
+			,DMENU AS dmenu
+			,DTYPE AS dtype
+			,DASK AS dask
+			,DCHECK AS dcheck
+			,DTIME AS dtime
+			,DCOUNT AS dcount
+			,DLIMIT AS dlimit
+		FROM 
+			DETAILS
+		WHERE 
+			DNUM = #{dnum}
+		 	AND DTYPE = 'Y' 
+		 	AND DCHECK = 'N'
+	</select>
+	
+	<update id="updateDetail" parameterType="details">
+		UPDATE
+			DETAILS
+		SET
+			DCHECK = #{dcheck}
+			<if test="ddate != null and ddate != ''">
+			,DDATE = #{ddate}
+			</if>
+			<if test="dperson != null and dperson != ''">
+			,DPERSON = #{dperson}
+			</if>
+			<if test="dmenu != null and dmenu != ''">
+			,DMENU = #{dmenu}
+			</if>
+			<if test="dtype != null and dtype != ''">
+			,DTYPE = #{dtype}
+			</if>
+			<if test="dask != null and dask != ''">
+			,DASK = #{dask}
+			</if>
+			<if test="dtime != null and dtime != ''">
+			,DTIME = #{dtime}
+			</if>
+		WHERE
+			DNUM = #{dnum}
+	</update>
+	
 	<!-- 가게 리스트 -->	
 	<select id="selectStoreList" parameterType="store" resultType="store">
 		SELECT 

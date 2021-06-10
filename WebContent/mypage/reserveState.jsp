@@ -42,7 +42,7 @@ function cancelReserve(dnum){//예약 췩소
 					<col width="10%">
 				</colgroup>
 				<tbody>
-				<tr>
+				<tr class="info">
 					<th>날짜</th>
 					<th>예약시간</th>
 					<th>인원</th>

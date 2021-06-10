@@ -452,5 +452,21 @@ public class OwnerController {
 		return null;
 	}
 	
+	//멤버쉽 적용
+	@RequestMapping("memberShipAply.do")
+	public boolean memberShipAply(Details details
+			, HttpServletResponse resp) throws Exception{
+		int result = 0;
+		boolean msg = false;
+		if(details.getDnum() > 0) {
+			result = oService.updateMemberShip(details);
+		}
+		
+		if(result > 0) {
+			msg = true;
+		}
+		return msg;
+	}
+	
 
 }

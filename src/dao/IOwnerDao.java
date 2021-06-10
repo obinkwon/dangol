@@ -31,6 +31,10 @@ public interface IOwnerDao {
 	public List<Details> selectDetailListTotal(Store store);
 	//예약 리스트(하나만)
 	public List<Details> selectDetailListOne(Store store);
+	//예약 정보
+	public Details selectDetailOne(Details details);
+	//멤버쉽 적용
+	public int updateDetail(Details details);
 	
 	/* 점장 가게*/
 	//가게 리스트 가져오기

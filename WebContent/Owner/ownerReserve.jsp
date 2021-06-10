@@ -14,12 +14,6 @@
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src="/js/calendar.js"></script>
 <style type="text/css">
-	div.nav {
-		margin-top: 50px;
-		float: left;
-		width: 10%;
-		margin-left: 50px;
-	}
 	li.navTitle {
 		background-color: #d9d9d9;
 	}
@@ -63,7 +57,7 @@ function search_member() {
 					table += '<tr>';
 					table += '<td>' + el.mid + '</td>';
 					table += '<td>' + el.mphone + '</td>';
-					table += '<td><button class="btn-view w100" type="button" onclick="memberShip()">적용</button></td>';
+					table += '<td><button class="btn-view w100" type="button" onclick="memberShip('+el.dnum+')">적용</button></td>';
 					table += '</tr>';
 				});
 				
@@ -84,15 +78,36 @@ function report(){//신고하기 (ing)
 	}
 }
 
-function memberShip(){//멤버쉽 적용 (ing)
-	alert("멤버쉽혜택이 적용되었습니다");
+function memberShip(dnum){//멤버쉽 적용 (ing)
+	if(dnum > 0){
+		if (confirm("적용하시겠습니까?")) {
+			$.ajax({
+				url : "memberShipAply.do",
+				data :{
+					dnum : dnum
+				},
+				type : "post",
+				success : function(data){
+					if(data){
+						alert("멤버쉽혜택이 적용되었습니다");
+					}else{
+						alert("서비스 오류입니다.\n 관리자에게 문의해주세요");
+					}
+				},
+				error :function(){
+					alert("서비스 오류입니다.\n 관리자에게 문의해주세요");
+				}
+			});
+		}
+	}else{
+		alert("서비스 오류입니다.\n 관리자에게 문의해주세요");
+	}
 }
 
 $(function(){
 	$("#select_store").on("change",function(){
 		location.href="reserveOwner.do?snum="+this.value;
 	});
-	
 });
 </script>
 </head>
@@ -143,8 +158,10 @@ $(function(){
 					<col width="5%"/>
 					<col width="*"/>
 					<col width="*"/>
+					<col width="*"/>
 					<col width="10%"/>
-					<col width="15%"/>
+					<col width="10%"/>
+					<col width="10%"/>
 				</colgroup>
 				<tbody>
 					<tr>
@@ -152,10 +169,12 @@ $(function(){
 						<th>ID</th>
 						<th>핸드폰</th>
 						<th>인원</th>
+						<th>가게</th>
 						<th>메뉴</th>
 						<th>요청사항</th>
-						<th>신고하기</th>
-						<th>멤버쉽 적용</th>
+						<th>변경</th>
+						<th>신고</th>
+						<th>멤버쉽</th>
 					</tr>
 					<c:forEach var="detail" items="${detailList}" varStatus="status">
 					<tr>
@@ -163,15 +182,17 @@ $(function(){
 						<td>${detail.mid}</td>
 						<td>${detail.mphone}</td>
 						<td>${detail.dperson} 명</td>
+						<td>${detail.sname} 명</td>
 						<td>${detail.dmenu}</td>
 						<td>${detail.dask}</td>
+						<td><button class="btn-view w100" type="button" onclick="updateReserve('${detail.dnum}')">변경</button></td>
 						<td><button class="btn-view w100" type="button" onclick="report()">신고</button></td>
-						<td><button class="btn-view w100" type="button" onclick="memberShip()">적용</button></td>
+						<td><button class="btn-view w100" type="button" onclick="memberShip('${detail.dnum}')">적용</button></td>
 					</tr>
 					</c:forEach>
 					<c:if test="${empty detailList}">
 					<tr>
-						<td colspan="7" style="text-align:center;">예약이 없습니다</td>
+						<td colspan="10" style="text-align:center;">예약이 없습니다</td>
 					</tr>
 					</c:if>
 				</tbody>

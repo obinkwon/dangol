@@ -215,4 +215,17 @@ public class OwnerService {
 		return oDao.deleteStore(store);
 	}
 	
+	//멤버쉽 적용
+	public int updateMemberShip(Details details) {
+		int result = 0;
+		//예약 정보 확인
+		Details data = oDao.selectDetailOne(details);
+		if(data != null) {
+			//적용
+			details.setDcheck("Y");
+			result = oDao.updateDetail(details);
+		}
+		return result;
+	}
+	
 }
