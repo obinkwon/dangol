@@ -40,7 +40,6 @@ public interface IOwnerDao {
 	public List<Details> selectDetailsCurrentYByMids(HashMap<String, String[]> hm);
 	public List<Details> selectDetailsByGnumsDdate(HashMap hm);
 	public List<Store> selectStoresBySnums(int[] snum);
-	public List<Grade> selectGradeListSnum(Grade grade);
 	
 	/* 점장 가게*/
 	//가게 리스트 가져오기

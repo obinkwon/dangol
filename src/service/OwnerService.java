@@ -104,23 +104,6 @@ public class OwnerService {
 	}
 	
 	
-	//ed snum에 일치하는 Gnums 구하기
-	public int[] selectGnums(Grade grade) {
-		//snum에 일치하는 현재등급 목록 불러오기
-		int i =0;
-		List<Grade> gradeList = oDao.selectGradeListSnum(grade);
-		int[] Gnums = new int[gradeList.size()];
-		
-		//Grades에서 gnum만 추출해서 Gnums에 저장
-		for (Grade gr : gradeList) {
-			Gnums[i] = gr.getGnum();
-			i++;
-		}
-		return Gnums;
-	}
-	
-	
-	
 	public List<Grade> selectGradesCurrentYByMids(String[] mids) {
 		HashMap<String, String[]> hm = new HashMap<String, String[]>();
 		hm.put("mids", mids);
@@ -144,16 +127,6 @@ public class OwnerService {
 			i++;
 		}
 		return snums;
-	}
-	
-	//ed Gnums와 ddate에 해당하는 details 구하기
-	public List<Details> selectDetailsByGnumsDdate(int[] Gnums, Date Ddate){
-		//Gnums, ddate 담기
-		HashMap<String, Object> hm = new HashMap<String, Object>();
-		hm.put("Gnums", Gnums);
-		hm.put("Ddate", Ddate);
-		//ddate로 details 조회
-		return oDao.selectDetailsByGnumsDdate(hm);
 	}
 
 	// 가게 등록
@@ -266,64 +239,6 @@ public class OwnerService {
 	public int deleteStore(Store store) {
 		oDao.deleteStag(store); //가게 태그 삭제
 		return oDao.deleteStore(store);
-	}
-
-	public int[] selectRatesByMids(String[] mids) {
-		 //mid로 grades구하기
-		 List<Grade> grades = selectGradesCurrentYByMids(mids);
-		 
-		 int i = 0;
-		 int[] snums = new int[grades.size()];
-		 int[] glevels = new int[grades.size()];
-		 
-//		 for (int j = 0; j < mids.length; j++) {
-//			System.out.println("mids"+mids[j]);
-//		}
-//		 
-//		 System.out.println(grades.size());
-		 //grades에서 snums, glevels 구하기
-		 for (Grade grade : grades) {
-			 System.out.println(i);
-			 System.out.println("snums"+i+snums[i]);
-			 System.out.println("glevels"+i+glevels[i]);
-			 snums[i] = grade.getSnum();
-			 glevels[i] = grade.getGlevel();
-			 i++;
-		 }
-		HashMap<String, int[]> hm = new HashMap<String, int[]>();
-		hm.put("snums", snums);
-		
-		List<Store> stores = eDao.selectStoresBySnums(hm);
-		
-		
-		int[] rates = new int[stores.size()];
-		int j=0;
-		for (Store store : stores) {
-			switch (glevels[j]) {
-			//범골
-			case 0:
-				rates[j] = store.getSratelv0();
-				break;
-			//진골
-			case 1:
-				rates[j] = store.getSratelv1();
-				break;
-			//성골
-			case 2:
-				rates[j] = store.getSratelv2();
-				break;
-			//단골
-			case 3:
-				rates[j] = store.getSratelv3();
-				break;
-			//오류 시 
-			default:
-				rates[j] = -1;
-				break;
-			}
-			j++;
-		}
-		return rates;
 	}
 
 	public List<Details> selectDetailsByMids(String[] mids) {
