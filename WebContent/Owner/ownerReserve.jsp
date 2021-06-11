@@ -14,23 +14,6 @@
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src="/js/calendar.js"></script>
 <style type="text/css">
-	li.navTitle {
-		background-color: #d9d9d9;
-	}
-	a.navTitle {
-		font-size: 15px;
-		font-weight: bold;
-		color: #000000;
-		text-align: center;
-	}
-	a.nav {
-		text-align: center;
-		font-size: 14px;
-		color: #000000;
-	}
-	li.active {
-		background-color: #66ccff;
-	}
 	.contents-wrap{
 		width: 100%;
 		height : 600px;

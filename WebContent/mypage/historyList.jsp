@@ -10,26 +10,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="/css/template.css" />
 <style type="text/css">
-li.navTitle {
-	background-color: #d9d9d9;
-}
-
-a.navTitle {
-	font-size: 15px;
-	font-weight: bold;
-	color: #000000;
-	text-align: center;
-}
-
-a.nav {
-	text-align: center;
-	font-size: 14px;
-	color: #000000;
-}
-
-li.active {
-	background-color: #66ccff;
-}
 
 table.historyList {
 	position: relative;
@@ -37,10 +17,6 @@ table.historyList {
 	width: 70%;
 	height: 140px;
 	border: 1px solid;
-}
-
-p.sname {
-	font-weight: bold;
 }
 
 table td {
@@ -62,45 +38,20 @@ a.viewStore {
 	font-size: 12px;
 }
 
-img.likes {
-	width: 50px;
-	height: 50px;
-}
-
-.likesBtn {
-	width: 50px;
-	height: 50px;
-	border: 0px;
-	background-color: white;
-	outline: 0;
-}
-
-a.dcount {
-	color: green;
-	text-decoration: none;
-	pointer-events: none;
-	cursor: default;
-}
-
-.image {
-	position: relative;
-	margin-left: 20px;
-	width: 140px;
-	height: 120px;
-}
-
-.storeClick {
-	cursor: pointer;
-}
 </style>
 <script type="text/javascript">
  $(document).ready(function(){
-	 $(".storeClick").click(function(){	 
-		var snum= $(this).closest("tr").find("td:eq(0)").find("input").val();
-		 location.href="historyView.do?mid=${mid}&snum="+snum;
-
-	 }) 
- })
+ });
+ </script>
+ <script type="text/javascript">
+ 	function historyLike(mid,snum,glike){// 즐겨찾기 변경
+ 		location.href='historyLike.do?mid='+mid+'&snum='+snum+'&glike='+glike;
+ 	}
+ 	
+ 	function historyView(snum){// 내역 상세보기
+ 		var mid = $('#hisMid').val();
+		location.href='historyView.do?mid='+mid+'&snum='+snum;
+ 	}
  </script>
 </head>
 <body>
@@ -119,61 +70,50 @@ a.dcount {
 			<div class="contentsTitGroup">
 				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">(${mid})&nbsp;단골님의 방문내역</h2>
 			</div>
-			<c:forEach var="history" items="${historylist}">
-				<table class="table">
-					<colgroup>
-						<col width="30%"/>
-						<col width="50%"/>
-						<col width="20%"/>
-						<col width="*"/>
-					</colgroup>
-					<tbody>
-						<tr>
-							<th>가게</th>
-							<th>ID</th>
-							<th>핸드폰</th>
-							<th>인원</th>
-						</tr>
-						<tr>
-							<td rowspan="4">
-								<input type="hidden" value="${history.snum}">
+			<input id="hisMid" type="hidden" name="mid" value="${mid}">
+			<table class="table">
+				<colgroup>
+					<col width="*"/>
+					<col width="70%"/>
+					<col width="10%"/>
+					<col width="*"/>
+				</colgroup>
+				<tbody>
+				<c:forEach var="history" items="${historylist}">
+					<tr>
+						<td rowspan="4" style="text-align:center;">
+							<a href="javascript:historyView(${history.snum});">
 								<c:if test="${history.simage eq null}"><img src="/image/image_ready2.png" class="img140"></c:if>
 								<c:if test="${history.simage ne null}"><img src="downloadSImage.do?snum=${history.snum}" class="img140"></c:if>
-							</td>
-							<td class="storeClick" ><p class="sname">${history.sname}</p></td>
-							<td rowspan="4" class="right">
-								<c:if test="${history.glevel==0}">범골<br></c:if>
-								<c:if test="${history.glevel==1}">진골<br></c:if>
-								<c:if test="${history.glevel==2}">성골<br></c:if>
-								<c:if test="${history.glevel==3}">단골<br></c:if>
-				
-								<c:if test="${history.glike == 1}">
-									<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=0'">
-										<img class="likes" src="mypage/likes.png">
-									</button>
-								</c:if>
-								<c:if test="${history.glike != 1}">
-									<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=1'">
-										<img class="likes" src="mypage/dislike.png">
-									</button>
-								</c:if>
-								<br /> 
-								<a href="storeView.do?snum=${history.snum}" class="viewStore">가게상세보기</a>
-							</td>
-						</tr>
-	
-						<tr>
-							<td>${history.saddress}</td>
-						</tr>
-						<tr>
-							<td>최근방문 &nbsp;&nbsp;${history.ddate}</td>
-						</tr>
-						<tr>
-							<td>남은리뷰&nbsp;&nbsp;<a class="dcount">${history.dcount}</a></td>
-						</tr>
-					</tbody>
-				</table>
-			</c:forEach>
+							</a>
+						</td>
+						<td class="storeClick" >${history.sname}</td>
+						<td rowspan="4" style="text-align:center;">
+							<c:if test="${history.glevel==0}">범골<br></c:if>
+							<c:if test="${history.glevel==1}">진골<br></c:if>
+							<c:if test="${history.glevel==2}">성골<br></c:if>
+							<c:if test="${history.glevel==3}">단골<br></c:if>
+			
+							<c:if test="${history.glike == 1}">
+								<button class="imgBtn m0" onclick="historyLike('${mid}','${history.snum}','0')">
+									<img class="img50" src="mypage/likes.png">
+								</button>
+							</c:if>
+							<c:if test="${history.glike != 1}">
+								<button class="imgBtn m0" onclick="historyLike('${mid}','${history.snum}','1')">
+									<img class="img50" src="mypage/dislike.png">
+								</button>
+							</c:if>
+							<br /> 
+							<a href="storeView.do?snum=${history.snum}" class="viewStore">가게상세보기</a>
+						</td>
+					</tr>
+					<tr><td>${history.saddress} ${history.sdetailaddr}</td></tr>
+					<tr><td>최근방문 ${history.ddate}</td></tr>
+					<tr><td>남은리뷰&nbsp;&nbsp;${history.dcount}</td></tr>
+				</c:forEach>
+				</tbody>
+			</table>
 		</div>
 	</div>
 <jsp:include page="/jsp/footer.jsp" />

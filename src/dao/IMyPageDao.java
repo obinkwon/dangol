@@ -20,7 +20,7 @@ public interface IMyPageDao {
 	public int deleteMemberOne (Member member);
 	//즐겨찾기 리스트
 	public List<Grade> selectGlikeList(Member member);
-	//내역 리스트
+	//방문내역 리스트
 	public List<Details> selectHistoryList(Member member);
 	//즐겨찾기 리스트
 	public List<Details> selectBookmarkList(Member member);

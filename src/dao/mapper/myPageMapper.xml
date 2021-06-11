@@ -92,7 +92,7 @@
 	 	SELECT 
 	 		D.DNUM AS dnum
 			,D.GNUM AS gnum 
-			,D.DDATE AS ddate
+			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
 			,D.DPERSON AS dperson
 			,D.DMENU AS dmenu
 			,D.DTYPE AS dtype
@@ -101,9 +101,17 @@
 			,D.DTIME AS dtime
 			,D.DCOUNT AS dcount
 			,D.DLIMIT AS dlimit
+			,G.GLEVEL AS glevel
+			,G.GLIKE AS glike
+			,S.SNAME AS sname
+			,S.SNUM AS snum
+			,S.SIMAGE AS simage
+			,S.SADDRESS AS saddress
+			,S.SDETAILADDR AS sdetailaddr
 	 	FROM 
 	 		DETAILS D
 	 		INNER JOIN GRADES G ON D.GNUM = G.GNUM
+	 		INNER JOIN STORES S ON G.SNUM = S.SNUM 
 	 	WHERE 
 			G.MID = #{mid} 
 	 		AND D.DCHECK = 'Y' 
@@ -112,27 +120,32 @@
 	
 	<!-- 즐겨찾기 리스트 -->
 	<select id="selectBookmarkList" parameterType="details" resultType="details">
-	 	SELECT 
-	        G.MID AS mid
+	    SELECT
+	    	S.SNUM AS snum
+	    	,S.SNAME AS sname 
+	    	,S.SIMAGE AS simage 
+	    	,S.SADDRESS AS saddress 
+	    	,S.SDETAILADDR AS sdetailaddr 
+	    	,T.GLEVEL AS glevel 
+	    	,T.GLIKE AS glike 
+		FROM STORES S
+		INNER JOIN (
+        SELECT 
+	        G.GNUM AS gnum
 	        ,G.GLEVEL AS glevel
 	        ,G.GLIKE AS glike
-	        ,D.DDATE AS ddate
-	        ,D.DCOUNT AS dcount
-	        ,S.SNUM AS snum
-	        ,S.SIMAGE AS simage
-	        ,S.SNAME AS sname
-	        ,S.SADDRESS AS saddress
-	        ,S.SDETAILADDR AS sdetailaddr
+            ,G.SNUM AS snum
 	    FROM 
 	        DETAILS D
 	        INNER JOIN GRADES G ON D.GNUM = G.GNUM
-	        INNER JOIN STORES S ON G.SNUM = S.SNUM
 	    WHERE 
 	        G.MID = #{mid}
 	        AND G.GCURRENT = 'Y' 
 	        AND G.GLIKE = 1
 	        AND D.DCHECK = 'Y' 
-	    ORDER BY D.DDATE DESC
+	    GROUP BY G.GNUM, G.SNUM, G.GLEVEL, G.GLIKE
+        ) T ON S.SNUM = T.SNUM
+        ORDER BY S.SNAME ASC
 	</select>
 	<!-- 나의 등급 정보 리스트 -->
 	<select id="selectGradeList" parameterType="member" resultType="grade">
@@ -211,7 +224,7 @@
 	<delete id="deleteReserve" parameterType="details">
 		DELETE FROM DETAILS WHERE DNUM = #{dnum}
 	</delete>
-	
+	<!-- 즐겨찾기 변경 -->
 	<update id="updateLike" parameterType="member">
 		UPDATE 
 			GRADES 

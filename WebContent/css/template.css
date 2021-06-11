@@ -1,10 +1,5 @@
 /* div css */
-div.main {
-	margin : auto;
-	margin-top: 50px;
-	margin-bottom:100px;
-	width: 100%;
-}
+div.main {margin : auto;margin-top: 50px;margin-bottom:100px;width: 100%;}
 div.nav {
 	margin-top: 50px;
 	float: left;
@@ -46,6 +41,12 @@ div.nav {
 	margin-left : 20px;
 	margin-bottom : 20px;
 }
+.bookmarkList{
+	display:block;
+	width:50%;
+	margin:auto;
+}
+
 
 /* btn css */
 .btn-wrap {
@@ -70,22 +71,9 @@ div.nav {
 	border: 0.1rem solid #66ccff;
 }
 .btn-mint{background-color: #66ccff;color: #fff;}
-.imgBtn{
-	text-decoration: none;
-	background-color: #ffffff;
-	margin-left : 170px;
-	color : #000000;
-}
-.imgBtn:hover{
-	color : #000000;
-	text-decoration: none;
-	text-decoration: none;
-	cursor : pointer;
-	color : gray;
-}
-.imgBtn:visited{
-	text-decoration: none;
-}
+.imgBtn{text-decoration: none;background-color: #ffffff;margin-left : 170px;color : #000000;border : 0px;}
+.imgBtn:hover{color : #000000;text-decoration: none;text-decoration: none;cursor : pointer;color : gray;}
+.imgBtn:visited{text-decoration: none;}
 
 /* img css */
 .img17{width : 17px;height : 17px;}
@@ -94,13 +82,14 @@ div.nav {
 .img50 {width: 50px;height: 50px;}
 .img100 {width: 100px;height: 100px;}
 .img140 {width: 140px;height: 140px;}
+.img140:hover{cursor:pointer;}
+.imgW300 {width: 300px;}
 
 /* width css  */
 .w50{width: 50px;}
 .w100{width: 100px;}
 .w200{width: 200px;}
 .w300{width: 300px;}
-.w500
 
 /* height css  */
 .h300{height : 300px;}
@@ -108,24 +97,21 @@ div.nav {
 .h1000{height : 1000px;}
 
 /* form css */
-.formArea{
-	vertical-align: middle;
-	height: 40px;
-   	line-height: 40px;
-}
-.formArea label{
-	margin-left: 10px;
-	vertical-align: middle;
-   	line-height: 40px;
-}
-.formArea ul {
+.formArea{vertical-align: middle;height: 40px;line-height: 40px;}
+.formArea label{margin-left: 10px;vertical-align: middle;line-height: 40px;}
+.formArea ul, .bookmarkList ul{
     padding-inline-start: 0px;
     overflow: hidden;
     height: 100%;
     width: 100%;
     margin-bottom : 0px;
 }
-.formArea li {
+.bookmarkList ul{
+	margin-bottom:20px;
+	border: 1px solid #000000;
+	padding:30px;
+}
+.formArea li, .bookmarkList li{
     vertical-align: middle;
     float: left;
     overflow: hidden;
@@ -197,3 +183,4 @@ a.nav {
 
 /* margin css */
 .m0{margin : 0px;}
+.mt20{margin-top:20px;}

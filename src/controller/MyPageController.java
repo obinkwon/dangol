@@ -108,21 +108,6 @@ public class MyPageController {
 			member.setMid(mid);
 			List<Details> bookmarkList = mypageService.selectBookmarkList(member);
 
-			for (Details detail : bookmarkList) {
-				int dcount = detail.getDcount();
-				int count = 0;
-				if (dcount < 12) {
-					count = (12 - dcount);
-				} else if (dcount < 24) {
-					count = (24 - dcount);
-				} else if (dcount < 48) {
-					count = (48 - dcount);
-				} else {
-					count = 100;
-				}
-				detail.setDcount(count);
-			}
-
 			mav.addObject("bookmarkList", bookmarkList);
 			mav.setViewName("mypage/bookmark");
 		}else {
