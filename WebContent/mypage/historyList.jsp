@@ -6,26 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>방문내역</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script type="text/javascript"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/template.css" />
 <style type="text/css">
-div.main {
-	display: block;
-	width: 100%;
-	margin-top: 50px;
-	margin-bottom: 100px;
-}
-
-div.nav {
-	margin-top: 50px;
-	float: left;
-	width: 10%;
-	margin-left: 50px;
-}
-
 li.navTitle {
 	background-color: #d9d9d9;
 }
@@ -45,19 +29,6 @@ a.nav {
 
 li.active {
 	background-color: #66ccff;
-}
-
-p.page-header {
-	position: relative;
-	margin-left: 15px;
-	margin-bottom: 20px;
-	font-size: 24px;
-	font-weight: bold;
-}
-
-div.historyContent {
-	position: relative;
-	margin-left: 22%;
 }
 
 table.historyList {
@@ -129,13 +100,11 @@ a.dcount {
 		 location.href="historyView.do?mid=${mid}&snum="+snum;
 
 	 }) 
-	 
-	
  })
  </script>
 </head>
 <body>
-	<jsp:include page="../jsp/header.jsp" />
+<jsp:include page="/jsp/header.jsp" />
 	<div class="main">
 		<div class="nav">
 			<ul class="nav nav-pills nav-stacked">
@@ -146,55 +115,66 @@ a.dcount {
 				<li class="nav"><a class="nav" href="reserveState.do">예약현황</a></li>
 			</ul>
 		</div>
-		<div class="historyContent">
-			<p class="page-header">(${mid})&nbsp;단골님의 방문내역</p>
+		<div class="container">
+			<div class="contentsTitGroup">
+				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">(${mid})&nbsp;단골님의 방문내역</h2>
+			</div>
 			<c:forEach var="history" items="${historylist}">
-				<table class="historyList">
-					<tr>
-						<td rowspan="4" width=30%><input type="hidden"
-							value="${history.snum}"> <c:choose>
-								<c:when test="${history.simage==null}">
-									<img src="image_ready2.png" class="image">
-								</c:when>
-								<c:otherwise>
-									<img src="downloadSImage.do?snum=${history.snum}" class="image">
-								</c:otherwise>
-							</c:choose></td>
-						<td class="storeClick" width=50%><p class="sname">${history.sname}</p></td>
-						<td rowspan="4" width=20% class="right">
-							<c:if test="${history.glevel==0}">범골<br></c:if>
-							<c:if test="${history.glevel==1}">진골<br></c:if>
-							<c:if test="${history.glevel==2}">성골<br></c:if>
-							<c:if test="${history.glevel==3}">단골<br></c:if>
-			
-							<c:if test="${history.glike == 1}">
-								<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=0'">
-									<img class="likes" src="mypage/likes.png">
-								</button>
-							</c:if>
-							<c:if test="${history.glike != 1}">
-								<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=1'">
-									<img class="likes" src="mypage/dislike.png">
-								</button>
-							</c:if>
-							<br /> 
-							<a href="storeView.do?snum=${history.snum}" class="viewStore">가게상세보기</a>
-						</td>
-					</tr>
-
-					<tr>
-						<td>${history.saddress}</td>
-					</tr>
-					<tr>
-						<td>최근방문 &nbsp;&nbsp;${history.ddate}</td>
-					</tr>
-					<tr>
-						<td>남은리뷰&nbsp;&nbsp;<a class="dcount">${history.dcount}</a></td>
-					</tr>
-
+				<table class="table">
+					<colgroup>
+						<col width="30%"/>
+						<col width="50%"/>
+						<col width="20%"/>
+						<col width="*"/>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>가게</th>
+							<th>ID</th>
+							<th>핸드폰</th>
+							<th>인원</th>
+						</tr>
+						<tr>
+							<td rowspan="4">
+								<input type="hidden" value="${history.snum}">
+								<c:if test="${history.simage eq null}"><img src="/image/image_ready2.png" class="img140"></c:if>
+								<c:if test="${history.simage ne null}"><img src="downloadSImage.do?snum=${history.snum}" class="img140"></c:if>
+							</td>
+							<td class="storeClick" ><p class="sname">${history.sname}</p></td>
+							<td rowspan="4" class="right">
+								<c:if test="${history.glevel==0}">범골<br></c:if>
+								<c:if test="${history.glevel==1}">진골<br></c:if>
+								<c:if test="${history.glevel==2}">성골<br></c:if>
+								<c:if test="${history.glevel==3}">단골<br></c:if>
+				
+								<c:if test="${history.glike == 1}">
+									<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=0'">
+										<img class="likes" src="mypage/likes.png">
+									</button>
+								</c:if>
+								<c:if test="${history.glike != 1}">
+									<button class="likesBtn" onclick="location.href='historyLike.do?mid=${mid}&snum=${history.snum}&glike=1'">
+										<img class="likes" src="mypage/dislike.png">
+									</button>
+								</c:if>
+								<br /> 
+								<a href="storeView.do?snum=${history.snum}" class="viewStore">가게상세보기</a>
+							</td>
+						</tr>
+	
+						<tr>
+							<td>${history.saddress}</td>
+						</tr>
+						<tr>
+							<td>최근방문 &nbsp;&nbsp;${history.ddate}</td>
+						</tr>
+						<tr>
+							<td>남은리뷰&nbsp;&nbsp;<a class="dcount">${history.dcount}</a></td>
+						</tr>
+					</tbody>
 				</table>
 			</c:forEach>
 		</div>
 	</div>
-	<jsp:include page="../jsp/footer.jsp" />
+<jsp:include page="/jsp/footer.jsp" />
 </body>

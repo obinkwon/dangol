@@ -80,34 +80,10 @@ public class MyPageService {
 	public List<Details> selectBookmarkList(Member member){
 		return mypagedao.selectBookmarkList(member);
 	}
-
-//	public List<List<Details>> selectGlikeList(Member member) {
-//		List<Grade> grade = mypagedao.selectGlikeList(member);
-//		List<List<Details>> detailList = new ArrayList<List<Details>>();
-//		for (Grade g : grade) {
-//			Details det = new Details();
-//			det.setMid(g.getMid());
-//			det.setSnum(g.getSnum());
-//			detailList.add(mypagedao.selectHistoryList(det));
-//		}
-//		return detailList;
-//	}
-
-	public List<List<Details>> selectdcountHistory(String mid) {
-		Member member = new Member();
-		member.setMid(mid);
-		List<Grade> grade = mypagedao.selectGradeList(member);
-
-		List<List<Details>>details = new ArrayList<>();
-		
-		for (Grade g : grade) {
-			Details det = new Details();
-			det.setMid(g.getMid());
-			det.setSnum(g.getSnum());
-			details.add(mypagedao.selectHistoryList(det));
-		
-		}
-		return details;
+	
+	//방문 내역 리스트
+	public List<Details> selectHistoryListMid(Member member) {
+		return mypagedao.selectHistoryList(member);
 	}
 	
 	public List<Details> selectdcount(String mid, int snum){
@@ -125,10 +101,12 @@ public class MyPageService {
 	}
 
 	public List<Details> selectHistoryList(String mid, int snum) {
-		Details det = new Details();
-		det.setMid(mid);
-		det.setSnum(snum);
-		List<Details> d = mypagedao.selectHistoryList(det);
+//		Details det = new Details();
+//		det.setMid(mid);
+//		det.setSnum(snum);
+		Member member = new Member();
+		member.setMid(mid);
+		List<Details> d = mypagedao.selectHistoryList(member);
 		return d;
 	}
 

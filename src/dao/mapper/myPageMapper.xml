@@ -86,8 +86,9 @@
 			AND GCURRENT = 'Y' 
 			AND GLIKE = 1
 	</select>
+	
 	<!-- 방문내역 -->
-	<select id="selectHistoryList" parameterType="details" resultType="details">
+	<select id="selectHistoryList" parameterType="member" resultType="details">
 	 	SELECT 
 	 		D.DNUM AS dnum
 			,D.GNUM AS gnum 
@@ -105,10 +106,10 @@
 	 		INNER JOIN GRADES G ON D.GNUM = G.GNUM
 	 	WHERE 
 			G.MID = #{mid} 
-			AND G.SNUM = #{snum}
 	 		AND D.DCHECK = 'Y' 
 	 	ORDER BY D.DDATE DESC
 	</select>
+	
 	<!-- 즐겨찾기 리스트 -->
 	<select id="selectBookmarkList" parameterType="details" resultType="details">
 	 	SELECT 

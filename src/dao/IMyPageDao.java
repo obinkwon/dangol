@@ -21,7 +21,7 @@ public interface IMyPageDao {
 	//즐겨찾기 리스트
 	public List<Grade> selectGlikeList(Member member);
 	//내역 리스트
-	public List<Details> selectHistoryList(Details details);
+	public List<Details> selectHistoryList(Member member);
 	//즐겨찾기 리스트
 	public List<Details> selectBookmarkList(Member member);
 	//즐겨찾기 수정

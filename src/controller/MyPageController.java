@@ -138,55 +138,20 @@ public class MyPageController {
 	}
 
 	@RequestMapping("historyList.do")
-	public ModelAndView history(HttpSession session) {
+	public ModelAndView history(Member member
+			,HttpSession session) {
 		String mid = (String) session.getAttribute("mid");
 		ModelAndView mav = new ModelAndView();
-		List<HashMap<String, Object>> historyList = new ArrayList<HashMap<String, Object>>();
-		List<List<Details>> detailslist = mypageService.selectdcountHistory(mid);// 리뷰
-		if(detailslist !=null) {
-			
-			for (List<Details> dlist : detailslist) {
-				System.out.println(dlist);
+		if (mid != null) {
+			member.setMid(mid);
+			List<Details> historyList = mypageService.selectHistoryListMid(member);//방문내역 리스트
 				
-			if(dlist.size()!=0) {
-				
-				HashMap<String, Object> history = new HashMap<String, Object>();
-		
-				Grade grade = mypageService.selectgradeByGnum(dlist.get(0).getGnum());
-				Store store = mypageService.selectStoreBySnum(grade.getSnum());
-				history.put("snum", store.getSnum());
-				history.put("simage", store.getSimage());
-				history.put("sname", store.getSname());
-				history.put("saddress", store.getSaddress()); 
-				Grade grades = mypageService.selectgrade(grade.getMid(),grade.getSnum());
-				history.put("glevel", grades.getGlevel());
-				history.put("glike", grades.getGlike());
-				String date = dlist.get(0).getDdate();
-				history.put("ddate", date);
-				List<Details> details= mypageService.selectdcount(grade.getMid(), grade.getSnum());
-				int dcount = details.get(0).getDcount();
-				Object count = null;
-				if (dcount < 12) {
-					count = (12 - dcount);
-				} else if (dcount < 24) {
-					count = (24 - dcount);
-				} else if (dcount < 48) {
-					count = (48 - dcount);
-				} else {
-					count = ("최고등급입니다.");
-				}
-				history.put("dcount", count);
-				historyList.add(history);
-				mav.addObject("historylist", historyList);
-				
-			}
+			mav.addObject("historylist", historyList);
+			mav.setViewName("mypage/historyList");
+		}else {
+			mav.setViewName("jsp/loginForm");
 		}
-			
-			}
-	
-	mav.setViewName("mypage/historyList");
 		return mav;
-
 	}
 
 	@RequestMapping("historyLike.do")
