@@ -8,106 +8,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="/css/template.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<style type="text/css">
-	div.main {
-		margin : auto;
-		margin-top: 50px;
-		margin-bottom:100px;
-		width: 100%;
-	}
-	.btn-wrap {
-		display: block;
-		text-align: center;
-	    width: 100%;
-	    margin: 0 auto;
-	    margin-bottom : 30px;
-		padding-top: 4.5rem;
-	}
-	.contentsTitGroup{
-		padding-top: 2.0rem;
-	    text-align: center;
-	    display: block;
-	}
-	.formArea{
-		vertical-align: middle;
-		height: 40px;
-    	line-height: 40px;
-	}
-	.formArea label{
-		margin-left: 10px;
-		vertical-align: middle;
-    	line-height: 40px;
-	}
-	.formArea ul {
-	    padding-inline-start: 0px;
-	    overflow: hidden;
-	    height: 100%;
-	    width: 100%;
-	    margin-bottom : 0px;
-	}
-	.formArea li {
-	    vertical-align: middle;
-	    display: block;
-	    float: left;
-	    overflow: hidden;
-	    margin-right: 25px;
-	}
-	.inputRadio{
-	    margin: 0;
-	    width: 15px;
-	    height: 15px;
-	    border: 0;
-	    margin-right: 20px;
-	}
-	.tagText {
-		text-align: center;
-		height: 10px;
-		font-weight: bold;
-		font-size: 15px;
-	}
-	div.nav {
-		margin-top: 50px;
-		float: left;
-		width: 10%;
-		margin-left: 50px;
-	}
-	li.navTitle {
-		background-color: #d9d9d9;
-	}
-	a.navTitle {
-		font-size: 15px;
-		font-weight: bold;
-		color: #000000;
-		text-align: center;
-	}
-	a.nav {
-		text-align: center;
-		font-size: 14px;
-		color: #000000;
-	}
-	li.active {
-		background-color: #66ccff;
-	}
-	.cancelImg {
-		width: 100%;
-		height: 100%;
-	}
-	.delBtn {
-		padding: 0px;
-		width: 30px;
-		height: 30px;
-		border: 0px;
-		background-color: white;
-		outline: 0;
-	}
-	img.memberImg {
-		display : block;
-		margin : auto;
-		margin-top: 20px;
-		width: 120px;
-		height: 120px;
-	}
-</style>
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#pwdCheck').blur(function(){
@@ -134,7 +34,7 @@ $(document).ready(function(){
 	$(document).ready(function(){
 		$("#file").on("change",SelectImg);
 	});
-	function SelectImg(e){
+	function SelectImg(e){ //이미지 변경
 		var files=e.target.files;
 		var filesArr = Array.prototype.slice.call(files);
 		
@@ -148,18 +48,17 @@ $(document).ready(function(){
 		});
 	}
 	
-	function goPopup(){
-		// 주소검색을 수행할 팝업 페이지를 호출합니다.
+	function goPopup(){// 주소
 		var pop = window.open("jusoPopup.do?index=0","pop","width=570,height=420, scrollbars=yes, resizable=yes,left=400,top=300");
 	}
-	function prefer1(){
+	function prefer1(){// 선호지역1
 		var pop = window.open("jusoPopup.do?index=1","pop","width=570,height=420, scrollbars=yes, resizable=yes,left=400,top=300");
 	}
-	function prefer2(){
+	function prefer2(){// 선호지역2
 		var pop = window.open("jusoPopup.do?index=2","pop","width=570,height=420, scrollbars=yes, resizable=yes,left=400,top=300");
 	}
 	
-	function jusoCallBack(roadAddrPart1,addrDetail,index){ 
+	function jusoCallBack(roadAddrPart1,addrDetail,index){//주소 API 리턴
 		console.log(roadAddrPart1 + "," + addrDetail + "," +index);
 		switch (index) {
 		case "0":
@@ -186,7 +85,7 @@ $(document).ready(function(){
 			var tagList = $('#themeTag').text();
 			var deleteBtn = '<span style="margin-left:20px;" id="themeTag_'+tagVal+'">';
 			deleteBtn += '<input type="hidden" name="mtag" value="'+tagVal+'">'+tagText;
-			deleteBtn += '<button class="delBtn" type="button" onClick="delTag('+tagVal+')"><img class="cancelImg" src="/jsp/cancel.png"></button>';
+			deleteBtn += '<button class="delBtn" type="button" onClick="delTag('+tagVal+')"><img class="img30" src="/jsp/cancel.png"></button>';
 			deleteBtn += '</span>';
 			$('#tagDiv').append(deleteBtn);
 		}
@@ -218,7 +117,6 @@ $(document).ready(function(){
 		}
 	}
 </script>
-
 </head>
 <body>
 <jsp:include page="../jsp/header.jsp" />
@@ -343,7 +241,7 @@ $(document).ready(function(){
 								<c:forEach var="mtag" items="${mtagList}">
 								<span style="margin-left:20px;" id="themeTag_${mtag.anum}">
 									<input type="hidden" name="mtag" value="${mtag.anum}">${mtag.avalue}
-									<button class="delBtn" type="button" onClick="delTag('${mtag.anum}')"><img class="cancelImg" src="jsp/cancel.png" ></button>
+									<button class="delBtn" type="button" onClick="delTag('${mtag.anum}')"><img class="img30" src="jsp/cancel.png" ></button>
 								</span>
 								</c:forEach>
 							</div>
@@ -351,20 +249,16 @@ $(document).ready(function(){
 					</tr>
 					<tr>
 						<td colspan="3">
-							<p class="tagtext">해시태그는 회원별 추천에 사용됩니다.</p>
-							<p class="tagtext">※태그최대 등록 갯수: 3개</p>
+							<span class="storeSpan">해시태그는 회원별 추천에 사용됩니다.</span><br/>
+							<span class="storeSpan">※태그최대 등록 갯수: 3개</span>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3">
-							<c:choose>
-								<c:when test="${Member.mimage!=null}">
-									<img id="img" class="memberImg" src="downloadMImage.do?mid=${mid}">
-								</c:when>
-								<c:otherwise>
-									<img id="img" class="memberImg" src="myPage.png">
-								</c:otherwise>
-							</c:choose>
+							<div class="btn-wrap">
+								<c:if test="${Member.mimage ne null}"><img id="img" class="img120" src="downloadMImage.do?mid=${mid}"></c:if>
+								<c:if test="${Member.mimage eq null}"><img id="img" class="img120" src="myPage.png"></c:if>
+							</div>
 						</td>
 					</tr>
 					<tr>

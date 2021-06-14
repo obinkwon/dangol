@@ -71,16 +71,21 @@ div.nav {
 	border: 0.1rem solid #66ccff;
 }
 .btn-mint{background-color: #66ccff;color: #fff;}
+
 .imgBtn{text-decoration: none;background-color: #ffffff;margin-left : 170px;color : #000000;border : 0px;}
 .imgBtn:hover{color : #000000;text-decoration: none;text-decoration: none;cursor : pointer;color : gray;}
 .imgBtn:visited{text-decoration: none;}
 
+.delBtn {padding: 0px;width: 30px;height: 30px;border: 0px;background-color: white;outline: 0;}
+
 /* img css */
 .img17{width : 17px;height : 17px;}
 .img20{width : 20px;height : 20px;}
+.img30{width : 30px;height : 30px;}
 .img20:hover{cursor: pointer;}
 .img50 {width: 50px;height: 50px;}
 .img100 {width: 100px;height: 100px;}
+.img120 {width: 120px;height: 120px;}
 .img140 {width: 140px;height: 140px;}
 .img140:hover{cursor:pointer;}
 .imgW300 {width: 300px;}
