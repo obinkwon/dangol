@@ -85,7 +85,7 @@ $(document).ready(function(){
 			var tagList = $('#themeTag').text();
 			var deleteBtn = '<span style="margin-left:20px;" id="themeTag_'+tagVal+'">';
 			deleteBtn += '<input type="hidden" name="mtag" value="'+tagVal+'">'+tagText;
-			deleteBtn += '<button class="delBtn" type="button" onClick="delTag('+tagVal+')"><img class="img30" src="/jsp/cancel.png"></button>';
+			deleteBtn += '<button class="delBtn" type="button" onClick="delTag('+tagVal+')"><img class="img30" src="/image/cancel.png"></button>';
 			deleteBtn += '</span>';
 			$('#tagDiv').append(deleteBtn);
 		}
@@ -132,7 +132,7 @@ $(document).ready(function(){
 		</div>
 		<div class="container">
 			<div class="contentsTitGroup">
-				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">(${mid})님의 회원정보</h2>
+				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">회원정보</h2>
 			</div>
 			<form action="modifyMember.do" enctype="multipart/form-data" method="post" id="modify">
 				<input type="hidden" name="mtype" value="user">
@@ -240,8 +240,8 @@ $(document).ready(function(){
 							<div id="tagDiv">
 								<c:forEach var="mtag" items="${mtagList}">
 								<span style="margin-left:20px;" id="themeTag_${mtag.anum}">
-									<input type="hidden" name="mtag" value="${mtag.anum}">${mtag.avalue}
-									<button class="delBtn" type="button" onClick="delTag('${mtag.anum}')"><img class="img30" src="jsp/cancel.png" ></button>
+									<input type="hidden" name="mtag" value="${mtag.anum}">#${mtag.avalue}
+									<button class="delBtn" type="button" onClick="delTag('${mtag.anum}')"><img class="img30" src="/image/cancel.png" ></button>
 								</span>
 								</c:forEach>
 							</div>
@@ -257,7 +257,7 @@ $(document).ready(function(){
 						<td colspan="3">
 							<div class="btn-wrap">
 								<c:if test="${Member.mimage ne null}"><img id="img" class="img120" src="downloadMImage.do?mid=${mid}"></c:if>
-								<c:if test="${Member.mimage eq null}"><img id="img" class="img120" src="myPage.png"></c:if>
+								<c:if test="${Member.mimage eq null}"><img id="img" class="img120" src="/image/myPage.png"></c:if>
 							</div>
 						</td>
 					</tr>
