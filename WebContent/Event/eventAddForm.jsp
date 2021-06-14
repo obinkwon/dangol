@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>이벤트등록_이벤트/행사</title>
+<link rel="stylesheet" href="/css/template.css" />
 <style>
 	.contentsTitGroup{
 		padding-top: 9.5rem;
@@ -54,31 +54,6 @@
 	ul, ol, li {
 	    list-style: none;
 	}
-	.w300 {
-	    width: 300px;
-	}
-	.w100 {
-	    width: 100px;
-	}
-	.inputText {
-		height: 40px;
-	    line-height: 40px;
-	    color: #7b6e66;
-	    padding: 0 7px;
-	    border: 1px solid #7b6e66;
-	    background-color: transparent;
-	    vertical-align: middle;
-	    float: left;
-	}
-	.spanText{
-		height: 40px;
-	    line-height: 40px;
-	    color: #7b6e66;
-	    padding: 0 7px;
-	    background-color: transparent;
-	    vertical-align: middle;
-	    float: left;
-	}
 	.filebox label { 
 		margin-top : 80px;
 		display: inline-block; 
@@ -100,24 +75,6 @@
 		overflow: hidden; 
 		clip:rect(0,0,0,0); 
 		border: 0; 
-	}
-	.btn-view {
-	    width: 200px;
-        font-size: 1.4rem;
-        background-color: #fff;
-		color: #000000;
-	    height: 4rem;
-	    margin: 0 auto;
-	    line-height: 3.9rem;
-		margin-top: 4.5rem;
-		font-weight: 600;
-	    letter-spacing: 0.5px;
-	    transition-duration: .5s;
-        border: 0.1rem solid #66ccff;
-	}
-	.btn-mint{
-		background-color: #66ccff;
-		color: #fff;
 	}
 	.memberImg {
 		display : block;

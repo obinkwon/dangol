@@ -13,12 +13,6 @@
 <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src="/js/calendar.js"></script>
-<style type="text/css">
-	.contents-wrap{
-		width: 100%;
-		height : 600px;
-	}
-</style>
 <script type="text/javascript">
 //회원 정보 조회
 function search_member() {

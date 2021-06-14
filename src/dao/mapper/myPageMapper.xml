@@ -101,8 +101,6 @@
 			,D.DTIME AS dtime
 			,D.DCOUNT AS dcount
 			,D.DLIMIT AS dlimit
-			,G.GLEVEL AS glevel
-			,G.GLIKE AS glike
 			,S.SNAME AS sname
 			,S.SNUM AS snum
 			,S.SIMAGE AS simage

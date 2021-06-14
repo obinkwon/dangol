@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,49 +9,13 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="/css/template.css" />
-<style type="text/css">
-
-table.historyList {
-	position: relative;
-	margin-top: 17px;
-	width: 70%;
-	height: 140px;
-	border: 1px solid;
-}
-
-table td {
-	padding: 5px;
-}
-
-.right {
-	text-align: center;
-	color: #ff0000;
-	font-size: 15px;
-	font-weight: bold;
-}
-
-a.viewStore {
-	margin-top: 10px;
-	color: #666666;
-	text-decoration: underline;
-	font-weight: bold;
-	font-size: 12px;
-}
-
-</style>
-<script type="text/javascript">
- $(document).ready(function(){
- });
- </script>
  <script type="text/javascript">
- 	function historyLike(mid,snum,glike){// 즐겨찾기 변경
- 		location.href='historyLike.do?mid='+mid+'&snum='+snum+'&glike='+glike;
+ 	function commentWrite(dnum){// 리뷰 작성하기
+ 		alert(dnum + ' 리뷰 작성 완료');
  	}
- 	
- 	function historyView(snum){// 내역 상세보기
- 		var mid = $('#hisMid').val();
-		location.href='historyView.do?mid='+mid+'&snum='+snum;
- 	}
+ 	function storeView(snum){// 상세보기
+		location.href='storeView.do?snum='+snum;
+	}
  </script>
 </head>
 <body>
@@ -68,52 +32,44 @@ a.viewStore {
 		</div>
 		<div class="container">
 			<div class="contentsTitGroup">
-				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">(${mid})&nbsp;단골님의 방문내역</h2>
+				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">방문내역</h2>
 			</div>
 			<input id="hisMid" type="hidden" name="mid" value="${mid}">
-			<table class="table">
-				<colgroup>
-					<col width="*"/>
-					<col width="70%"/>
-					<col width="10%"/>
-					<col width="*"/>
-				</colgroup>
-				<tbody>
-				<c:forEach var="history" items="${historylist}">
-					<tr>
-						<td rowspan="4" style="text-align:center;">
-							<a href="javascript:historyView(${history.snum});">
-								<c:if test="${history.simage eq null}"><img src="/image/image_ready2.png" class="img140"></c:if>
-								<c:if test="${history.simage ne null}"><img src="downloadSImage.do?snum=${history.snum}" class="img140"></c:if>
-							</a>
-						</td>
-						<td class="storeClick" >${history.sname}</td>
-						<td rowspan="4" style="text-align:center;">
-							<c:if test="${history.glevel==0}">범골<br></c:if>
-							<c:if test="${history.glevel==1}">진골<br></c:if>
-							<c:if test="${history.glevel==2}">성골<br></c:if>
-							<c:if test="${history.glevel==3}">단골<br></c:if>
-			
-							<c:if test="${history.glike == 1}">
-								<button class="imgBtn m0" onclick="historyLike('${mid}','${history.snum}','0')">
-									<img class="img50" src="mypage/likes.png">
-								</button>
-							</c:if>
-							<c:if test="${history.glike != 1}">
-								<button class="imgBtn m0" onclick="historyLike('${mid}','${history.snum}','1')">
-									<img class="img50" src="mypage/dislike.png">
-								</button>
-							</c:if>
-							<br /> 
-							<a href="storeView.do?snum=${history.snum}" class="viewStore">가게상세보기</a>
-						</td>
-					</tr>
-					<tr><td>${history.saddress} ${history.sdetailaddr}</td></tr>
-					<tr><td>최근방문 ${history.ddate}</td></tr>
-					<tr><td>남은리뷰&nbsp;&nbsp;${history.dcount}</td></tr>
-				</c:forEach>
-				</tbody>
-			</table>
+			<div class="historyList">
+			<c:forEach var="history" items="${historylist}">
+				<ul>
+					<li>
+						<c:if test="${history.simage eq null}"><img src="/image/image_ready2.png" class="img140"></c:if>
+						<c:if test="${history.simage ne null}"><img src="downloadSImage.do?snum=${history.snum}" class="img140"></c:if>
+					</li>
+					<li>
+						<span class="storeSpan">가게명 : </span>${history.sname}
+						<span class="storeSpan">가게주소 : </span>${history.saddress} ${history.sdetailaddr}
+					</li>
+					<li>
+						<span class="storeSpan">방문날짜 : </span>
+						<span>${history.ddate}
+							<fmt:parseDate var="dtime" value="${history.dtime}"  pattern="HHmm"/>
+							<fmt:formatDate value="${dtime}"  pattern="HH:mm"/>
+						</span>
+						<span class="storeSpan">방문종류 : </span>
+						<c:if test="${history.dtype == 'Y'}">예약 방문</c:if>
+						<c:if test="${history.dtype != 'Y'}">직접 방문</c:if><br/>
+					</li>
+					<li>
+						<span class="storeSpan">메뉴 : </span>${history.dmenu}
+						<span class="storeSpan">인원 : </span>${history.dperson}명
+						<span class="storeSpan">요구사항 : </span>${history.dask}<br/>
+					</li>
+					<li>
+						<div class="btn-wrap" style="margin-bottom:0px;">
+							<button class="btn-view w100 mt20" type="button" onClick="storeView('${history.snum}')">상세보기</button>
+							<button class="btn-view w100 mt20" type="button" onClick="commentWrite('${history.dnum}}')">리뷰작성</button>
+						</div>
+					</li>
+				</ul>
+			</c:forEach>
+			</div>
 		</div>
 	</div>
 <jsp:include page="/jsp/footer.jsp" />
