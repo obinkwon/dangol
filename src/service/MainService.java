@@ -26,37 +26,23 @@ public class MainService {
 	@Autowired
 	private IOwnerDao oDao;
 	
+	//지역별 가게 리스트
+	public List<Store> areaStoreList(Store store){
+		return imdao.selectStoreByArea(store);
+	}
+	
+	//지역별 가게 리스트 수
+	public int areaStoreListCnt(Store store) {
+		return imdao.getStoreByAreaCount(store);
+	}
+	
+	//총 카운트 리스트
 	public HashMap<String, Integer> infoStoreCount() {
 		HashMap<String, Integer> infoMap = new HashMap<String, Integer>();
 		infoMap.put("storeCount", imdao.selectTotalStores());
 		infoMap.put("userCount", imdao.selectTotalMembers());
 		infoMap.put("reviewCount", imdao.selectTotalComments());
 		return infoMap;
-	}
-	public HashMap<String, Object> infoStoreList(int page, String address, int storesPerPage) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		
-		int offset = getOffset(page, storesPerPage);
-		params.put("offset",offset);
-		params.put("storesPerPage", storesPerPage);
-		params.put("address", address);
-		result.put("sList", imdao.selectStoreByArea(params));
-		result.put("current",page);
-		result.put("start", getStartPage(page));
-		result.put("end", getEndPage(page));
-		result.put("last", getLastPage(storesPerPage,imdao.getStoreByAreaCount(params)));
-		result.put("totalBoard", imdao.getStoreByAreaCount(params));
-		return result;
-	}
-	public int[] storeMemberCount(List<Store> sList) {
-		int i = 0;
-		int[] memberCount = new int[sList.size()];
-		for(Store s : sList) {
-			memberCount[i] = imdao.selectStoreMembers(s.getSnum());
-			i++;
-		}
-		return memberCount;
 	}
 	
 	public int selectBestStore() {

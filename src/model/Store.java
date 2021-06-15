@@ -29,6 +29,14 @@ public class Store {
 	private int anum;
 	private String bpw;
 	private String bphone;
+	private int offset;
+	private String address;
+	private int storesPerPage;
+	private int page;
+	private int startPage;
+	private int endPage;
+	private int lastPage;
+	
 	
 	public int getSnum() {
 		return snum;
@@ -197,6 +205,48 @@ public class Store {
 	}
 	public void setBphone(String bphone) {
 		this.bphone = bphone;
+	}
+	public int getOffset() {
+		return offset;
+	}
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public int getStoresPerPage() {
+		return storesPerPage;
+	}
+	public void setStoresPerPage(int storesPerPage) {
+		this.storesPerPage = storesPerPage;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getStartPage() {
+		return startPage;
+	}
+	public void setStartPage(int startPage) {
+		this.startPage = startPage;
+	}
+	public int getEndPage() {
+		return endPage;
+	}
+	public void setEndPage(int endPage) {
+		this.endPage = endPage;
+	}
+	public int getLastPage() {
+		return lastPage;
+	}
+	public void setLastPage(int lastPage) {
+		this.lastPage = lastPage;
 	}
 	@Override
 	public String toString() {

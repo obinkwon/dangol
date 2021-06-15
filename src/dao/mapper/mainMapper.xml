@@ -4,23 +4,63 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.IMainDao">
+	<!-- 지역별 가게 리스트 -->
+	<select id="selectStoreByArea" parameterType="store" resultType="store">
+		SELECT 
+			ROWNUM AS rn
+			,SNUM AS snum
+			,SNAME AS sname
+			,SADDRESS AS saddress
+			,SDETAILADDR AS sdetailaddr
+			,DANGOLCNT AS dancnt
+		FROM (
+			SELECT 
+				ROWNUM 
+				,S.SNUM
+				,S.SNAME
+				,S.SADDRESS
+				,S.SDETAILADDR
+				,(SELECT COUNT(*) FROM GRADES G WHERE G.SNUM = S.SNUM AND GLEVEL <![CDATA[<>]]> 0) AS dangolCnt
+			FROM
+				STORES S
+			WHERE 
+				S.SADDRESS LIKE '${saddress}%' 
+			ORDER BY S.SNUM
+		) 
+		WHERE 
+			ROWNUM BETWEEN #{offset} AND (#{offset}+#{storesPerPage}-1)
+	</select>
+	
+	<!-- 지역별 가게 리스트 수 -->
+	<select id="getStoreByAreaCount" parameterType="store" resultType="int"> 
+		SELECT 
+			COUNT(*) 
+		FROM 
+			STORES 
+		WHERE 
+			SADDRESS LIKE '${saddress}%' 
+	</select>
+	
+	<!-- 총 지점수 -->
 	<select id="selectTotalStores" resultType="int">
-		select count(*) from stores
+		SELECT COUNT(*) FROM STORES
 	</select>
+	
+	<!-- 총 회원수 -->
 	<select id="selectTotalMembers" resultType="int">
-		select count(*) from members where mtype='user'
+		SELECT COUNT(*) FROM MEMBERS WHERE MTYPE = 'user'
 	</select>
+	
+	<!-- 총 후기수 -->
 	<select id="selectTotalComments" resultType="int">
-		select count(*) from comments
+		SELECT COUNT(*) FROM COMMENTS
 	</select>
-	<select id="selectStoreByArea" parameterType="java.util.HashMap" resultType="store">
-		select * from
-		(select rownum as rn ,e.* from (select * from stores where saddress like '${address}%' order by snum) e) 
-		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
-	</select>
-	<select id="selectStoreMembers" parameterType="int" resultType="int">
-		select count(*) from grades where snum = #{snum} and gcurrent like 'yes' and glevel != 0
-	</select>
+	
+	
+	
+	
+	
+	
 	<select id="selectStoreMemberBySnum" resultType="int">
 		select snum from 
 		(select rownum as rn ,e.* from (select snum from grades where gcurrent = 'yes' and glevel != 0 group by snum order by count(snum) desc) e) 
@@ -64,7 +104,5 @@
 	<select id="getSearchStoreAllCount" parameterType="java.util.HashMap" resultType="int"> 
 		select count(*) from stores where sname like '%${keyword}%'
 	</select>
-	<select id="getStoreByAreaCount" parameterType="java.util.HashMap" resultType="int"> 
-		select count(*) from stores where saddress like '${address}%' order by snum
-	</select>
+	
 </mapper>
