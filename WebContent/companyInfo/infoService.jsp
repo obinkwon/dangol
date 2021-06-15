@@ -1,72 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="icon" href="favicon.png">
+<link rel="icon" href="/image/favicon.png">
 <meta charset="UTF-8">
 <title>회사소개</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<style type="text/css">
-	div.main{
-		display : inline;
-		width : 100%;
-	}
-	div.nav {
-		margin-top: 50px;
-		float: left;
-		width: 10%;
-		margin-left: 50px;
-	}
-	div.section{
-		float : left;
-		margin-left : 10%;
-		margin-top : 50px;
-		width : 60%;
-	}
-	img.infoService{
-		width : 750px;
-		height : 50px;
-	}
-	img.infoService2{
-		width : 800px;
-		height : 300px;
-	}
-	a.nav:hover,a.nav_active:hover,a.navTitle:hover{
-		text-decoration : none;
-		color : #404040;
-		cursor: pointer;
-	}
-	li.navTitle {
-		background-color: #d9d9d9;
-	}
-	li.nav:hover{
-		background-color: #e6e6e6;	
-	}
-	li.nav_active:hover {
-		background-color: #66ccff;
-	}
-	a.navTitle {
-		font-size: 15px;
-		font-weight: bold;
-		color: #000000;
-		text-align: center;
-	}
-	a.nav {
-		text-align: center;
-		font-size: 14px;
-		color: #000000;
-	}
-	li.nav_active {
-		background-color: #66ccff;
-	}
-	div.infoService,div.infoService2{
-		margin-bottom : 100px;
-	}
-</style>
+<link rel="stylesheet" href="/css/template.css" />
 </head>
 <body>
-	<jsp:include page="../jsp/header.jsp"/>
+<jsp:include page="/jsp/header.jsp"/>
 	<div class="main">
 		<div class="nav">
 			<ul class="nav nav-pills nav-stacked">
@@ -78,16 +21,16 @@
 			</ul>
 		</div>
 		<div class="section">
-			<div class="infoService">
+			<div style="margin-bottom:100px;">
 				<h4><b>단골의 희열 이용 방법</b></h4><br>
-				<img src="infoServiceList.png" class="infoService">
+				<img src="/image/infoServiceList.png">
 			</div>
-			<div class="infoService2">
+			<div>
 				<h4><b>단골의 희열 주요 서비스</b></h4><br>
-				<img src="infoServiceList2.png" class="infoService2">
+				<img src="/image/infoServiceList2.png" class="imgInfoBig">
 			</div>
 		</div>
 	</div>
-	<jsp:include page="../jsp/footer.jsp"/>
+<jsp:include page="/jsp/footer.jsp"/>
 </body> 
 </html>

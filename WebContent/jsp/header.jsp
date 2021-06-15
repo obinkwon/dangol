@@ -139,7 +139,7 @@
 			</c:choose>
 		</div>
 		<div class="headerB">
-			<a href="main.do"><img class="headerImage" src="headerLogo.png"></a>
+			<a href="main.do"><img class="headerImage" src="/image/headerLogo.png"></a>
 			<div class="col-md-6">
 				<div class="headerSearch">
 		           	<div class="input-group">
@@ -153,11 +153,11 @@
 			<div class="headerB2">
 				<c:choose>
 					<c:when test="${bid!=null}">
-						<a href="ownerInfoForm.do"><img class="myPageImage" src="ceo.png"></a>
+						<a href="ownerInfoForm.do"><img class="myPageImage" src="/image/ceo.png"></a>
 						<p>사장님 페이지</p>
 					</c:when>
 					<c:otherwise>
-						<a href="myPage.do"><img class="myPageImage" src="myPage.png"></a>
+						<a href="myPage.do"><img class="myPageImage" src="/image/myPage.png"></a>
 						<p>마이 페이지</p>
 					</c:otherwise>
 				</c:choose>

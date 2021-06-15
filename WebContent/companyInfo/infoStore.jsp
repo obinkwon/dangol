@@ -1,52 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="icon" href="favicon.png">
-	<meta charset="UTF-8">
-	<title>회사소개</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-	<style type="text/css">
-		div.main{
-			display : inline;
-			width : 100%;
-		}
-		div.nav {
-			margin-top: 50px;
-			float: left;
-			width: 10%;
-			margin-left: 50px;
-		}
-		div.section{
-			float : left;
-			margin-left : 10%;
-			margin-top : 50px;
-			width : 50%;
-		}
-		div.infoStoreTop,div.infoStoreBotTitle{
-			display : inline-block; 
-		}
-		div.infoStoreTop{
-			width : 100%;
-			text-align: center;
-		}
-		div.infoStoreBotTitle{
-			width : 100%;
-		}
-		div.infoStoreList{
-			margin : auto;
-			float : left;
-			width : 310px;
-			height : 230px;
-			font-size : 17px;
-			padding-top : 30px;
-			border : 1px solid #d9d9d9;
-			border-bottom : 3px solid #d9d9d9;
-			border-radius: 4px;
-		}
+<link rel="icon" href="/image/favicon.png">
+<meta charset="UTF-8">
+<title>회사소개</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/template.css" />
+<style type="text/css">
+div.infoStoreBotTitle{
+	display : inline-block; 
+	width : 100%;
+}
 		div.infoStoreBoard{
 			width : 100%;
 			height : 310px;
@@ -59,59 +26,14 @@
 		div.row{
 			margin-left : 5px;
 		}
-		table.table-condensed,th.infoStore{
-			margin-bottom : 0px;
-			text-align : center;
-		}
-		th.infoStore{
-			background-color : #d9d9d9;
-			width : 400px;
-			position : inherit;
-		}
-		a.nav:hover,a.nav_active:hover,a.navTitle:hover{
-			text-decoration : none;
-			color : #404040;
-			cursor: pointer;
-		}
-		li.navTitle {
-			background-color: #d9d9d9;
-		}
-		li.nav:hover{
-			background-color: #e6e6e6;	
-		}
-		li.nav_active {
-			background-color: #66ccff;
-		}
-		a.navTitle {
-			font-size: 15px;
-			font-weight: bold;
-			color: #000000;
-			text-align: center;
-		}
-		a.nav {
-			text-align: center;
-			font-size: 14px;
-			color: #000000;
-		}
-		li.nav_active {
-			background-color: #66ccff;
-		}
-		img.infoStore{
-			width : 100px;
-			height : 100px;
-		}
-		h3.infoStore{
-			float : left;
-			margin-top : 50px;
-		}
 		select.infoStoreBottom{
 			width : 100px;
 			height : 30px;
 			float : right;
 			margin-top : 50px;
 		} 
-	</style>
-	<script type="text/javascript">
+</style>
+<script type="text/javascript">
 		$(document).ready(function(){
 			$("#selectAddress").change(function(){
 				location.href="infoStore.do?address="+this.value;
@@ -167,7 +89,7 @@
 	</script>
 </head>
 <body>
-	<jsp:include page="../jsp/header.jsp"/>
+<jsp:include page="/jsp/header.jsp"/>
 	<div class="main">
 		<div class="nav">
 			<ul class="nav nav-pills nav-stacked">
@@ -180,28 +102,28 @@
 		</div>
 		<div class="section">
 			<div class="alert alert-info" role="alert">
-				<p><b>숫자로 보는 단골의 희열</b> &nbsp;&nbsp;${year} 년 ${month} 월 기준</p>
+				<p><b style="margin-right:20px">숫자로 보는 단골의 희열</b> ${year} 년 ${month} 월 기준</p>
 			</div>
-			<div class="infoStoreTop">
-				<div class="infoStoreList">
-					<p><b>&nbsp;등록 가맹점 수</b></p>
-					<img class="infoStore" src="shop.png">
-					<p class="ftco-animated">&nbsp;&nbsp;${storeCount}개</p>
+			<div style="text-align:center;">
+				<div class="infoBox">
+					<p><b>등록 가맹점 수</b></p>
+					<img class="img100" src="/image/shop.png">
+					<p class="ftco-animated">${storeCount}개</p>
 				</div>
-				<div class="infoStoreList">
-					<p><b>&nbsp;&nbsp;가입회원 수</b></p>
-					<img class="infoStore" src="team.png">
-					<p class="ftco-animated">&nbsp;&nbsp;${userCount}명</p>
+				<div class="infoBox">
+					<p><b>가입회원 수</b></p>
+					<img class="img100" src="/image/team.png">
+					<p class="ftco-animated">${userCount}명</p>
 				</div>
-				<div class="infoStoreList">
-					<p><b>&nbsp;&nbsp;누적 리뷰 수</b></p>
-					<img class="infoStore" src="rating.png">
-					<p class="ftco-animated">&nbsp;&nbsp;${reviewCount}개</p>
+				<div class="infoBox">
+					<p><b>누적 리뷰 수</b></p>
+					<img class="img100" src="/image/rating.png">
+					<p class="ftco-animated">${reviewCount}개</p>
 				</div>
 			</div>
-			<div class="infoStoreBottom">
+			<div class="infoStoreBottom" style="margin-top : 50px;">
 				<div class="infoStoreBotTitle">
-					<h3 class="infoStore">단골의 희열 가맹점 정보</h3>
+					<h3>단골의 희열 가맹점 정보</h3>
 					<select class="infoStoreBottom" name="address" id="selectAddress">
 						<option id="address1" value="전체">전체</option>
 						<option id="address2" value="서울">서울특별시</option>
@@ -220,28 +142,21 @@
 						<option id="address15" value="세종">세종특별자치시</option>
 					</select>
 				</div>
-				<table class="table table-condensed">   
-					<colgroup>
-						<col width="13%">
-						<col width="42%">
-						<col width="17%">
-						<col width="20%">
-					</colgroup>                             
-	                <tr>
-	                    <th class="infoStore">가맹점번호</th>
-						<th class="infoStore">매장명</th>
-						<th class="infoStore">지역</th>
-						<th class="infoStore">단골 수</th>
-	                </tr>    
-            	</table> 
 				<div class="infoStoreBoard">
-					<table class="table table-condensed">
+					<table class="table" style="text-align:center;">
 						<colgroup>
-							<col width="15%">
-							<col width="45%">
+							<col width="10%">
+							<col width="*">
 							<col width="20%">
 							<col width="20%">
 						</colgroup>
+						<tbody>
+		                <tr>
+		                    <th>가맹점번호</th>
+							<th>매장명</th>
+							<th>지역</th>
+							<th>단골 수</th>
+		                </tr>    
 						<c:forEach var="store" items="${storeList}" varStatus="status">
 							<tr>
 								<td>${store.snum}</td>
@@ -250,6 +165,7 @@
 								<td>${storeMemberCount[status.index]}명</td>
 							</tr>
 						</c:forEach>
+						</tbody>
 					</table>
 				</div>
 				<div style="text-align : center;">
@@ -275,6 +191,6 @@
 			</div>
 		</div>
 	</div>
-	<jsp:include page="../jsp/footer.jsp"/>
+<jsp:include page="/jsp/footer.jsp"/>
 </body> 
 </html>
