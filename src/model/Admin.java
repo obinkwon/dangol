@@ -11,6 +11,8 @@ public class Admin {
 	private int startPage;
 	private int endPage;
 	private int lastPage;
+	private String type;
+	
 	
 	
 	public int getAnum() {
@@ -73,16 +75,11 @@ public class Admin {
 	public void setLastPage(int lastPage) {
 		this.lastPage = lastPage;
 	}
-	public Admin() {}
-	public Admin(int anum, String atype, String avalue, String aimage) {
-		this.anum = anum;
-		this.atype = atype;
-		this.avalue = avalue;
-		this.aimage = aimage;
+	public String getType() {
+		return type;
 	}
-	@Override
-	public String toString() {
-		return "Admin [anum=" + anum + ", atype=" + atype + ", avalue=" + avalue + ", aimage=" + aimage + "]";
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

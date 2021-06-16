@@ -65,9 +65,9 @@ public class MainController {
 		//
 		storeMapList = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, Integer> mainTagMap = maService.selectMainTagNum();
-		if(mainTagMap.get("main1") != null) {
-			params = cservice.selectThemeStoreList(1, 3, mainTagMap.get("main1"));
-		}
+//		if(mainTagMap.get("main1") != null) {
+//			params = cservice.selectThemeStoreList(1, 3, mainTagMap.get("main1"));
+//		}
 		sList = (List<Store>)params.get("sList");
 		gradeCount = cservice.gradeCount(sList);
 		commentCount = cservice.commentCount(sList);
@@ -98,10 +98,10 @@ public class MainController {
 		//
 		storeMapList = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, Integer> mainMap = maService.selectMainTagNum();
-		if(mainMap.containsKey("main2")) {
-			params = cservice.selectThemeStoreList(1, 3, maService.selectMainTagNum().get("main2"));
-			sList = (List<Store>)params.get("sList");
-		}
+//		if(mainMap.containsKey("main2")) {
+//			params = cservice.selectThemeStoreList(1, 3, maService.selectMainTagNum().get("main2"));
+//			sList = (List<Store>)params.get("sList");
+//		}
 		gradeCount = cservice.gradeCount(sList);
 		commentCount = cservice.commentCount(sList);
 		stagList = cservice.selectStagList(sList);

@@ -54,11 +54,8 @@ div.infoBox{margin : auto;
 	width:80%;
 	margin:auto;
 }
-.foodList{
-	display : inline-block;
-	text-align: center;
-	margin : auto;
-}
+.categorySort{display : inline-block;margin-top : 30px;}
+.categoryList{display : inline-block;text-align: center;margin : auto;}
 .storeOne{
 	width : 300px;
 	height : 400px;
@@ -76,10 +73,7 @@ div.infoBox{margin : auto;
 	border : 2px solid #66ccff;
 	cursor: pointer;
 }
-.foodSort{
-	display : inline-block;
-	margin-top : 30px;
-}
+
 
 
 /* btn css */
@@ -125,7 +119,17 @@ div.infoBox{margin : auto;
 	float : left;
 	background-position : center;
 }
-.foodImg:hover{border : 1px solid #66ccff;cursor : pointer;}
+.themeImg{
+	width : 99.6px;
+	height : 50px;
+	border-radius : 4px;
+	padding-top : 15px;
+	margin-right : 10px;
+	margin-bottom : 10px;
+	border : 1px solid #000000;
+	float : left;
+}
+.foodImg:hover, .themeImg:hover{border : 1px solid #66ccff;cursor : pointer;}
 .imgCheck{border : 1px solid #66ccff;}
 
 /* width css  */
@@ -211,6 +215,12 @@ div.infoBox{margin : auto;
     background-color: transparent;
     vertical-align: middle;
     float: left;
+}
+.themeTxt{
+	width : 100%;
+	text-align : center;
+	font-size : 13px;
+	font-family : '맑은 고딕';
 }
 .imgSpan{
 	width : 100%;

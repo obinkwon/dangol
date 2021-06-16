@@ -58,13 +58,23 @@ public class CategoryService {
 	}
 	
 	//음식종류별 가게 리스트 가져오기
-	public List<Store> getStoreList(Admin admin){ 
-		return icdao.selectStoreListType(admin);
+	public List<Store> getStoreListFood(Admin admin){ 
+		return icdao.selectStoreListFood(admin);
 	}
 	
-	public List<Admin> sortThemeList() {//테마태그 리스트
-		List<Admin> aList = icdao.selectAdminAllByTheme();
-		return aList;
+	//테마종류별 가게 리스트 가져오기
+	public List<Store> getStoreListTheme(Admin admin){ 
+		return icdao.selectStoreListTheme(admin);
+	}
+	
+	//음식 종류별 가게 갯수
+	public int getStoreListCountFood(Admin admin) {
+		return icdao.getStoreListCountFood(admin);
+	}
+	
+	//테마 종류별 가게 갯수
+	public int getStoreListCountTheme(Admin admin) {
+		return icdao.getStoreListCountTheme(admin);
 	}
 	
 	public int[] gradeCount(List<Store> sList) {//단골수 리스트
@@ -77,27 +87,7 @@ public class CategoryService {
 		return gradeCount;
 	}
 	
-	//음식 종류별 가게 갯수
-	public int getStoreListCount(Admin admin) {
-		return icdao.getStoreListCount(admin);
-	}
 	
-	public HashMap<String, Object> selectThemeStoreList(int page, int storesPerPage, int anum) {//테마별 가게 리스트
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		
-		int offset = getOffset(page, storesPerPage);
-		params.put("offset",offset);
-		params.put("storesPerPage", storesPerPage);
-		params.put("anum", anum);
-		result.put("sList", icdao.selectStoreAllByAnum(params));
-		result.put("current",page);
-		result.put("start", getStartPage(page));
-		result.put("end", getEndPage(page));
-		result.put("last", getLastPage(storesPerPage,icdao.getStoreAllByAnumCount(anum)));
-		result.put("totalBoard", icdao.getStoreAllByAnumCount(anum));
-		return result;
-	}
 	
 	public HashMap<String, Object> selectNewStoreList(int page,int storesPerPage) {//신규 가게 리스트
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -173,16 +163,28 @@ public class CategoryService {
 			String stag= "";
 			int total = icdao.selectCommentTotal(store); //가게별 리뷰 총점
 			int totalCnt = icdao.selectCommentTotalCnt(store); //가게별 리뷰 갯수
-			List<Store> stagList = oDao.selectStagList(store);
-			for(Store st : stagList) {
-				stag = stag+" #"+st.getAvalue();
-			}
-			store.setStag(stag);
 			if(total > 0 && totalCnt > 0) {
 				store.setCommentTotal(total/totalCnt);
 			}else {
 				store.setCommentTotal(0);
 			}
+			List<Store> stagList = oDao.selectStagList(store);
+			for(Store st : stagList) {
+				stag = stag+" #"+st.getAvalue();
+			}
+			store.setStag(stag);
+		}
+		return sList;
+	}
+	//가게 태그 세팅
+	public List<Store> stagSetting(List<Store> sList){
+		for(Store store : sList) {
+			String stag= "";
+			List<Store> stagList = oDao.selectStagList(store);
+			for(Store st : stagList) {
+				stag = stag+" #"+st.getAvalue();
+			}
+			store.setStag(stag);
 		}
 		return sList;
 	}
