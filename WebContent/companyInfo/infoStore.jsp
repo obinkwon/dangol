@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="/css/template.css" />
 <script type="text/javascript">
-	function infoStore(page,address){
+	function infoStore(page,address){//페이지 이동
 		location.href='infoStore.do?page='+page+'&address='+address;
 	}
 </script>

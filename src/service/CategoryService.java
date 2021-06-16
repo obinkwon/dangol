@@ -1,7 +1,6 @@
 package service;
 
 import java.io.File;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,11 +52,13 @@ public class CategoryService {
 		return icdao.insertDetail(detail);
 	}
 	
-	public List<Admin> sortFoodList(Admin admin) {//음식태그 리스트
+	//음식태그 리스트
+	public List<Admin> sortFoodList(Admin admin) {
 		return adao.selectAdminTypeList(admin);
 	}
 	
-	public List<Store> getStoreList(Admin admin){ //음식종류별 가게 리스트 가져오기
+	//음식종류별 가게 리스트 가져오기
+	public List<Store> getStoreList(Admin admin){ 
 		return icdao.selectStoreListType(admin);
 	}
 	
@@ -76,18 +77,9 @@ public class CategoryService {
 		return gradeCount;
 	}
 	
-	public HashMap<String, Object> selectFoodStoreList(int page,  Admin admin) {//음식별 가게 리스트 페이징
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		
-		int offset = getOffset(page, admin.getStoresPerPage());
-		int resultSize = icdao.getStoreListCount(admin);
-		admin.setOffset(offset);
-		result.put("current",page);
-		result.put("start", getStartPage(page));
-		result.put("end", getEndPage(page));
-		result.put("last", getLastPage(admin.getStoresPerPage(),resultSize));
-		result.put("totalBoard", resultSize);
-		return result;
+	//음식 종류별 가게 갯수
+	public int getStoreListCount(Admin admin) {
+		return icdao.getStoreListCount(admin);
 	}
 	
 	public HashMap<String, Object> selectThemeStoreList(int page, int storesPerPage, int anum) {//테마별 가게 리스트
@@ -175,8 +167,8 @@ public class CategoryService {
 		}
 		return commentCount;
 	}
-	
-	public List<Store> etcCount(List<Store> sList) {//가게 후기 총 평점 평균 리스트
+	//가게 후기 총 평점 평균 리스트
+	public List<Store> etcCount(List<Store> sList) {
 		for(Store store : sList) {
 			String stag= "";
 			int total = icdao.selectCommentTotal(store); //가게별 리뷰 총점

@@ -47,40 +47,62 @@
 	<select id="selectStoreListType" parameterType="admin" resultType="store">
 		<include refid="topPaging"/>
 		SELECT
-			A.SNUM AS snum
-			,A.BID AS bid
-			,A.SINTRO AS sintro
-			,A.SNAME AS sname
-			,A.SADDRESS AS saddress
-			,A.SDETAILADDR AS sdetailaddr
-			,A.SPHONE AS sphone
-			,A.STIME_START AS stime_start
-			,A.STIME_END AS stime_end
-			,A.SPARKING AS sparking
-			,A.SIMAGE AS simage
-			,A.STYPE AS stype
-			,A.SHOLIDAY AS sholiday
-			,A.SDATE AS sdate
-			,A.SRATELV0 AS sratelv0
-			,A.SRATELV1 AS sratelv1
-			,A.SRATELV2 AS sratelv2
-			,A.SRATELV3 AS sratelv3
-			,A.SLIMIT AS slimit
+			S.SNUM AS snum
+			,S.BID AS bid
+			,S.SINTRO AS sintro
+			,S.SNAME AS sname
+			,S.SADDRESS AS saddress
+			,S.SDETAILADDR AS sdetailaddr
+			,S.SPHONE AS sphone
+			,S.STIME_START AS stime_start
+			,S.STIME_END AS stime_end
+			,S.SPARKING AS sparking
+			,S.SIMAGE AS simage
+			,S.STYPE AS stype
+			,S.SHOLIDAY AS sholiday
+			,S.SDATE AS sdate
+			,S.SRATELV0 AS sratelv0
+			,S.SRATELV1 AS sratelv1
+			,S.SRATELV2 AS sratelv2
+			,S.SRATELV3 AS sratelv3
+			,S.SLIMIT AS slimit
 			,(SELECT 
 					COUNT(*) 
 				FROM 
-					GRADES B
+					GRADES G
 				WHERE 
-					B.SNUM = A.SNUM
-					AND B.GCURRENT = 'Y' 
-					AND B.GLEVEL <![CDATA[>]]> 0
+					S.SNUM = G.SNUM
+					AND G.GLEVEL <![CDATA[>]]> 0
 			) AS dancnt 
 		FROM 
-			STORES A
+			STORES S
 		WHERE 
-			A.STYPE = #{anum}
-		ORDER BY A.SDATE DESC
+			S.STYPE = #{anum}
+		ORDER BY S.SDATE DESC
 		<include refid="btmPaging"/>
+	</select>
+	<!-- 가게 리뷰 총점 -->
+	<select id="selectCommentTotal" parameterType="store" resultType="int">
+		SELECT 
+			NVL(SUM(C.CTOTAL),0)
+		FROM 
+			GRADES A
+			LEFT JOIN DETAILS B ON A.GNUM = B.GNUM
+			LEFT JOIN COMMENTS C ON B.DNUM = C.DNUM
+		WHERE 
+			A.SNUM = #{snum} 
+			AND B.DCOUNT <![CDATA[>]]> 0
+	</select>
+	<!-- 가게 리뷰 총 갯수 -->
+	<select id="selectCommentTotalCnt" parameterType="store" resultType="int">
+		SELECT 
+			COUNT(*)
+		FROM 
+			GRADES A
+			LEFT JOIN DETAILS B ON A.GNUM = B.GNUM
+		WHERE 
+			A.SNUM = #{snum} 
+			AND B.DCOUNT <![CDATA[>]]> 0
 	</select>
 	<!-- 등급 정보 등록 -->
 	<insert id="insertGrade" parameterType="grade" keyProperty="gnum" useGeneratedKeys="true">
@@ -218,6 +240,29 @@
 		WHERE
 			DNUM = #{dnum}
 	</select>
+	<!-- 음식 종류별 가게 갯수 -->
+	<select id="getStoreListCount" parameterType="admin" resultType="int"> 
+		SELECT 
+			COUNT(*) 
+		FROM 
+			STORES 
+		WHERE 
+			STYPE = #{anum}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	<select id="selectGradeCountBySnum" parameterType="int" resultType="int">
 		SELECT 
@@ -229,32 +274,7 @@
 			AND GCURRENT = 'Y' 
 			AND GLEVEL <![CDATA[>]]> 0
 	</select>
-	<!-- 가게 리뷰 총점 -->
-	<select id="selectCommentTotal" parameterType="store" resultType="int">
-		SELECT 
-			NVL(SUM(C.CTOTAL),0)
-		FROM 
-			GRADES A
-			LEFT JOIN DETAILS B ON A.GNUM = B.GNUM
-			LEFT JOIN COMMENTS C ON B.DNUM = C.DNUM
-		WHERE 
-			A.SNUM = #{snum} 
-			AND A.GCURRENT = 'Y'
-			AND B.DCOUNT <![CDATA[>]]> 0
-	</select>
-	<!-- 가게 리뷰 총 갯수 -->
-	<select id="selectCommentTotalCnt" parameterType="store" resultType="int">
-		SELECT 
-			COUNT(*)
-		FROM 
-			GRADES A
-			LEFT JOIN DETAILS B ON A.GNUM = B.GNUM
-			LEFT JOIN COMMENTS C ON B.DNUM = C.DNUM
-		WHERE 
-			A.SNUM = #{snum} 
-			AND A.GCURRENT = 'Y'
-			AND B.DCOUNT <![CDATA[>]]> 0
-	</select>
+	
 	<select id="selectDetailAllByGnum" parameterType="int" resultType="details">
 		SELECT 
 			DNUM AS dnum
@@ -434,14 +454,7 @@
 	<select id="getStoreNewCount" resultType="int"> 
 		select count(*) from stores where sdate between (sysdate-10) and sysdate
 	</select>
-	<select id="getStoreListCount" parameterType="admin" resultType="int"> 
-		SELECT 
-			COUNT(*) 
-		FROM 
-			STORES 
-		WHERE 
-			STYPE = #{anum}
-	</select>
+	
 	<select id="getStoreAllByAnumCount" parameterType="int" resultType="int"> 
 		select count(*) from stores where snum in (select snum from stag where anum = #{anum})
 	</select>

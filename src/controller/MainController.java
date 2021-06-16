@@ -160,6 +160,7 @@ public class MainController {
 		return mav;
 	}
 	
+	//로그아웃
 	@RequestMapping("logout.do")
 	public String logout(HttpSession session) {
 		session.invalidate();
@@ -207,22 +208,26 @@ public class MainController {
 		mav.setViewName("jsp/searchStore");
 		return mav;
 	}
+	
 	//회사소개 요청 부분
 	@RequestMapping("infoCompany.do")
 	public String infoCompany() {
 		return "companyInfo/infoCompany";
 	}
+	
 	//서비스 소개 요청 부분
 	@RequestMapping("infoService.do")
 	public String infoService() {	
 		return "companyInfo/infoService";
 	}
 	
+	//등급별 혜택 부분
 	@RequestMapping("infoBenefit.do")
 	public String infoBenefit() {
 		return "companyInfo/infoBenefit";
 	}
 	
+	//가맹점 현황 부분
 	@RequestMapping("infoStore.do")
 	public ModelAndView infoStore(@RequestParam(defaultValue="전체")String address,
 			@RequestParam(defaultValue="1")int page,

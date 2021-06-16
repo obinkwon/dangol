@@ -56,7 +56,7 @@ public class AdminService {
 		String aimage = afile.getOriginalFilename();
 		afile.transferTo(attachFile);  //웹으로 받아온 파일을 복사
 		admin.setAimage(aimage); //db에 파일 정보 저장을 하기위해 모델객체에 setting하기
-		return aDao.insertTag(admin);
+		return insertTag(admin);
 	}
 	
 	//1:1문의 

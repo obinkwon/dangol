@@ -68,12 +68,11 @@ public class MyPageController {
 		, @RequestParam(value = "mfile", required = false) MultipartFile mfile) throws Exception {
 		resp.setContentType("text/html; charset=UTF-8");
 		PrintWriter pw = resp.getWriter();
-		String str = "";
+		String str = "<script language='javascript'>";
 		int result = mypageService.updateMemberOne(member, mfile);
 		if(member.getMtag() != null) {
 			mypageService.updateMtag(member);
 		}
-		str = "<script language='javascript'>";
 		if(result > 0) {
 			str += "alert('회원정보가 수정되었습니다.');";
 		}else {
@@ -85,6 +84,7 @@ public class MyPageController {
 		return null;
 
 	}
+	
 	//회원 탈퇴
 	@RequestMapping("removeMember.do")
 	public String removeMember(HttpSession session

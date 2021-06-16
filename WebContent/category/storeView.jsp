@@ -210,7 +210,6 @@
 					alert('오류 발생');
 				}
 			});
-			//location.href='likes.do?mid=${mid}&snum='+snum+'&like='+glike;
 		}else{
 			if('${mid}' == '') {
 				alert('일반 사용자 로그인후 이용해주세요');

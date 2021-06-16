@@ -4,6 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="dao.IAdminDao">
+	<!-- admin 하나만 검색 -->
 	<select id="selectAdminTypeOne" parameterType="admin" resultType="admin">
 		SELECT 
 			ANUM AS anum
@@ -16,6 +17,7 @@
 			ATYPE = #{atype} 
 	</select>
 	
+	<!-- admin 하나만 검색 (타입) -->
 	<select id="selectAdminOne" parameterType="admin" resultType="admin">
 		SELECT 
 			ANUM AS anum
@@ -28,6 +30,7 @@
 			ANUM = #{anum} 
 	</select>
 	
+	<!-- admin 여러개 검색 (타입) -->
 	<select id="selectAdminTypeList" parameterType="admin" resultType="admin">
 		SELECT 
 			ANUM AS anum
@@ -41,6 +44,7 @@
 		ORDER BY ANUM
 	</select>
 	
+	<!-- 태그 추가 -->
 	<insert id="insertTag" parameterType="admin">
 		INSERT INTO ADMINS(
 			ANUM
@@ -55,6 +59,7 @@
 		)
 	</insert>
 	
+	<!-- 태그 삭제 -->
 	<delete id="deleteTag" parameterType="admin">
 		DELETE FROM 
 			ADMINS 
@@ -62,6 +67,7 @@
 			ANUM = #{anum}
 	</delete>
 	
+	<!-- 메인 태그 수정 -->
 	<update id="updateAdmin" parameterType="admin">
 		UPDATE 
 			ADMINS 
