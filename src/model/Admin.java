@@ -12,6 +12,7 @@ public class Admin {
 	private int endPage;
 	private int lastPage;
 	private String type;
+	private String areaName;
 	
 	
 	
@@ -80,6 +81,12 @@ public class Admin {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getAreaName() {
+		return areaName;
+	}
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
 	}
 	
 }

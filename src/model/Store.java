@@ -36,6 +36,8 @@ public class Store {
 	private int startPage;
 	private int endPage;
 	private int lastPage;
+	private int areanum;
+	private int ord;
 	
 	
 	public int getSnum() {
@@ -248,46 +250,17 @@ public class Store {
 	public void setLastPage(int lastPage) {
 		this.lastPage = lastPage;
 	}
-	@Override
-	public String toString() {
-		return "Store [snum=" + snum + ", bid=" + bid + ", sintro=" + sintro + ", sname=" + sname + ", saddress="
-				+ saddress + ", sdetailaddr=" + sdetailaddr + ", sphone=" + sphone + ", stime_start=" + stime_start
-				+ ", sparking=" + sparking + ", simage=" + simage + ", stype=" + stype + ", sholiday=" + sholiday
-				+ ", sdate=" + sdate + ", sratelv0=" + sratelv0 + ", sratelv1=" + sratelv1 + ", sratelv2=" + sratelv2
-				+ ", sratelv3=" + sratelv3 + ", slimit=" + slimit + ", slatitude=" + slatitude + ", slongitude="
-				+ slongitude + ", stime_end=" + stime_end + ", dancnt=" + dancnt + ", commentTotal=" + commentTotal
-				+ ", stag=" + stag + "]";
+	public int getAreanum() {
+		return areanum;
 	}
-	public Store() {}
-	public Store(int snum, String bid, String sintro, String sname, String saddress, String sdetailaddr, String sphone,
-			String stime_start, String sparking, String simage, String stype, String sholiday, String sdate, int sratelv0,
-			int sratelv1, int sratelv2, int sratelv3, int slimit, double slatitude, double slongitude, String stime_end,
-			int dancnt, int commentTotal, String stag) {
-		super();
-		this.snum = snum;
-		this.bid = bid;
-		this.sintro = sintro;
-		this.sname = sname;
-		this.saddress = saddress;
-		this.sdetailaddr = sdetailaddr;
-		this.sphone = sphone;
-		this.stime_start = stime_start;
-		this.sparking = sparking;
-		this.simage = simage;
-		this.stype = stype;
-		this.sholiday = sholiday;
-		this.sdate = sdate;
-		this.sratelv0 = sratelv0;
-		this.sratelv1 = sratelv1;
-		this.sratelv2 = sratelv2;
-		this.sratelv3 = sratelv3;
-		this.slimit = slimit;
-		this.slatitude = slatitude;
-		this.slongitude = slongitude;
-		this.stime_end = stime_end;
-		this.dancnt = dancnt;
-		this.commentTotal = commentTotal;
-		this.stag = stag;
+	public void setAreanum(int areanum) {
+		this.areanum = areanum;
+	}
+	public int getOrd() {
+		return ord;
+	}
+	public void setOrd(int ord) {
+		this.ord = ord;
 	}
 	
 }

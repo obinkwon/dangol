@@ -32,22 +32,26 @@ public interface ICategoryDao {
 	public Details selectDetail(Details details);
 	//음식종류별 가게 리스트 가져오기
 	public List<Store> selectStoreListFood(Admin admin);
-	//음식종류별 가게 리스트 가져오기
+	//테마별 가게 리스트 가져오기
 	public List<Store> selectStoreListTheme(Admin admin);
+	//지역별 가게 리스트 가져오기
+	public List<Store> selectStoreListArea(Admin admin);
 	//음식 종류별 가게 갯수
 	public int getStoreListCountFood(Admin admin);
 	//테마 종류별 가게 갯수
 	public int getStoreListCountTheme(Admin admin);
+	//지역별 가게 갯수
+	public int getStoreListCountArea(Admin admin);
 	//가게별 리뷰 총점
 	public int selectCommentTotal(Store store);
 	//가게별 리뷰 갯수
 	public int selectCommentTotalCnt(Store store);
 	
+	public List<Store> selectStoreAllByArea(HashMap<String, Object> params);
 	
 	
 	
 	public List<Store> selectStoreNew(HashMap<String, Object> params);
-	public List<Store> selectStoreAllByArea(HashMap<String, Object> params);
 	//
 	public int selectGradeCountBySnum(int snum);
 	

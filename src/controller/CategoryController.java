@@ -59,16 +59,12 @@ public class CategoryController {
 	@Autowired
 	private OwnerService oService;
 	
-	@RequestMapping("foodSort.do")//음식별 요청부분
-	public ModelAndView foodSort(Admin admin ,ModelAndView mav) {
-		int page = 0;
+	//카테고리 - 음식별
+	@RequestMapping("foodSort.do")
+	public ModelAndView foodSort(Admin admin ,ModelAndView mav
+			,@RequestParam(defaultValue="1") int page) {
 		if(admin.getType() == null){
 			admin.setType("new");
-		}
-		if(admin.getPage() > 0){
-			page = admin.getPage();
-		}else {
-			page = 1;
 		}
 		
 		admin.setAtype("food");
@@ -82,14 +78,7 @@ public class CategoryController {
 			admin.setStoresPerPage(12);
 			admin.setPage(page);
 			int resultSize = cService.getStoreListCountFood(admin);
-			int offset = maService.getOffset(page, 12);
-			int startPage = maService.getStartPage(page);
-			int endPage = maService.getEndPage(page);
-			int lastPage = maService.getLastPage(12,resultSize);
-			admin.setOffset(offset);
-			admin.setStartPage(startPage);
-			admin.setEndPage(endPage);
-			admin.setLastPage(lastPage);
+			admin = maService.getPaging(admin,resultSize);
 			
 			sList = cService.getStoreListFood(admin); //음식종류별 가게 리스트 가져오기
 			sList = cService.stagSetting(sList);//가게 태그 세팅
@@ -101,16 +90,12 @@ public class CategoryController {
 		return mav;
 	}
 	
-	@RequestMapping("themeSort.do")//테마별 요청부분
-	public ModelAndView themeSort(Admin admin , ModelAndView mav) {
-		int page = 0;
+	//카테고리 - 테마별
+	@RequestMapping("themeSort.do")
+	public ModelAndView themeSort(Admin admin , ModelAndView mav
+			,@RequestParam(defaultValue="1") int page) {
 		if(admin.getType() == null){
 			admin.setType("new");
-		}
-		if(admin.getPage() > 0){
-			page = admin.getPage();
-		}else {
-			page = 1;
 		}
 		
 		admin.setAtype("theme");
@@ -124,20 +109,11 @@ public class CategoryController {
 			admin.setStoresPerPage(12);
 			admin.setPage(page);
 			int resultSize = cService.getStoreListCountTheme(admin);
-			int offset = maService.getOffset(page, 12);
-			int startPage = maService.getStartPage(page);
-			int endPage = maService.getEndPage(page);
-			int lastPage = maService.getLastPage(12,resultSize);
-			admin.setOffset(offset);
-			admin.setStartPage(startPage);
-			admin.setEndPage(endPage);
-			admin.setLastPage(lastPage);
+			admin = maService.getPaging(admin,resultSize);
 			
 			sList = cService.getStoreListTheme(admin); //음식종류별 가게 리스트 가져오기
 			sList = cService.stagSetting(sList);//가게 태그 세팅
 		}
-//			params = cService.selectThemeStoreList(page, 12, anum);
-		
 		mav.addObject("viewInfo", admin); //조회 정보
 		mav.addObject("adminList", aList); //테마 태그 리스트
 		mav.addObject("storeList", sList); //가게 리스트
@@ -145,45 +121,39 @@ public class CategoryController {
 		return mav;
 	}
 	
-	@RequestMapping("areaSort.do")//지역별 요청부분
-	public ModelAndView areaSort(@RequestParam(defaultValue="서울특별시") String areaName,
-			@RequestParam(defaultValue="new") String type,@RequestParam(defaultValue="1") int page) {
-		ModelAndView mav = new ModelAndView();
-		HashMap<String, Object> params = cService.selectAreaStoreList(page, 12, areaName);
-		List<Store> sList = (List<Store>)params.get("sList"); 
-		List<HashMap<String, Object>> storeMapList = new ArrayList<HashMap<String, Object>>();
-		int[] gradeCount = cService.gradeCount(sList);
-		double[] commentCount = cService.commentCount(sList);
-		List<String[]> stagList = cService.selectStagList(sList);
-		for(int i=0; i<sList.size();i++) {
-			HashMap<String, Object> storeMap = new HashMap<String, Object>();
-			storeMap.put("snum", sList.get(i).getSnum()+"");
-			storeMap.put("sname", sList.get(i).getSname());
-			String[] str = sList.get(i).getSaddress().split(" ");
-			String address=str[0]+" "+str[1];
-			storeMap.put("saddress", address);
-			storeMap.put("simage", sList.get(i).getSimage());
-			storeMap.put("userCount", gradeCount[i]);
-			storeMap.put("commentCount", commentCount[i]);
-			String[] stag = stagList.get(i);
-			for(int j=0;j<3;j++) {
-				storeMap.put("stag"+(j+1), stag[j]);
-			}
-			storeMapList.add(storeMap);
+	//카테고리 - 지역별
+	@RequestMapping("areaSort.do")
+	public ModelAndView areaSort(Admin admin , ModelAndView mav
+			,@RequestParam(defaultValue="1") int page) {
+		if(admin.getType() == null){
+			admin.setType("new");
 		}
-		if(type.equals("star")) {
-			MapComparatorDouble comp = new MapComparatorDouble("commentCount");
-			Collections.sort(storeMapList, comp);
-			Collections.reverse(storeMapList);
-		}else if(type.equals("dan")){
-			MapComparatorInt comp = new MapComparatorInt("userCount");
-			Collections.sort(storeMapList, comp);
-			Collections.reverse(storeMapList);
+		if(admin.getAreaName() == null) {
+			admin.setAreaName("서울특별시");
 		}
-		mav.addObject("viewInfo", params);
-		mav.addObject("storeMapList", storeMapList);
+		
+		System.out.println("지역 ::: "+admin.getAreaName());
+		
+		List<Store> areaList = maService.getAreaInfo();
+		List<Store> sList = cService.getStoreListArea(admin); //음식종류별 가게 리스트 가져오기
+		sList = cService.stagSetting(sList);//가게 태그 세팅
+		admin.setStoresPerPage(12);
+		admin.setPage(page);
+		int resultSize = cService.getStoreListCountTheme(admin);
+		admin = maService.getPaging(admin,resultSize);
+		
+		mav.addObject("viewInfo", admin); //조회 정보
+		mav.addObject("storeList", sList); //가게 리스트
+		mav.addObject("areaList", areaList); //지역 리스트
 		mav.setViewName("category/areaSort");
 		return mav;
+	}
+	
+	//지역 상세 정보
+	@RequestMapping("areaInfoDetail.do")
+	@ResponseBody
+	public List<Store> areaInfoDetail(Store store) {
+		return maService.getAreaInfoDetail(store);
 	}
 	
 	@RequestMapping("recommendSort.do")//추천별 요청부분

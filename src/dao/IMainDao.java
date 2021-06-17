@@ -21,6 +21,10 @@ public interface IMainDao {
 	public int selectTotalMembers();
 	//총 후기수
 	public int selectTotalComments();
+	//지역명 정보
+	public List<Store> getAreaInfo();
+	//지역명 상세 정보
+	public List<Store> getAreaInfoDetail(Store store);
 	
 	
 	

@@ -67,6 +67,11 @@ public class CategoryService {
 		return icdao.selectStoreListTheme(admin);
 	}
 	
+	//지역별 가게 리스트 가져오기
+	public List<Store> getStoreListArea(Admin admin){ 
+		return icdao.selectStoreListArea(admin);
+	}
+	
 	//음식 종류별 가게 갯수
 	public int getStoreListCountFood(Admin admin) {
 		return icdao.getStoreListCountFood(admin);
@@ -75,6 +80,11 @@ public class CategoryService {
 	//테마 종류별 가게 갯수
 	public int getStoreListCountTheme(Admin admin) {
 		return icdao.getStoreListCountTheme(admin);
+	}
+	
+	//지역별 가게 갯수
+	public int getStoreListCountArea(Admin admin) {
+		return icdao.getStoreListCountArea(admin);
 	}
 	
 	public int[] gradeCount(List<Store> sList) {//단골수 리스트

@@ -56,6 +56,32 @@
 		SELECT COUNT(*) FROM COMMENTS
 	</select>
 	
+	<!-- 지역명 정보 -->
+	<select id="getAreaInfo" resultType="store">
+		SELECT 
+			ORD AS ord
+			,AREANAME AS saddress
+		FROM 
+			AREA 
+		ORDER BY ORD ASC
+	</select>
+	
+	<!-- 지역명 상세 정보 -->
+	<select id="getAreaInfoDetail" parameterType="store" resultType="store">
+		SELECT 
+			AREANUM AS areanum
+			,ORD AS ord
+			,AREANAME AS saddress
+		FROM 
+			AREA_D
+		WHERE
+			AREANUM = #{areanum}
+		ORDER BY ORD ASC
+	</select>
+	
+	
+	
+	
 	
 	
 	
