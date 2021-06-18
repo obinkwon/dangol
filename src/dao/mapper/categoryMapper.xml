@@ -17,26 +17,6 @@
 			)t1
 		) WHERE RNUM BETWEEN #{offset} AND #{offset} + (#{storesPerPage} - 1)
 	</sql>
-	<sql id="dask">
-		<choose>
-			<when test="dask !=null">
-				#{dask}
-			</when>
-			<otherwise>
-				null
-			</otherwise>
-		</choose>
-	</sql>
-	<sql id="simage">
-		<choose>
-			<when test="simage !=null">
-				#{simage}
-			</when>
-			<otherwise>
-				null
-			</otherwise>
-		</choose>
-	</sql>
 	<!-- 음식종류별 가게 리스트 가져오기 -->
 	<select id="selectStoreListFood" parameterType="admin" resultType="store">
 		<include refid="topPaging"/>
@@ -594,7 +574,6 @@
 	<update id="updateDcountMinusByDnum" parameterType="int">
 		update details set dcount = dcount - 1 where dnum = #{dnum} 
 	</update>
-	
 	<select id="selectAdminTasteTag" resultType="admin">
 		select * from admins where atype= 'taste'
 	</select>
@@ -604,23 +583,9 @@
 	<select id="selectCommentByDnum" parameterType="int" resultType="comment">
 		select * from comments where dnum = #{dnum}
 	</select>
-	<select id="selectStoreDB" resultType="storedb">
-		select * from storedb
-	</select>
 	<select id="getStoreNewCount" resultType="int"> 
 		select count(*) from stores where sdate between (sysdate-10) and sysdate
 	</select>
-	
-	<select id="getStoreAllByAnumCount" parameterType="int" resultType="int"> 
-		select count(*) from stores where snum in (select snum from stag where anum = #{anum})
-	</select>
-	<select id="getStoreAllByAreaCount" parameterType="java.util.HashMap" resultType="int"> 
-		select count(*) from stores where saddress like '${areaName}%'
-	</select>
-	<insert id="insertStores" parameterType="store">
-		insert into stores values(stores_seq.nextval,#{bid},#{sintro},#{sname}, #{saddress}, #{sdetailaddr}, #{sphone},#{stime}, #{sparking},
-	<include refid="simage"/>,#{stype},#{sholiday},sysdate,#{sratelv0}, #{sratelv1}, #{sratelv2}, #{sratelv3},#{slimit},#{slatitude},#{slongitude})
-	</insert>
 	<select id="selectKeywordStore" parameterType="java.util.HashMap" resultType="store">
 		select * from stores where sname like '${keyword}%'
 	</select>

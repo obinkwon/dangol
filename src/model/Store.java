@@ -36,7 +36,7 @@ public class Store {
 	private int startPage;
 	private int endPage;
 	private int lastPage;
-	private int areanum;
+	private int areaNum;
 	private int ord;
 	
 	
@@ -250,11 +250,11 @@ public class Store {
 	public void setLastPage(int lastPage) {
 		this.lastPage = lastPage;
 	}
-	public int getAreanum() {
-		return areanum;
+	public int getAreaNum() {
+		return areaNum;
 	}
-	public void setAreanum(int areanum) {
-		this.areanum = areanum;
+	public void setAreaNum(int areaNum) {
+		this.areaNum = areaNum;
 	}
 	public int getOrd() {
 		return ord;

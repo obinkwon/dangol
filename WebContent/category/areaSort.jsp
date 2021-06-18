@@ -10,24 +10,37 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/template.css" />
-<style type="text/css">
-	div.tab-pane a, div.tab-pane active a {
-		margin-right: 20px;
-		color: #000000;
-	}
-	div.tab-pane td,div.tab-pane active td{
-		padding-bottom : 15px; 
-	}
-	div.tab-pane a:hover, div.tab-pane active a:hover {
-		text-decoration: none;
-		color: #66ccff;
-		cursor: pointer;
-	}
-</style>
 <script type="text/javascript">
-	function mainArea(areaNum){//메인 지역 클릭시
-		alert(areaNum);
-		alert('mainArea');
+	function mainArea(areaNum,areaName){//메인 지역 클릭시
+		$('#areaName').val(areaName);
+		$.ajax({
+			url: 'areaInfoDetail.do',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				areaNum : areaNum,
+			},
+			success: function(data){
+				var str  = '<div role="tabpanel" class="tab-pane active" id="area'+areaNum+'">';
+				str += '<a href="#" onclick="areaSort(\'전체\')">전체</a>';
+				for(var i=0; i <data.length; i++){
+					str += '<a href="#" onclick="areaSort(\''+data[i].saddress+'\')">'+data[i].saddress+'</a>'
+					if((i+1)%11 == 0){
+						str += '<br />';
+					}
+				}
+				str += '</div>';
+				$('#area_d').html(str);
+			},
+		});
+	}
+	
+	function areaSort(subArea){
+		var mainArea = $('#areaName').val();
+		if(subArea == '전체') {
+			subArea = '';
+		}
+		location.href="areaSort.do?areaName="+mainArea+" "+subArea;
 	}
 </script>
 <script type="text/javascript">
@@ -35,12 +48,6 @@
 		$("#sortSelect").change(function(){//정렬 클륵시
 			var areaName = $('#areaName').val();
 			location.href='areaSort.do?page=1&areaName='+areaName+'&type='+$(this).val();
-		});
-		
-		$('.tab-content a').click(function(){
-			subArea = $(this).text();
-			if(subArea == '전체') subArea = '';
-			location.href="areaSort.do?areaName="+mainArea+" "+subArea;
 		});
 		
 		$('.storeOne').click(function(){// 가게 클릭시
@@ -63,42 +70,12 @@
 					<!-- Nav tabs -->
 					<ul class="nav nav-tabs" role="tablist">
 						<c:forEach var="area" items="${areaList}">
-							<li role="presentation"><a href="#area${area.ord}" aria-controls="area${area.ord}" role="tab" data-toggle="tab" onclick="mainArea('${area.ord}')">${area.saddress}</a></li>
+							<li role="presentation"><a href="#area${area.ord}" aria-controls="area${area.ord}" role="tab" data-toggle="tab" onclick="mainArea('${area.ord}','${area.saddress}')">${area.saddress}</a></li>
 						</c:forEach>
 					</ul>
 					<!-- Tab panes -->
-					<div class="tab-content">
-						<div role="tabpanel" class="tab-pane active" id="area1">
-							<table>
-								<tr>
-									<td><a>전체</a></td>
-									<td><a>강남구</a></td>
-									<td><a>강동구</a></td>
-									<td><a>강서구</a></td>
-									<td><a>강북구</a></td>
-									<td><a>관악구</a></td>
-									<td><a>광진구</a></td>
-									<td><a>금천구</a></td>
-									<td><a>노원구</a></td>
-									<td><a>도봉구</a></td>
-									<td><a>동대문구</a></td>
-									<td><a>동작구</a></td>
-									<td><a>마포구</a></td>
-									<td><a>서대문구</a></td>
-									<td><a>서초구</a></td>
-									<td><a>성동구</a></td>
-									<td><a>성북구</a></td>
-									<td><a>송파구</a></td>
-									<td><a>양천구</a></td>
-									<td><a>영등포구</a></td>
-									<td><a>용산구</a></td>
-									<td><a>은평구</a></td>
-									<td><a>종로구</a></td>
-									<td><a>중구</a></td>
-									<td><a>중랑구</a></td>
-								</tr>
-							</table>
-						</div>
+					<div id="area_d" class="tab-content">
+						<span class="storeSpan" style="text-align:center;">${viewInfo.areaName}</span>
 					</div>
 				</div>
 			</div>
@@ -113,6 +90,7 @@
 			</div>
 			<div class="categoryList">
 				<input id="areaName" type="hidden" value="${viewInfo.areaName}">
+				
 				<c:forEach var="store" items="${storeList}">
 					<div class="storeOne">
 						<input type="hidden" value="${store.snum}">

@@ -132,15 +132,13 @@ public class CategoryController {
 			admin.setAreaName("서울특별시");
 		}
 		
-		System.out.println("지역 ::: "+admin.getAreaName());
-		
 		List<Store> areaList = maService.getAreaInfo();
-		List<Store> sList = cService.getStoreListArea(admin); //음식종류별 가게 리스트 가져오기
-		sList = cService.stagSetting(sList);//가게 태그 세팅
 		admin.setStoresPerPage(12);
 		admin.setPage(page);
 		int resultSize = cService.getStoreListCountTheme(admin);
 		admin = maService.getPaging(admin,resultSize);
+		List<Store> sList = cService.getStoreListArea(admin); //음식종류별 가게 리스트 가져오기
+		sList = cService.stagSetting(sList);//가게 태그 세팅
 		
 		mav.addObject("viewInfo", admin); //조회 정보
 		mav.addObject("storeList", sList); //가게 리스트
@@ -150,8 +148,8 @@ public class CategoryController {
 	}
 	
 	//지역 상세 정보
-	@RequestMapping("areaInfoDetail.do")
 	@ResponseBody
+	@RequestMapping("areaInfoDetail.do")
 	public List<Store> areaInfoDetail(Store store) {
 		return maService.getAreaInfoDetail(store);
 	}
@@ -451,11 +449,6 @@ public class CategoryController {
 			view = new DownloadView(attachFile);
 		}
 		return view;
-	}
-	
-	@RequestMapping("insertNewStoreDB.do")//데이터 입력 요청
-	public void insertNewStoreDB() {
-		cService.insertNewStore();
 	}
 	
 	@RequestMapping("insertStoreMenu.do")//메뉴 입력 요청

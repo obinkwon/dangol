@@ -47,7 +47,6 @@ public interface ICategoryDao {
 	//가게별 리뷰 갯수
 	public int selectCommentTotalCnt(Store store);
 	
-	public List<Store> selectStoreAllByArea(HashMap<String, Object> params);
 	
 	
 	
@@ -82,10 +81,6 @@ public interface ICategoryDao {
 	public List<Admin> selectAdminTasteTag();
 	public void updateCommentOne(Comment comment);
 	public Comment selectCommentByDnum(int dnum);
-	public List<Storedb> selectStoreDB();
 	public int getStoreNewCount();
-	public int getStoreAllByAnumCount(int anum);
-	public int getStoreAllByAreaCount(HashMap<String, Object> params);
-	public int insertStores(Store store);
 	public List<Store> selectKeywordStore(HashMap<String, Object> params);
 }

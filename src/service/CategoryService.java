@@ -115,23 +115,6 @@ public class CategoryService {
 		return result;
 	}
 	
-	public HashMap<String, Object> selectAreaStoreList(int page,int storesPerPage,String areaName) {//지역별 가게 리스트
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		
-		int offset = getOffset(page, storesPerPage);
-		params.put("offset",offset);
-		params.put("storesPerPage", storesPerPage);
-		params.put("areaName", areaName);
-		result.put("sList", icdao.selectStoreAllByArea(params));
-		result.put("current",page);
-		result.put("start", getStartPage(page));
-		result.put("end", getEndPage(page));
-		result.put("last", getLastPage(storesPerPage,icdao.getStoreAllByAreaCount(params)));
-		result.put("totalBoard", icdao.getStoreAllByAreaCount(params));
-		return result;
-	}
-	
 	public double[] commentCount(List<Store> sList) {//가게 후기 총 평점 평균 리스트
 		int i = 0;
 		List<List<Grade>> gListAll = new ArrayList<List<Grade>>();
@@ -425,40 +408,4 @@ public class CategoryService {
 		return dList.size();
 	}
 	
-	public void insertNewStore() {//데이터 입력 부분 
-		List<Storedb> sList = icdao.selectStoreDB();
-		int i = 1;
-		int count = 0;
-		for(Storedb sdb : sList) {
-			if(count==10) {
-				count = 0;
-				i++;
-			}
-			String address = sdb.getAddress();
-			String saddress = address.split(" ")[0]+" "+address.split(" ")[1];
-			String sdetailaddr = address.split(" ")[2]+" "+address.split(" ")[3];
-			Store s = new Store();
-			s.setSname(sdb.getName());
-			s.setBid("boss"+i);
-			s.setSintro("환영합니다");
-			s.setSaddress(saddress);
-			s.setSphone("02-1234-1234");
-			s.setStime_start("1000");
-			s.setStime_end("2100");
-			s.setSparking("yes");
-			s.setSdetailaddr(sdetailaddr);
-			s.setStype(sdb.getType());
-			s.setSholiday("sun");
-			s.setSratelv0(3);
-			s.setSratelv1(5);
-			s.setSratelv2(7);
-			s.setSratelv3(10);
-			s.setSlimit(20);
-			s.setSlatitude(sdb.getLatitude());
-			s.setSlongitude(sdb.getLongitude());
-			System.out.println(s);
-			icdao.insertStores(s);
-			count++;
-		}
-	}
 }

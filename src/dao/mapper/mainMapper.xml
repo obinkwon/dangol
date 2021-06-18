@@ -69,13 +69,13 @@
 	<!-- 지역명 상세 정보 -->
 	<select id="getAreaInfoDetail" parameterType="store" resultType="store">
 		SELECT 
-			AREANUM AS areanum
+			AREANUM AS areaNum
 			,ORD AS ord
-			,AREANAME AS saddress
+			,AREADNAME AS saddress
 		FROM 
 			AREA_D
 		WHERE
-			AREANUM = #{areanum}
+			AREANUM = #{areaNum}
 		ORDER BY ORD ASC
 	</select>
 	
