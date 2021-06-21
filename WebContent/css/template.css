@@ -57,6 +57,7 @@ div.infoBox{margin : auto;
 }
 .categorySort{display : inline-block;margin-top : 30px;}
 .categoryList{display : inline-block;text-align: center;margin : auto;}
+.categoryListBot{display : inline;text-align: center;margin : auto;width :100%;}
 .storeOne{
 	width : 300px;
 	height : 400px;
@@ -285,3 +286,18 @@ a.nav {
 /* margin css */
 .m0{margin : 0px;}
 .mt20{margin-top:20px;}
+
+
+/*paging*/
+.paging {padding-top:30px;text-align: center;font-size:0;}
+.paging>* {display:inline-block;letter-spacing: -1.5px;}
+.paging>a {width:20px;height:20px;margin:0 3px;background:url(/image/paging.gif) no-repeat;text-indent:-9999px;vertical-align:top;}
+.paging .first {background-position:0 0;}
+.paging .prev {background-position:-20px 0;}
+.paging .next {background-position:-40px 0;}
+.paging .end {background-position:-60px 0;}
+.paging .num{width:auto;height:20px;line-height:20px;margin:0 9px;}
+.paging .num a {display:inline-block;padding:0 8px;line-height:20px;color:#888;font-size:16px;}
+.paging .num a+a:before {content:'·';display:inline-block;color:#c9c9c9;margin-left:-9px;padding-right:8px;}
+.paging .num a:hover,
+.paging .num .current {color:#e82145;}

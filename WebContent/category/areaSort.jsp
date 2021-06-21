@@ -22,9 +22,9 @@
 			},
 			success: function(data){
 				var str  = '<div role="tabpanel" class="tab-pane active" id="area'+areaNum+'">';
-				str += '<a href="#" onclick="areaSort(\'전체\')">전체</a>';
+				str += '<a href="#" onclick="areaSortTop(\'전체\')">전체</a>';
 				for(var i=0; i <data.length; i++){
-					str += '<a href="#" onclick="areaSort(\''+data[i].saddress+'\')">'+data[i].saddress+'</a>'
+					str += '<a href="#" onclick="areaSortTop(\''+data[i].saddress+'\')">'+data[i].saddress+'</a>'
 					if((i+1)%11 == 0){
 						str += '<br />';
 					}
@@ -35,12 +35,16 @@
 		});
 	}
 	
-	function areaSort(subArea){
+	function areaSortTop(subArea){
 		var mainArea = $('#areaName').val();
 		if(subArea == '전체') {
 			subArea = '';
 		}
 		location.href="areaSort.do?areaName="+mainArea+" "+subArea;
+	}
+	
+	function areaSortBot(page,type,areaName){
+		location.href='areaSort.do?page='+page+'&type='+type+'&areaName='+areaName;
 	}
 </script>
 <script type="text/javascript">
@@ -114,24 +118,26 @@
 					</div>
 				</c:forEach>
 			</div>
-			<div>
+			<div class="paging">
 				<c:if test="${viewInfo.startPage ne 1}">
-					<input type="button" value="처음" onclick="themeSort('1','${viewInfo.type}','${viewInfo.anum}')">
-					<input type="button" value="이전" onclick="themeSort('${viewInfo.startPage-1}','${viewInfo.type}','${viewInfo.anum}')">
+					<a href="#none" class="first" onclick="areaSortBot('1','${viewInfo.type}','${viewInfo.areaName}')">처음</a>
+					<a href="#none" class="prev" onclick="areaSortBot('${viewInfo.startPage-1}','${viewInfo.type}','${viewInfo.areaName}')">이전</a>
 				</c:if>
+				<span class="num">
 				<c:forEach begin="${viewInfo.startPage}" end="${viewInfo.endPage < viewInfo.lastPage ? viewInfo.endPage : viewInfo.lastPage}" var="i">
 					<c:choose>
 						<c:when test="${i == viewInfo.page}">
-							[${i}]
+							<a href="#none" class="current">[${i}]</a>
 						</c:when>
 						<c:otherwise>
-							<a href="themeSort('${i}','${viewInfo.type}','${viewInfo.anum}')">[${i}]</a>	
+							<a href="#none" onclick="areaSortBot('${i}','${viewInfo.type}','${viewInfo.areaName}')">[${i}]</a>	
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
+				</span>
 				<c:if test="${viewInfo.endPage < viewInfo.lastPage}">
-					<input type="button" value="다음" onclick="themeSort('${viewInfo.endPage+1}','${viewInfo.type}','${viewInfo.anum}')">
-					<input type="button" value="마지막" onclick="themeSort('${viewInfo.lastPage}','${viewInfo.type}','${viewInfo.anum}')">
+					<a href="#none" class="next" onclick="areaSortBot('${viewInfo.endPage+1}','${viewInfo.type}','${viewInfo.areaName}')">다음</a>
+					<a href="#none" class="end" onclick="areaSortBot('${viewInfo.lastPage}','${viewInfo.type}','${viewInfo.areaName}')">마지막</a>
 				</c:if>
 			</div>
 		</div>

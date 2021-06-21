@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
@@ -8,200 +7,87 @@
 <meta charset="UTF-8">
 <title>신규매장</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<style type="text/css">
-	div.main{
-		margin : auto;
-		display : block;
-		width : 100%;
-		padding-top : 50px;
-	}
-	div.newStoreTop{
-		text-align : center;
-		margin : auto;
-		width : 660px;
-	}
-	div.sortSelect{
-		margin-top : 30px;
-		width : 100%;
-		height : 100px;
-	}
-	div.newStoreBottom{
-		width : 965px;
-		text-align : center;
-		margin : auto;
-	}
-	p.newStoreTop{
-		width : 100%;
-		text-align : center;
-		font-size : 30px;
-		font-weight : bold;
-		font-family : '맑은 고딕';
-	}
-	/* 중복 */
-	div.storeList{
-		display : inline-block;
-		width : 100%;
-		margin : auto;
-	}
-	div.storeOne{
-		width : 300px;
-		height : 400px;
-		margin : auto;
-		margin-left : 10px;
-		margin-right : 10px;
-		margin-bottom : 10px;
-		display : block;
-		float : left;
-		border : 1px solid #d9d9d9;
-		border-bottom : 2px solid #d9d9d9;
-		text-align: center;
-	}
-	div.storeOne:hover{
-		border : 2px solid #66ccff;
-		cursor: pointer;
-	}
-	select.sortSelect{
-		float : right;
-		margin-bottom : 60px;
-		width : 80px;
-		height : 30px;
-	}
-	img.storeOne{
-		margin-top : 15px;
-		width : 250px;
-		height : 200px;
-	}
-	a.storeOne{
-		margin-left : 15px;
-		font-size : 15px;
-		color : #ff4d4d;
-	}
-	a.storeOneA{
-		margin-left : 15px;
-		margin-top : 10px;
-		font-size : 15px;
-		color : #ff4d4d;
-	}
-	a.storeOneB{
-		margin-left : 15px;
-		margin-top : 10px;
-		font-size : 15px;
-		color : #00cc00;
-	}
-	p.storeOneA{
-		margin-top : 10px;
-		font-size : 20px;
-	}
-	p.storeOneB{
-		margin-top : 10px;
-		font-size : 15px;
-	}
-	p.hashTag{
-		margin-top : 10px;
-		font-size : 15px;
-	}
-	a.storeOneA:hover{
-		text-decoration : none;
-		font-size : 20px;
-		color : #ff4d4d;
-		font-weight : bold;
-	}
-	a.storeOneB:hover{
-		text-decoration : none;
-		font-size : 20px;
-		color : #00cc00;
-		font-weight : bold;
-	}
-	span.glyphicon-star,span.glyphicon-user{
-		margin-top : 15px;
-	}
-</style>
+<link rel="stylesheet" href="/css/template.css" />
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#sortSelect").change(function(){
-			location.href="newStoreAll.do?page=${param.page}&type="+this.value;
+		$("#sortSelect").change(function(){//정렬 클륵시
+			location.href="newStoreAll.do?page=1&type="+$(this).val();
 		});
-		if(${param.type=="dan"})
-			$("#option_dan").prop('selected','true');
-		else if(${param.type=="star"})
-			$("#option_star").prop('selected','true');
-		else
-			$("#option_new").prop('selected','true');
 		
-		$('div.storeOne').click(function(){
-			var snum = $(this).find('input[type=hidden]#storeNum').val();
+		$('.storeOne').click(function(){// 가게 클릭시
+			var snum = $(this).find('input[type=hidden]').val();
 			location.href="storeView.do?snum="+snum;
 		});
 	});
 </script>
 </head>
 <body>
-	<jsp:include page="../jsp/header.jsp"/>
-	<div class="main">
-		<div class="newStoreTop">
-			<p class="newStoreTop">새로운 가맹점을 소개합니다</p>
-			<div class="newStoreTxt">
+<jsp:include page="/jsp/header.jsp"/>
+<div class="main">
+	<div class="container">
+		<div class="w90Form" style="margin:auto;text-align:center;">
+			<div class="contentsTitGroup">
+				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">새로운 가맹점을 소개합니다</h2>
 			</div>
 		</div>
-		<div class="newStoreBottom">
-			<div class="sortSelect">
-				<select class="sortSelect" id="sortSelect">
-					<option id="option_new" value="new">최신순</option>
-					<option id="option_star" value="star">별점순</option>
-					<option id="option_dan" value="dan">단골순</option>
+		<div class="w90Form" style="margin:auto;text-align:center;">
+			<div class="toggle-wrap">
+				<select class="inputText w100" id="sortSelect">
+					<option value="new" <c:if test="${viewInfo.type == 'new' or viewInfo.type == ''}">selected</c:if>>최신순</option>
+					<option value="star" <c:if test="${viewInfo.type == 'star'}">selected</c:if>>별점순</option>
+					<option value="dan" <c:if test="${viewInfo.type == 'dan'}">selected</c:if>>단골순</option>
 				</select>
 			</div>
-			<div class="storeList">
-				<c:forEach var="storeMap" items="${storeMapList}">
-				<div class="storeOne">
-					<input id="storeNum" type="hidden" value="${storeMap.snum}">
-					<c:choose>
-						<c:when test="${storeMap.simage != null}">
-							<img class="storeOne" src="downloadStoreImg.do?snum=${storeMap.snum}">
-						</c:when>
-						<c:otherwise>
-							<img class="storeOne" src="image_ready2.png">
-						</c:otherwise>
-					</c:choose>
-					<p class="storeOneA">
-						<img src="new.png" style="width : 30px; heoght : 30px;">
-						<b>${storeMap.sname}</b>
-					</p>
-					<p class="storeOneB">${storeMap.saddress}</p>
-					<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					<a class="storeOneA">${storeMap.commentCount}점</a><br>
-					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-					<a class="storeOneB">${storeMap.userCount}명</a>
-					<p class="hashTag">
-						<c:if test="${storeMap.stag1!=null}"><a>#${storeMap.stag1}</a></c:if>
-						<c:if test="${storeMap.stag2!=null}"><a>#${storeMap.stag2}</a></c:if>
-						<c:if test="${storeMap.stag3!=null}"><a>#${storeMap.stag3}</a></c:if>
-					</p>
-				</div>
+			<div class="categoryList" style="margin-top:50px;">
+				<c:forEach var="store" items="${storeList}">
+					<div class="storeOne">
+						<input type="hidden" value="${store.snum}">
+						<c:choose>
+							<c:when test="${store.simage != null}">
+								<img class="img250 h200" src="downloadStoreImg.do?snum=${store.snum}" style="margin-top:20px;">
+							</c:when>
+							<c:otherwise>
+								<img class="img250 h200" src="/image/image_ready2.png" style="margin-top:20px;">
+							</c:otherwise>
+						</c:choose><br/>
+						<img class="img30" src="new.png">
+						<span class="storeSpan" style="margin-left:0px;">${store.sname}</span><br/>
+						<span class="storeSpan" style="margin-left:0px;">${store.saddress}</span><br/>
+						<span class="glyphicon glyphicon-star" aria-hidden="true" style="margin-top:15px;"></span>
+						<a class="storeA span-red">${store.commentTotal}점</a><br/>
+						<span class="glyphicon glyphicon-user" aria-hidden="true" style="margin-top:15px;"></span>
+						<a class="storeA span-green">${store.dancnt}명</a><br/>
+						<span class="storeSpan" style="margin-left:0px;">
+							<c:if test="${store.stag ne null}"><a>${store.stag}</a></c:if>
+						</span>
+					</div>
 				</c:forEach>
 			</div>
-			<div>
-			<c:if test="${viewInfo.start ne 1}">
-				<input type="button" value="처음" onclick="location.href='newStoreAll.do?page=1&type=${param.type}'">
-				<input type="button" value="이전" onclick="location.href='newStoreAll.do?page=${viewInfo.start-1}&type=${param.type}'">
-			</c:if>
-			<c:forEach begin="${viewInfo.start}" end="${viewInfo.end<viewInfo.last?viewInfo.end:viewInfo.last}" var="i">
-				<c:choose>
-					<c:when test="${i==viewInfo.current}">
-						[${i}]
-					</c:when>
-					<c:otherwise>
-						<a href="newStoreAll.do?page=${i}&type=${param.type}">[${i}]</a>	
-					</c:otherwise>
-				</c:choose>
-			</c:forEach>
-			<c:if test="${viewInfo.end < viewInfo.last}">
-				<input type="button" value="다음" onclick="location.href='newStoreAll.do?page=${viewInfo.end+1}&type=${param.type}'">
-				<input type="button" value="마지막" onclick="location.href='newStoreAll.do?page=${viewInfo.last}&type=${param.type}'">
-			</c:if>
+			<div class="paging">
+				<c:if test="${viewInfo.startPage ne 1}">
+					<a href="#none" class="first" onclick="areaSortBot('1','${viewInfo.type}','${viewInfo.areaName}')">처음</a>
+					<a href="#none" class="prev" onclick="areaSortBot('${viewInfo.startPage-1}','${viewInfo.type}','${viewInfo.areaName}')">이전</a>
+				</c:if>
+				<span class="num">
+				<c:forEach begin="${viewInfo.startPage}" end="${viewInfo.endPage < viewInfo.lastPage ? viewInfo.endPage : viewInfo.lastPage}" var="i">
+					<c:choose>
+						<c:when test="${i == viewInfo.page}">
+							<a href="#none" class="current">[${i}]</a>
+						</c:when>
+						<c:otherwise>
+							<a href="#none" onclick="areaSortBot('${i}','${viewInfo.type}','${viewInfo.areaName}')">[${i}]</a>	
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				</span>
+				<c:if test="${viewInfo.endPage < viewInfo.lastPage}">
+					<a href="#none" class="next" onclick="areaSortBot('${viewInfo.endPage+1}','${viewInfo.type}','${viewInfo.areaName}')">다음</a>
+					<a href="#none" class="end" onclick="areaSortBot('${viewInfo.lastPage}','${viewInfo.type}','${viewInfo.areaName}')">마지막</a>
+				</c:if>
 			</div>
 		</div>
 	</div>
-	<jsp:include page="../jsp/footer.jsp"/>
+</div>
+<jsp:include page="/jsp/footer.jsp"/>
 </body>
 </html>

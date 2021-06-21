@@ -91,25 +91,27 @@
 					</div>
 				</c:forEach>
 			</div>
-			<div>
-			<c:if test="${viewInfo.startPage ne 1}">
-				<input type="button" value="처음" onclick="foodSort('1','${viewInfo.type}','${viewInfo.anum}')">
-				<input type="button" value="이전" onclick="foodSort('${viewInfo.startPage-1}','${viewInfo.type}','${viewInfo.anum}')">
-			</c:if>
-			<c:forEach begin="${viewInfo.startPage}" end="${viewInfo.endPage < viewInfo.lastPage ? viewInfo.endPage : viewInfo.lastPage}" var="i">
-				<c:choose>
-					<c:when test="${i == viewInfo.page}">
-						[${i}]
-					</c:when>
-					<c:otherwise>
-						<a href="foodSort('${i}','${viewInfo.type}','${viewInfo.anum}')">[${i}]</a>	
-					</c:otherwise>
-				</c:choose>
-			</c:forEach>
-			<c:if test="${viewInfo.endPage < viewInfo.lastPage}">
-				<input type="button" value="다음" onclick="foodSort('${viewInfo.endPage+1}','${viewInfo.type}','${viewInfo.anum}')">
-				<input type="button" value="마지막" onclick="foodSort('${viewInfo.lastPage}','${viewInfo.type}','${viewInfo.anum}')">
-			</c:if>
+			<div class="paging">
+				<c:if test="${viewInfo.startPage ne 1}">
+					<a href="#none" class="first" onclick="foodSort('1','${viewInfo.type}','${viewInfo.anum}')">처음</a>
+					<a href="#none" class="prev" onclick="foodSort('${viewInfo.startPage-1}','${viewInfo.type}','${viewInfo.anum}')">이전</a>
+				</c:if>
+				<span class="num">
+				<c:forEach begin="${viewInfo.startPage}" end="${viewInfo.endPage < viewInfo.lastPage ? viewInfo.endPage : viewInfo.lastPage}" var="i">
+					<c:choose>
+						<c:when test="${i == viewInfo.page}">
+							<a href="#none" class="current">[${i}]</a>
+						</c:when>
+						<c:otherwise>
+							<a href="#none" onclick="foodSort('${i}','${viewInfo.type}','${viewInfo.anum}')">[${i}]</a>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				</span>
+				<c:if test="${viewInfo.endPage < viewInfo.lastPage}">
+					<a href="#none" class="next" onclick="foodSort('${viewInfo.endPage+1}','${viewInfo.type}','${viewInfo.anum}')">다음</a>
+					<a href="#none" class="end" onclick="foodSort('${viewInfo.lastPage}','${viewInfo.type}','${viewInfo.anum}')">마지막</a>
+				</c:if>
 			</div>
 		</div>
 	</div>
