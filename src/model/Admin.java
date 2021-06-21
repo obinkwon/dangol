@@ -1,5 +1,8 @@
 package model;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Admin {
 	private int anum;
 	private String atype;
@@ -13,6 +16,11 @@ public class Admin {
 	private int lastPage;
 	private String type;
 	private String areaName;
+	private String mid;
+	private String maddress;
+	private String marea1;
+	private String marea2;
+	public List<Integer> anumList;
 	
 	
 	
@@ -87,6 +95,36 @@ public class Admin {
 	}
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
+	}
+	public String getMid() {
+		return mid;
+	}
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
+	public List<Integer> getAnumList() {
+		return anumList;
+	}
+	public void setAnumList(List<Integer> anumList) {
+		this.anumList = anumList;
+	}
+	public String getMaddress() {
+		return maddress;
+	}
+	public void setMaddress(String maddress) {
+		this.maddress = maddress;
+	}
+	public String getMarea1() {
+		return marea1;
+	}
+	public void setMarea1(String marea1) {
+		this.marea1 = marea1;
+	}
+	public String getMarea2() {
+		return marea2;
+	}
+	public void setMarea2(String marea2) {
+		this.marea2 = marea2;
 	}
 	
 }

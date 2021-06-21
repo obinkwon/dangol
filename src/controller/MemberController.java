@@ -169,7 +169,7 @@ public class MemberController {
 	@RequestMapping("checkIdMember.do")
 	@ResponseBody
 	public boolean checkId(Member member) throws Exception{
-		if (mService.checkId(member) == null) {
+		if (mService.selectMember(member) == null) {
 			return true;
 		}else {
 			return false;

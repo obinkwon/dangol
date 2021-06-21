@@ -44,6 +44,21 @@
 		ORDER BY ANUM
 	</select>
 	
+	<!-- admin 여러개 검색 (anum) -->
+	<select id="selectAdminMtagList" parameterType="admin" resultType="admin">
+		SELECT 
+			A.ANUM AS anum
+			,A.ATYPE AS atype
+			,A.AVALUE AS avalue
+			,A.AIMAGE AS aimage
+		FROM 
+			ADMINS A
+			INNER JOIN MTAG MT ON A.ANUM = MT.ANUM
+		WHERE 
+			MT.MID = #{mid}
+		ORDER BY A.ANUM
+	</select>
+	
 	<!-- 태그 추가 -->
 	<insert id="insertTag" parameterType="admin">
 		INSERT INTO ADMINS(

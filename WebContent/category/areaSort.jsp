@@ -61,7 +61,7 @@
 <jsp:include page="/jsp/header.jsp" />
 <div class="main">
 	<div class="container">
-		<div class="w80Form" style="margin:auto;text-align:center;">
+		<div class="w90Form" style="margin:auto;text-align:center;">
 			<div class="contentsTitGroup">
 				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">지역별</h2>
 			</div>
@@ -80,7 +80,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="w80Form" style="margin:auto;text-align:center;">
+		<div class="w90Form" style="margin:auto;text-align:center;">
 			<div class="toggle-wrap">
 				<select class="inputText w100" id="sortSelect">
 					<option value="new" <c:if test="${viewInfo.type == 'new' or viewInfo.type == ''}">selected</c:if>>최신순</option>

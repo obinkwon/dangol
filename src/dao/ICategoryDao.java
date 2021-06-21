@@ -36,17 +36,20 @@ public interface ICategoryDao {
 	public List<Store> selectStoreListTheme(Admin admin);
 	//지역별 가게 리스트 가져오기
 	public List<Store> selectStoreListArea(Admin admin);
+	//추천별 가게 리스트 가져오기
+	public List<Store> selectStoreListRecommend(Admin admin);
 	//음식 종류별 가게 갯수
 	public int getStoreListCountFood(Admin admin);
 	//테마 종류별 가게 갯수
 	public int getStoreListCountTheme(Admin admin);
 	//지역별 가게 갯수
 	public int getStoreListCountArea(Admin admin);
+	//추천별 가게 갯수
+	public int getStoreListCountRecommend(Admin admin);
 	//가게별 리뷰 총점
 	public int selectCommentTotal(Store store);
 	//가게별 리뷰 갯수
 	public int selectCommentTotalCnt(Store store);
-	
 	
 	
 	
@@ -59,12 +62,8 @@ public interface ICategoryDao {
 	public List<Details> selectDetailAllByGnum(int gnum);
 	public Comment selectCommentOneByDnum(int dnum);
 	
-	public List<Stag> selectStagByAnum(int anum);
 	//
 	public Admin selectAdminOne(int anum);
-	public List<Mtag> selectMtagByMid(String mid);
-	public Store selectStoreOneByRecommend(HashMap<String, Object> rMap);
-	public Store selectStoreOneByRecommendPre(HashMap<String, Object> rMap);
 	
 	public Order selectOrderOne(Order order);
 	

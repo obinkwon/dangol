@@ -52,11 +52,6 @@ public class CategoryService {
 		return icdao.insertDetail(detail);
 	}
 	
-	//음식태그 리스트
-	public List<Admin> sortFoodList(Admin admin) {
-		return adao.selectAdminTypeList(admin);
-	}
-	
 	//음식종류별 가게 리스트 가져오기
 	public List<Store> getStoreListFood(Admin admin){ 
 		return icdao.selectStoreListFood(admin);
@@ -70,6 +65,11 @@ public class CategoryService {
 	//지역별 가게 리스트 가져오기
 	public List<Store> getStoreListArea(Admin admin){ 
 		return icdao.selectStoreListArea(admin);
+	}
+	
+	//추천별 가게 리스트 가져오기
+	public List<Store> getStoreListRecommend(Admin admin){ 
+		return icdao.selectStoreListRecommend(admin);
 	}
 	
 	//음식 종류별 가게 갯수
@@ -87,6 +87,12 @@ public class CategoryService {
 		return icdao.getStoreListCountArea(admin);
 	}
 	
+	//추천별 가게 갯수
+	public int getStoreListCountRecommend(Admin admin) {
+		return icdao.getStoreListCountRecommend(admin);
+	}
+	
+	
 	public int[] gradeCount(List<Store> sList) {//단골수 리스트
 		int i = 0;
 		int[] gradeCount = new int[sList.size()];
@@ -96,6 +102,12 @@ public class CategoryService {
 		}
 		return gradeCount;
 	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -232,65 +244,7 @@ public class CategoryService {
 		return stagList;
 	}
 	
-	public HashMap<String, Object> selectRecommendList(String mid) throws Exception{//추천 별 가게 리스트
-		Member member = new Member();
-		member.setMid(mid);
-		Member m = mdao.selectMember(member);
-		List<Mtag> mtagList = icdao.selectMtagByMid(mid);
-		List<Admin> aList = new ArrayList<Admin>();
-		ArrayList<Integer> snumList = new ArrayList<Integer>();
-		HashMap<String, Object> recommendMap = new HashMap<>();
-		for(Mtag mt : mtagList) {
-			List<Stag> stags = icdao.selectStagByAnum(mt.getAnum());
-			aList.add(icdao.selectAdminOne(mt.getAnum()));
-			if(stags!=null) {
-				for(Stag s : stags) {//해시태그에 맞는 snum을 모두 가져와 List에 담는다
-					snumList.add(s.getSnum());
-				}
-			}
-		}
-		HashMap<Integer, Integer> snumMap = new HashMap<Integer, Integer>();
-		for(int n : snumList) {//key value 형태로 snum에 갯수를 카운트 한다
-			if(snumMap.containsKey(n))
-				snumMap.put(n, snumMap.get(n)+1);
-			else 
-				snumMap.put(n, 1);
-		}
-		System.out.println();
-		List<Store> sList = new ArrayList<Store>();
-		
-		if(m.getMarea1()!=null || m.getMarea2()!=null) {//선호지역이 있을때
-			for(int h=3;h>0;h--) {
-				for(int snum : snumMap.keySet()) {
-					if(snumMap.get(snum)==h) {
-						HashMap<String, Object> rMap = new HashMap<String, Object>();
-						rMap.put("snum", snum);
-						rMap.put("marea1", m.getMarea1());
-						rMap.put("marea2", m.getMarea2());
-						Store s = icdao.selectStoreOneByRecommendPre(rMap);
-						if(s!=null) sList.add(s);
-					}
-				}
-			}
-			recommendMap.put("sList", sList);
-			recommendMap.put("mtagList", aList);
-		}else {//없을때 자신의 주소
-			for(int h=3;h>0;h--) {
-				for(int snum : snumMap.keySet()) {
-					if(snumMap.get(snum)==h) {
-						HashMap<String, Object> rMap = new HashMap<String, Object>();
-						rMap.put("snum", snum);
-						rMap.put("maddress", m.getMaddress());
-						Store s = icdao.selectStoreOneByRecommend(rMap);
-						if(s!=null) sList.add(s);
-					}
-				}
-			}
-			recommendMap.put("sList", sList);
-			recommendMap.put("mtagList", aList);
-		}
-		return recommendMap;
-	}
+	
 	
 	public List<Comment> storeCommentList(Store store) {
 		return icdao.selectCommentListBySnum(store);

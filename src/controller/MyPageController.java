@@ -256,7 +256,7 @@ public class MyPageController {
 		detail = cService.selectDetail(detail);//예약 정보 조회
 		if(ddate <= today) {//예약 날짜가 당일인 경우
 			member.setMid(detail.getMid());
-			member = mService.checkId(member);
+			member = mService.selectMember(member);
 			
 			int penalty = member.getMpenalty();
 			member.setMpenalty(penalty+1);

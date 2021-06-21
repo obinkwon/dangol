@@ -57,11 +57,6 @@ public class MemberService {
 		return mdao.findPw(member);
 	}
 
-	// 회원 id로 조회
-	public Member checkId(Member member) throws Exception{
-		return mdao.selectMember(member);
-	}
-
 	//회원 가입
 	public int insertMember(Member member
 			, MultipartFile mfile) throws Exception{

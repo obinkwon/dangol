@@ -51,7 +51,7 @@ public class CategoryController {
 	private MyPageService mypageService;
 	
 	@Autowired
-	private MemberService memservice;
+	private MemberService mService;
 	
 	@Autowired
 	private AdminService aService;
@@ -154,43 +154,50 @@ public class CategoryController {
 		return maService.getAreaInfoDetail(store);
 	}
 	
-	@RequestMapping("recommendSort.do")//추천별 요청부분
-	public ModelAndView recommendSort(HttpSession session,HttpServletResponse resp,
-			@RequestParam(defaultValue="1") int page) throws Exception {
-		ModelAndView mav = new ModelAndView();
+	//카테고리 - 추천별
+	@RequestMapping("recommendSort.do")
+	public ModelAndView recommendSort(HttpSession session
+			, Admin admin
+			, Member member
+			, ModelAndView mav
+			, HttpServletResponse resp
+			, @RequestParam(defaultValue="1") int page) throws Exception {
 		resp.setContentType("text/html; charset=UTF-8");
-		PrintWriter pw = resp.getWriter();
-		String str = "";
-		if(session.getAttribute("mid")!=null) {//일반 회원 로그인이 되어 있을때 
-			String mid = (String)session.getAttribute("mid");
-			HashMap<String, Object> recommendMap = cService.selectRecommendList(mid);
-			List<Store> sList = (List<Store>)recommendMap.get("sList");
-			List<Store> mtagList = (List<Store>)recommendMap.get("mtagList");
-			List<HashMap<String, Object>> storeMapList = new ArrayList<HashMap<String, Object>>();
-			int[] gradeCount = cService.gradeCount(sList);
-			double[] commentCount = cService.commentCount(sList);
-			List<String[]> stagList = cService.selectStagList(sList);
-			for(int i=0; i<sList.size();i++) {
-				HashMap<String, Object> storeMap = new HashMap<String, Object>();
-				storeMap.put("snum", sList.get(i).getSnum()+"");
-				storeMap.put("sname", sList.get(i).getSname());
-				String[] string = sList.get(i).getSaddress().split(" ");
-				String address=string[0]+" "+string[1];
-				storeMap.put("saddress", address);
-				storeMap.put("simage", sList.get(i).getSimage());
-				storeMap.put("userCount", gradeCount[i]);
-				storeMap.put("commentCount", commentCount[i]);
-				String[] stag = stagList.get(i);
-				for(int j=0;j<3;j++) {
-					storeMap.put("stag"+(j+1), stag[j]);
+		String mid = (String)session.getAttribute("mid");
+		if(mid != null) {//일반 회원 로그인이 되어 있을때 
+			member.setMid(mid);
+			member = mService.selectMember(member);
+			if(member != null) {
+				admin.setMid(member.getMid());
+				List<Admin> aList = aService.selectAdminMtagList(admin); // admin type 리스트
+				List<Integer> anumList = new ArrayList<Integer>();
+				for(Admin ad : aList) {
+					anumList.add(ad.getAnum());
 				}
-				storeMapList.add(storeMap);
+				admin.setAnumList(anumList);
+				admin.setMaddress(member.getMaddress());
+				admin.setMarea1(member.getMarea1());
+				admin.setMarea2(member.getMarea2());
+				admin.setStoresPerPage(12);
+				admin.setPage(page);
+				int resultSize = cService.getStoreListCountRecommend(admin);
+				admin = maService.getPaging(admin,resultSize);
+				
+				List<Store> sList = cService.getStoreListRecommend(admin);
+				sList = cService.stagSetting(sList);//가게 태그 세팅
+				
+				mav.addObject("viewInfo", admin); //조회 정보
+				mav.addObject("mtagList", aList);
+				mav.addObject("storeList", sList);
+				mav.setViewName("category/recommendSort");
+				return mav;
+			}else {
+				mav.setViewName("redirect:loginForm.do");
+				return mav;
 			}
-			mav.addObject("mtagList", mtagList);
-			mav.addObject("storeMapList", storeMapList);
-			mav.setViewName("category/recommendSort");
-			return mav;
-		}else if(session.getAttribute("bid")!=null){//사장님이 로그인이 되어 있을때 
+		}else if(session.getAttribute("bid") != null){//사장님이 로그인이 되어 있을때 
+			PrintWriter pw = resp.getWriter();
+			String str = "";
 			str = "<script language='javascript'>";
 			str += "alert('일반회원만 이용 가능 합니다.');";
 			str += "location.href='main.do';";
@@ -396,7 +403,7 @@ public class CategoryController {
 		String mid = (String)session.getAttribute("mid");
 		Member member = new Member();
 		member.setMid(mid);
-		Member m = memservice.selectMember(member);
+		Member m = mService.selectMember(member);
 		Comment c = cService.selectComment(cnum,dnum);
 		Details detail = new Details();
 		detail.setDnum(c.getDnum());

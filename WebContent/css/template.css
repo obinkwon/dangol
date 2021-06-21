@@ -24,6 +24,7 @@ div.infoBox{margin : auto;
 .w50Form {display:block;width:50%;margin-top:50px;}
 .w60Form {display:block;width:60%;margin-top:50px;}
 .w80Form {display:block;width:80%;margin-top:50px;}
+.w90Form {display:block;width:90%;margin-top:50px;}
 .listHeader{
 	width : 100%;
 	font-size : 18px; 
@@ -238,6 +239,12 @@ div.infoBox{margin : auto;
 	font-size : 13px;
 	font-family : '맑은 고딕';
 }
+.recommendTag{
+	margin-right : 20px;
+	font-size : 20px;
+	text-decoration: none;
+}
+.tooltipSpan{display:none;position:absolute;margin-left:120px;font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 13px;font-weight: 400;line-height: 1.4;}
 
 .span-red{color : #ff4d4d;}
 .span-green{color : #00cc00;}

@@ -35,6 +35,11 @@ public class AdminService {
 		return aDao.selectAdminTypeList(admin);
 	}
 	
+	//admin 여러개 검색 (mtag)
+	public List<Admin> selectAdminMtagList(Admin admin){
+		return aDao.selectAdminMtagList(admin);
+	}
+	
 	//메인 태그 수정
 	public int updateAdmin(Admin admin) {
 		return aDao.updateAdmin(admin);
