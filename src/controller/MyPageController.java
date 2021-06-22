@@ -61,6 +61,7 @@ public class MyPageController {
 		}
 		return mav;
 	}
+	
 	//회원 수정
 	@RequestMapping("modifyMember.do")
 	public String modifyMember(HttpServletResponse resp
@@ -116,12 +117,14 @@ public class MyPageController {
 		return mav;
 	}
 
-	@RequestMapping("bookmarkLikes.do") //즐겨찾기 목록에서 즐겨찾기 제거
+	//즐겨찾기 목록에서 즐겨찾기 제거
+	@RequestMapping("bookmarkLikes.do") 
 	public String bookmarkLikes(Member member) {
 		mypageService.updateLike(member);
 		return "redirect:bookmark.do";
 	}
 
+	//방문내역 리스트
 	@RequestMapping("historyList.do")
 	public ModelAndView history(Member member
 			,HttpSession session) {

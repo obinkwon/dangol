@@ -72,6 +72,11 @@ public class CategoryService {
 		return icdao.selectStoreListRecommend(admin);
 	}
 	
+	//신규 가게 리스트 가져오기
+	public List<Store> getStoreListNew(Admin admin){ 
+		return icdao.selectStoreListNew(admin);
+	}
+	
 	//음식 종류별 가게 갯수
 	public int getStoreListCountFood(Admin admin) {
 		return icdao.getStoreListCountFood(admin);
@@ -92,76 +97,11 @@ public class CategoryService {
 		return icdao.getStoreListCountRecommend(admin);
 	}
 	
-	
-	public int[] gradeCount(List<Store> sList) {//단골수 리스트
-		int i = 0;
-		int[] gradeCount = new int[sList.size()];
-		for(Store s : sList) {
-			gradeCount[i] = icdao.selectGradeCountBySnum(s.getSnum());
-			i++;
-		}
-		return gradeCount;
+	//신규 가게 갯수
+	public int getStoreListCountNew(Admin admin) {
+		return icdao.getStoreListCountNew(admin);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	public HashMap<String, Object> selectNewStoreList(int page,int storesPerPage) {//신규 가게 리스트
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		
-		int offset = getOffset(page, storesPerPage);
-		params.put("offset",offset);
-		params.put("storesPerPage", storesPerPage);
-		result.put("sList", icdao.selectStoreNew(params));
-		result.put("current",page);
-		result.put("start", getStartPage(page));
-		result.put("end", getEndPage(page));
-		result.put("last", getLastPage(storesPerPage,icdao.getStoreNewCount()));
-		result.put("totalBoard", icdao.getStoreNewCount());
-		return result;
-	}
-	
-	public double[] commentCount(List<Store> sList) {//가게 후기 총 평점 평균 리스트
-		int i = 0;
-		List<List<Grade>> gListAll = new ArrayList<List<Grade>>();
-		double[] commentCount = new double[sList.size()];
-		for(Store s : sList) {
-			System.out.println(s);
-			int total = icdao.selectCommentTotal(s); //가게별 리뷰 총점
-			int totalCnt = icdao.selectCommentTotalCnt(s); //가게별 리뷰 갯수
-			System.out.println(total +"::::"+ totalCnt);
-			if(total > 0 ) {
-				s.setCommentTotal(total/totalCnt);
-			}else {
-				s.setCommentTotal(0);
-			}
-		}
-		int count = 0;
-		List<Details> dList = null;
-		for(List<Grade> gl : gListAll) {
-			double sum = 0;
-			for(Grade g : gl) {
-				dList = icdao.selectDetailAllByGnum(g.getGnum());
-				for(Details d : dList) {
-					Comment c = icdao.selectCommentOneByDnum(d.getDnum());
-					if(c!=null) {
-						sum += c.getCtotal();
-						count++;
-					}
-				}
-			}
-			if(count==0) commentCount[i] = 0;
-			else commentCount[i] = sum/count;
-			i++;
-		}
-		return commentCount;
-	}
 	//가게 후기 총 평점 평균 리스트
 	public List<Store> etcCount(List<Store> sList) {
 		for(Store store : sList) {
@@ -181,6 +121,7 @@ public class CategoryService {
 		}
 		return sList;
 	}
+	
 	//가게 태그 세팅
 	public List<Store> stagSetting(List<Store> sList){
 		for(Store store : sList) {
@@ -194,13 +135,25 @@ public class CategoryService {
 		return sList;
 	}
 	
+	//해당가게 내 등급
+	public Grade selectMyGradeInfo(Grade grade) {
+		return icdao.selectGradeAtStore(grade);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public List<Order> selectOrderList(Store store) {
 		return icdao.selectOrderList(store);
 	}
 	
-	public Grade selectMyGradeInfo(Grade grade) {//해당가게 내 등급
-		return icdao.selectGradeAtStore(grade);
-	}
 	
 	public Map<String, Object> selectDangolList(Store store) {
 		List<Grade> dangolList = icdao.selectStoreGlevel(store);
@@ -222,6 +175,10 @@ public class CategoryService {
 		}
 		return dangolMap;
 	}
+	
+	
+	
+	
 	
 	public List<String[]> selectStagList(List<Store> sList) {//해당 가게 태그 리스트
 		List<String[]> stagList = new ArrayList<String[]>();

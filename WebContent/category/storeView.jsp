@@ -367,271 +367,277 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-<jsp:include page="../jsp/header.jsp" />
-	<div class="main">
-		<div class="container">
-			<div class="storeViewTop">
-				<c:if test="${store.simage ne null}"><img src="downloadStoreImg.do?snum=${store.snum}"></c:if>
-				<c:if test="${store.simage eq null}"><img src="image_ready.png"></c:if>
-			</div>
-			<form id="frmView" name="frmView" enctype="multipart/form-data" method="post">
-			<input id="snum" name="snum" type="hidden" value="${store.snum}">
-			<input id="glike" name="glike" type="hidden" value="${grade.glike}">
-			<div class="storeViewBottom">
-				<div class="storeViewMain">
-					<div class="storeLeft">
-						<span class="storeBoldSpan">${store.sname}</span><br />
-						<span class="storeTag">
-							<c:forEach var="stag" items="${tagList}">#${stag.avalue} </c:forEach>
-						</span><br />
-						<span class="storeSpan">${store.sintro}</span><br />
-						<span class="storeSpan">
-							<span class="glyphicon glyphicon-earphone" ></span>
-							${store.sphone}  
-							<a href="javascript:likeBtn(this);" id="likeImg" class="imgBtn">
-								<c:if test="${grade.glike == 1}"><img class="img50" src="/image/likes.png"></c:if>
-								<c:if test="${grade.glike != 1}"><img class="img50" src="/image/dislike.png"></c:if>
-							좋아요
-							</a>
-						</span><br />
-						<%-- <jsp:include page="kakaoMap.jsp" /> --%>
-						<span class="storeSpan"><span class="glyphicon glyphicon-map-marker"></span>  ${store.saddress} ${store.sdetailaddr}</span>
-						<div class="storeViewBottom">
-							<div class="storeLeft">
-								<span class="storeSpan">
-									<span class="glyphicon glyphicon-time"></span>  
-									<fmt:parseDate var="startTime" value="${store.stime_start}"  pattern="HHmm"/>
-									<fmt:formatDate value="${startTime}"  pattern="HH:mm"/> ~
-									<fmt:parseDate var="endTime" value="${store.stime_end}"  pattern="HHmm"/>
-									<fmt:formatDate value="${endTime}"  pattern="HH:mm"/>
-								</span><br />
-								<span class="storeSpan">휴무 : 
-									<c:forEach var="holiday" items="${hoList}">
-										${holiday}  
-									</c:forEach>
-								</span><br />
-								<span class="storeSpan">
-									<img class="img17" src="car-front.png">
-									<c:if test="${store.sparking == 'yes'}">주차공간 있음</c:if>
-									<c:if test="${store.sparking != 'yes'}">주차공간 없음</c:if>
-								</span><br />
-								<table>
-									<tr>
-										<td rowspan="4" style="vertical-align: top">
-											<span class="storeSpan"><img class="img17" src="membership.png"></span>
-										</td>
-										<td><span class="storeSpan">단골</span></td>
-										<td><span id="glevel3" class="storeSpan">${store.sratelv3}</span>%</td>
-									</tr>
-									<tr>
-										<td><span class="storeSpan">성골</span></td>
-										<td><span id="glevel2" class="storeSpan">${store.sratelv2}</span>%</td>
-									</tr>
-									<tr>
-										<td><span class="storeSpan">진골</span></td>
-										<td><span id="glevel1" class="storeSpan">${store.sratelv1}</span>%</td>
-									</tr>
-									<tr>
-										<td><span class="storeSpan">범골</span></td>
-										<td><span id="glevel0" class="storeSpan">${store.sratelv0}</span>%</td>
-									</tr>
-								</table><br />
-								<table>
-									<tr>
-										<td rowspan="4" style="vertical-align: top">
-											<span class="storeSpan"><span class="glyphicon glyphicon-user"></span></span>
-											<input id="danLevel" type="hidden" value="${grade.glevel}">
-										</td>
-										<td><span class="storeSpan" <c:if test="${grade.glevel == 3}">style="color:red;"</c:if>>단골</span></td>
-										<td><span class="storeSpan">${dangolMap.glevel3}명</span></td>
-									</tr>
-									<tr>
-										<td><span class="storeSpan" <c:if test="${grade.glevel == 2}">style="color:red;"</c:if>>성골</span></td>
-										<td><span class="storeSpan">${dangolMap.glevel2}명</span></td>
-									</tr>
-									<tr>
-										<td><span class="storeSpan" <c:if test="${grade.glevel == 1}">style="color:red;"</c:if>>진골</span></td>
-										<td><span class="storeSpan">${dangolMap.glevel1}명</span></td>
-									</tr>
-									<tr>
-										<td><span class="storeSpan" <c:if test="${grade.glevel == 0}">style="color:red;"</c:if>>범골</span></td>
-										<td><span class="storeSpan">${dangolMap.glevel0}명</span></td>
-									</tr>
-								</table>
-							</div>
-							<div class="storeRight">
-								<div class="listHeader">메뉴판</div>
-								<div class="listBottom h300">
-								<table id="menuList" class="table table-striped">
-									<colgroup>
-										<col width="50%">
-										<col width="*">
-									</colgroup>
-									<tbody>
-									<c:forEach var="menu" items="${menuList}">
-									<tr>
-								    	<td>${menu.oname}</td>
-								        <td>${menu.oprice}원</td>
-								    </tr>
-								    </c:forEach>
-									</tbody>
-								</table>
-								</div>
-							</div>
+<jsp:include page="/jsp/header.jsp" />
+<div class="main">
+	<div class="container">
+		<div class="storeViewTop">
+			<c:if test="${store.simage ne null}"><img class="img300" src="downloadStoreImg.do?snum=${store.snum}"></c:if>
+			<c:if test="${store.simage eq null}"><img class="img300" src="/image/image_ready.png"></c:if>
+		</div>
+		<form id="frmView" name="frmView" enctype="multipart/form-data" method="post">
+		<input id="snum" name="snum" type="hidden" value="${store.snum}">
+		<input id="glike" name="glike" type="hidden" value="${grade.glike}">
+		<div class="storeViewBottom">
+			<div class="storeViewMain">
+				<div class="storeLeft">
+					<span class="storeBoldSpan">${store.sname}</span><br />
+					<span class="storeTag">
+						<c:forEach var="stag" items="${tagList}">#${stag.avalue} </c:forEach>
+					</span><br />
+					<span class="storeSpan">${store.sintro}</span><br />
+					<span class="storeSpan">
+						<span class="glyphicon glyphicon-earphone" ></span>
+						${store.sphone}  
+						<a href="javascript:likeBtn(this);" id="likeImg" class="imgBtn">
+							<c:if test="${grade.glike == 1}"><img class="img50" src="/image/likes.png"></c:if>
+							<c:if test="${grade.glike != 1}"><img class="img50" src="/image/dislike.png"></c:if>
+						좋아요
+						</a>
+					</span><br />
+					<%-- <jsp:include page="kakaoMap.jsp" /> --%>
+					<span class="storeSpan"><span class="glyphicon glyphicon-map-marker"></span>  ${store.saddress} ${store.sdetailaddr}</span>
+					<div class="storeViewBottom">
+						<div class="storeLeft">
+							<span class="storeSpan">
+								<span class="glyphicon glyphicon-time"></span>  
+								<fmt:parseDate var="startTime" value="${store.stime_start}"  pattern="HHmm"/>
+								<fmt:formatDate value="${startTime}"  pattern="HH:mm"/> ~
+								<fmt:parseDate var="endTime" value="${store.stime_end}"  pattern="HHmm"/>
+								<fmt:formatDate value="${endTime}"  pattern="HH:mm"/>
+							</span><br />
+							<span class="storeSpan">휴무 : 
+								<c:forEach var="holiday" items="${hoList}">
+									<c:if test="${holiday == 'mon'}">월요일 / </c:if>
+									<c:if test="${holiday == 'tue'}">화요일 / </c:if>
+									<c:if test="${holiday == 'wed'}">수요일 / </c:if>
+									<c:if test="${holiday == 'thu'}">목요일 / </c:if>
+									<c:if test="${holiday == 'fri'}">금요일 / </c:if>
+									<c:if test="${holiday == 'sat'}">토요일 / </c:if>
+									<c:if test="${holiday == 'sun'}">일요일</c:if>
+								</c:forEach>
+							</span><br />
+							<span class="storeSpan">
+								<img class="img17" src="car-front.png">
+								<c:if test="${store.sparking == 'yes'}">주차공간 있음</c:if>
+								<c:if test="${store.sparking != 'yes'}">주차공간 없음</c:if>
+							</span><br />
+							<table>
+								<tr>
+									<td rowspan="4" style="vertical-align: top">
+										<span class="storeSpan"><img class="img17" src="membership.png"></span>
+									</td>
+									<td><span class="storeSpan">단골</span></td>
+									<td><span id="glevel3" class="storeSpan">${store.sratelv3}</span>%</td>
+								</tr>
+								<tr>
+									<td><span class="storeSpan">성골</span></td>
+									<td><span id="glevel2" class="storeSpan">${store.sratelv2}</span>%</td>
+								</tr>
+								<tr>
+									<td><span class="storeSpan">진골</span></td>
+									<td><span id="glevel1" class="storeSpan">${store.sratelv1}</span>%</td>
+								</tr>
+								<tr>
+									<td><span class="storeSpan">범골</span></td>
+									<td><span id="glevel0" class="storeSpan">${store.sratelv0}</span>%</td>
+								</tr>
+							</table><br />
+							<table>
+								<tr>
+									<td rowspan="4" style="vertical-align: top">
+										<span class="storeSpan"><span class="glyphicon glyphicon-user"></span></span>
+										<input id="danLevel" type="hidden" value="${grade.glevel}">
+									</td>
+									<td><span class="storeSpan" <c:if test="${grade.glevel == 3}">style="color:red;"</c:if>>단골</span></td>
+									<td><span class="storeSpan">${dangolMap.glevel3}명</span></td>
+								</tr>
+								<tr>
+									<td><span class="storeSpan" <c:if test="${grade.glevel == 2}">style="color:red;"</c:if>>성골</span></td>
+									<td><span class="storeSpan">${dangolMap.glevel2}명</span></td>
+								</tr>
+								<tr>
+									<td><span class="storeSpan" <c:if test="${grade.glevel == 1}">style="color:red;"</c:if>>진골</span></td>
+									<td><span class="storeSpan">${dangolMap.glevel1}명</span></td>
+								</tr>
+								<tr>
+									<td><span class="storeSpan" <c:if test="${grade.glevel == 0}">style="color:red;"</c:if>>범골</span></td>
+									<td><span class="storeSpan">${dangolMap.glevel0}명</span></td>
+								</tr>
+							</table>
 						</div>
-						<div class="storeViewBottom">
-							<span class="selectSpan">이용후기</span>
-								<select id="selectType" class="inputText w100">
-									<option id="new" value="new">전체</option>
-									<c:if test="${mid!=null}">
-										<option id="my" value="my">내글</option>
-									</c:if>
-								</select>
-							<c:forEach var="commentMap" items="${commentMapList}" varStatus="status">
-							<div class="storeCommentOne" id="comment${status.index}">
-								<table>
-									<tr>
-										<td rowspan="4">
-										<c:choose>
-											<c:when test="${commentMap.mimage eq null}">
-												<img class="storeCommentOne img100" src="myPage.png">
-											</c:when>
-											<c:otherwise>
-												<img class="storeCommentOne img100" src="downloadMImage.do?mid=${commentMap.mid}">
-											</c:otherwise>
-										</c:choose>
-										</td>
-										<td><span class="mLR20">${commentMap.mid}</span></td>
-										<td><span class="mLR20"><fmt:formatDate value="${commentMap.comment.cdate}" pattern="yyyy-MM-dd"/></span></td>
-										<td rowspan="4">
-										<input type="hidden" value="${commentMap.comment.cnum}">
-										<c:if test="${commentMap.mid == mid}">
-											<a id="commentUpdate" class="storeCommentOne">수정</a>
-											<a id="commentDelete" class="storeCommentOne">삭제</a>
-										</c:if>
-										</td>
-									</tr>
-									<tr>
-										<td><span class="mLR20">총점</span></td>
-										<td>
-											<ul>
-												<li>${commentMap.comment.ctotal}</li>
-											</ul>
-										</td>
-									</tr>
-									<tr>
-										<td><span class="mLR20">서비스</span></td>
-										<td>
-											<ul>
-												<li>${commentMap.comment.cservice}</li>
-											</ul>
-										</td>
-									</tr>
-									<tr>
-										<td><span class="mLR20">가격</span></td>
-										<td>
-											<ul>
-												<li>${commentMap.comment.cprice}</li>
-											</ul>
-										</td>
-									</tr>
-								</table>
-								<span class="mLR20"><b>맛</b> 
-								<c:forTokens var="taste" items="${commentMap.comment.ctaste}" delims=",">
-								${taste}
-								</c:forTokens>
-								</span>
-								<span class="mLR20"><b>후기</b></span>
-								<textarea class="storeTextarea" cols="63" rows="2" readonly="readonly">${commentMap.comment.creview}</textarea>
+						<div class="storeRight">
+							<div class="listHeader">메뉴판</div>
+							<div class="listBottom h300">
+							<table id="menuList" class="table table-striped">
+								<colgroup>
+									<col width="50%">
+									<col width="*">
+								</colgroup>
+								<tbody>
+								<c:forEach var="menu" items="${menuList}">
+								<tr>
+							    	<td>${menu.oname}</td>
+							        <td>${menu.oprice}원</td>
+							    </tr>
+							    </c:forEach>
+								</tbody>
+							</table>
 							</div>
-							</c:forEach>
 						</div>
 					</div>
-					<div class="storeRight h1000">
-					<c:choose>
-					<c:when test="${mid==null}"><!-- 일반 로그인을 하지 않았을때 -->
-						<div class="noReserve"><img src="noReserve.png"></div>
-					</c:when>
-					<c:when test="${store.slimit==0}"><!-- 가게가 예약을 받지않을때 -->
-						<div class="noReserve"><img src="noReserve2.png"></div>
-					</c:when>
-					<c:otherwise><!-- 로그인을 했을때 -->
-						<div class="listHeader" style="margin-left:20px;">예약</div>
-						<div class="listBottom reserveList h500">
-							<c:forEach var="menu" items="${menuList}" varStatus="status">
-							<div class="reserveMenuOne" id="menu${status.index}">
+					<div class="storeViewBottom">
+						<span class="selectSpan">이용후기</span>
+							<select id="selectType" class="inputText w100">
+								<option id="new" value="new">전체</option>
+								<c:if test="${mid!=null}">
+									<option id="my" value="my">내글</option>
+								</c:if>
+							</select>
+						<c:forEach var="commentMap" items="${commentMapList}" varStatus="status">
+						<div class="storeCommentOne" id="comment${status.index}">
 							<table>
 								<tr>
-									<td rowspan="3">
-										<c:if test="${menu.oimage ne null}">
-											<img class="storeViewRight img100"src="downloadStoreMenuImg.do?ord=${menu.ord}&snum=${store.snum}">
-										</c:if>
-										<c:if test="${menu.oimage eq null}">
-											<img class="storeViewRight img100"src="menu_ready.png">
-										</c:if>
+									<td rowspan="4">
+									<c:choose>
+										<c:when test="${commentMap.mimage eq null}">
+											<img class="storeCommentOne img100" src="myPage.png">
+										</c:when>
+										<c:otherwise>
+											<img class="storeCommentOne img100" src="downloadMImage.do?mid=${commentMap.mid}">
+										</c:otherwise>
+									</c:choose>
 									</td>
-									<td>
-										<input type="hidden" value="${menu.ord}">
-										<span id="menuName${status.index}" class="storeSpan">${menu.oname}</span>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<span class="storeSpan">
-											<img class="img20" src="minus.png" onClick="menuBtn('${status.index}','minus');">
-											<input id="menuCnt${status.index}" class="img20" type="text" value="0"> 
-											<img class="img20" src="plus.png" onClick="menuBtn('${status.index}','plus');"> 
-										</span>
+									<td><span class="mLR20">${commentMap.mid}</span></td>
+									<td><span class="mLR20"><fmt:formatDate value="${commentMap.comment.cdate}" pattern="yyyy-MM-dd"/></span></td>
+									<td rowspan="4">
+									<input type="hidden" value="${commentMap.comment.cnum}">
+									<c:if test="${commentMap.mid == mid}">
+										<a id="commentUpdate" class="storeCommentOne">수정</a>
+										<a id="commentDelete" class="storeCommentOne">삭제</a>
+									</c:if>
 									</td>
 								</tr>
 								<tr>
-									<td><span id="menuPrice${status.index}" class="storeSpan">${menu.oprice}</span>원</td>
+									<td><span class="mLR20">총점</span></td>
+									<td>
+										<ul>
+											<li>${commentMap.comment.ctotal}</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td><span class="mLR20">서비스</span></td>
+									<td>
+										<ul>
+											<li>${commentMap.comment.cservice}</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td><span class="mLR20">가격</span></td>
+									<td>
+										<ul>
+											<li>${commentMap.comment.cprice}</li>
+										</ul>
+									</td>
 								</tr>
 							</table>
-							</div>
-							</c:forEach>
+							<span class="mLR20"><b>맛</b> 
+							<c:forTokens var="taste" items="${commentMap.comment.ctaste}" delims=",">
+							${taste}
+							</c:forTokens>
+							</span>
+							<span class="mLR20"><b>후기</b></span>
+							<textarea class="storeTextarea" cols="63" rows="2" readonly="readonly">${commentMap.comment.creview}</textarea>
 						</div>
-						<div>
-							<span class="selectSpan storeSpan">예약 인원</span>
-							<img class="img20" src="minus.png" style="margin-left:30px;" onClick="personBtn('minus');">
-							<input id="dperson" name="dperson" class="img20" type="text" value="0"> 
-							<img class="img20" src="plus.png" onClick="personBtn('plus');"> 명<br />
-							<span class="selectSpan storeSpan">예약 날짜</span> 
-							<input id="ddate" name="ddate" type="date" class="inputText w200" min="${currentDate}" value="${currentDate}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" ><br />
-							<span class="selectSpan storeSpan">예약 시간</span> 
-							<select class="inputText w200" id="dtime" name="dtime" title="예약 시간 선택"></select><br />
-							<span class="selectSpan storeSpan">요구사항</span>
-							<textarea id="dask" name="dask" cols="57" rows="2" class="storeTextarea"></textarea>
-							<input id="dmenu" name="dmenu" type="hidden" value="">
-						</div>
-						<div class="reserveBottom">
-							<table>
-								<tr>
-									<td><span class="storeSpan">할인전 금액</span></td>
-									<td><span id="price" class="storeSpan">0</span>원</td>
-								</tr>
-								<tr>
-									<td><span class="storeSpan">할인 금액</span></td>
-									<td><span id="discount" class="storeSpan">0</span>원</td>
-								</tr>
-								<tr>
-									<td><span class="storeSpan">총 금액</span></td>
-									<td><span id="total" class="storeSpan">0</span>원</td>
-								</tr>
-							</table>
-							<div class="btn-wrap">
-								<button class="btn-view" type="button"  style="margin-right:20px;" onClick="cancelBtn();">예약취소</button>
-								<button class="btn-view" type="button" onClick="reserveBtn();">예약완료</button>
-							</div>
-						</div>
-					</c:otherwise>
-					</c:choose>
+						</c:forEach>
 					</div>
 				</div>
+				<div class="storeRight h1000">
+				<c:choose>
+				<c:when test="${mid==null}"><!-- 일반 로그인을 하지 않았을때 -->
+					<div class="noReserve"><img src="noReserve.png"></div>
+				</c:when>
+				<c:when test="${store.slimit==0}"><!-- 가게가 예약을 받지않을때 -->
+					<div class="noReserve"><img src="noReserve2.png"></div>
+				</c:when>
+				<c:otherwise><!-- 로그인을 했을때 -->
+					<div class="listHeader" style="margin-left:20px;">예약</div>
+					<div class="listBottom reserveList h500">
+						<c:forEach var="menu" items="${menuList}" varStatus="status">
+						<div class="reserveMenuOne" id="menu${status.index}">
+						<table>
+							<tr>
+								<td rowspan="3">
+									<c:if test="${menu.oimage ne null}">
+										<img class="storeViewRight img100"src="downloadStoreMenuImg.do?ord=${menu.ord}&snum=${store.snum}">
+									</c:if>
+									<c:if test="${menu.oimage eq null}">
+										<img class="storeViewRight img100"src="menu_ready.png">
+									</c:if>
+								</td>
+								<td>
+									<input type="hidden" value="${menu.ord}">
+									<span id="menuName${status.index}" class="storeSpan">${menu.oname}</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="storeSpan">
+										<img class="img20" src="minus.png" onClick="menuBtn('${status.index}','minus');">
+										<input id="menuCnt${status.index}" class="img20" type="text" value="0"> 
+										<img class="img20" src="plus.png" onClick="menuBtn('${status.index}','plus');"> 
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><span id="menuPrice${status.index}" class="storeSpan">${menu.oprice}</span>원</td>
+							</tr>
+						</table>
+						</div>
+						</c:forEach>
+					</div>
+					<div>
+						<span class="selectSpan storeSpan">예약 인원</span>
+						<img class="img20" src="minus.png" style="margin-left:30px;" onClick="personBtn('minus');">
+						<input id="dperson" name="dperson" class="img20" type="text" value="0"> 
+						<img class="img20" src="plus.png" onClick="personBtn('plus');"> 명<br />
+						<span class="selectSpan storeSpan">예약 날짜</span> 
+						<input id="ddate" name="ddate" type="date" class="inputText w200" min="${currentDate}" value="${currentDate}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" ><br />
+						<span class="selectSpan storeSpan">예약 시간</span> 
+						<select class="inputText w200" id="dtime" name="dtime" title="예약 시간 선택"></select><br />
+						<span class="selectSpan storeSpan">요구사항</span>
+						<textarea id="dask" name="dask" cols="57" rows="2" class="storeTextarea"></textarea>
+						<input id="dmenu" name="dmenu" type="hidden" value="">
+					</div>
+					<div class="reserveBottom">
+						<table>
+							<tr>
+								<td><span class="storeSpan">할인전 금액</span></td>
+								<td><span id="price" class="storeSpan">0</span>원</td>
+							</tr>
+							<tr>
+								<td><span class="storeSpan">할인 금액</span></td>
+								<td><span id="discount" class="storeSpan">0</span>원</td>
+							</tr>
+							<tr>
+								<td><span class="storeSpan">총 금액</span></td>
+								<td><span id="total" class="storeSpan">0</span>원</td>
+							</tr>
+						</table>
+						<div class="btn-wrap">
+							<button class="btn-view" type="button"  style="margin-right:20px;" onClick="cancelBtn();">예약취소</button>
+							<button class="btn-view" type="button" onClick="reserveBtn();">예약완료</button>
+						</div>
+					</div>
+				</c:otherwise>
+				</c:choose>
+				</div>
 			</div>
-			</form>
 		</div>
+		</form>
 	</div>
-<jsp:include page="../jsp/footer.jsp" />	
+</div>
+<jsp:include page="/jsp/footer.jsp" />	
 </body>
 </html>

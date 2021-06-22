@@ -50,7 +50,7 @@
 								<img class="img250 h200" src="/image/image_ready2.png" style="margin-top:20px;">
 							</c:otherwise>
 						</c:choose><br/>
-						<img class="img30" src="new.png">
+						<img class="img30" src="/image/new.png">
 						<span class="storeSpan" style="margin-left:0px;">${store.sname}</span><br/>
 						<span class="storeSpan" style="margin-left:0px;">${store.saddress}</span><br/>
 						<span class="glyphicon glyphicon-star" aria-hidden="true" style="margin-top:15px;"></span>

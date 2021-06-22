@@ -254,6 +254,62 @@
 		ORDER BY stagTotal DESC
 		<include refid="btmPaging"/>
 	</select>
+	<!-- 신규 가게 리스트 가져오기 -->
+	<select id="selectStoreListNew" parameterType="admin" resultType="store">
+		<include refid="topPaging"/>
+		SELECT
+			S.SNUM AS snum
+			,S.BID AS bid
+			,S.SINTRO AS sintro
+			,S.SNAME AS sname
+			,S.SADDRESS AS saddress
+			,S.SDETAILADDR AS sdetailaddr
+			,S.SPHONE AS sphone
+			,S.STIME_START AS stime_start
+			,S.STIME_END AS stime_end
+			,S.SPARKING AS sparking
+			,S.SIMAGE AS simage
+			,S.STYPE AS stype
+			,S.SHOLIDAY AS sholiday
+			,S.SDATE AS sdate
+			,S.SRATELV0 AS sratelv0
+			,S.SRATELV1 AS sratelv1
+			,S.SRATELV2 AS sratelv2
+			,S.SRATELV3 AS sratelv3
+			,S.SLIMIT AS slimit
+			,(SELECT 
+					COUNT(*) 
+				FROM 
+					GRADES G
+				WHERE 
+					S.SNUM = G.SNUM
+					AND G.GLEVEL <![CDATA[>]]> 0
+			) AS dancnt 
+			,(SELECT 
+					MOD(NVL(SUM(C.CTOTAL),0),COUNT(*))
+				FROM 
+					GRADES G
+					LEFT JOIN DETAILS D ON G.GNUM = D.GNUM
+					LEFT JOIN COMMENTS C ON D.DNUM = C.DNUM
+				WHERE 
+					S.SNUM = G.SNUM
+					AND D.DCOUNT <![CDATA[>]]> 0
+			) AS commentTotal
+		FROM 
+			STORES S
+		WHERE
+			S.SDATE BETWEEN (SYSDATE - 10) AND SYSDATE
+		<if test="type == '' or type == 'new' or type == null">
+		ORDER BY S.SDATE DESC
+		</if>
+		<if test="type == 'star'">
+		ORDER BY commentTotal DESC
+		</if>
+		<if test="type == 'dan'">
+		ORDER BY dancnt DESC
+		</if>
+		<include refid="btmPaging"/>
+	</select>
 	<!-- 가게 리뷰 총점 -->
 	<select id="selectCommentTotal" parameterType="store" resultType="int">
 		SELECT 
@@ -463,6 +519,15 @@
 			OR SADDRESS = #{marea2}
 			</if>
 	</select>
+	<!-- 신규 가게 갯수 -->
+	<select id="getStoreListCountNew" parameterType="admin" resultType="int"> 
+		SELECT 
+			COUNT(*) 
+		FROM 
+			STORES 
+		WHERE 
+			SDATE BETWEEN (SYSDATE - 10) AND SYSDATE
+	</select>
 	
 	
 	
@@ -527,6 +592,17 @@
 			GNUM = #{gnum} 
 			<!-- AND DCOUNT <![CDATA[>]]> 0 -->
 	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<select id="selectCommentOneByDnum" parameterType="int" resultType="comment">
 		SELECT
 			*
@@ -541,12 +617,6 @@
 			ADMINS 
 		WHERE 
 			ANUM = #{anum} 
-	</select>
-	
-	<select id="selectStoreNew" parameterType="java.util.HashMap" resultType="store">
-		select * from
-		(select rownum as rn ,e.* from (select * from stores where sdate between (sysdate-10) and sysdate order by sdate desc) e) 
-		where rn between #{offset} and (#{offset}+#{storesPerPage}-1)
 	</select>
 	
 
@@ -643,9 +713,6 @@
 	</update>
 	<select id="selectCommentByDnum" parameterType="int" resultType="comment">
 		select * from comments where dnum = #{dnum}
-	</select>
-	<select id="getStoreNewCount" resultType="int"> 
-		select count(*) from stores where sdate between (sysdate-10) and sysdate
 	</select>
 	<select id="selectKeywordStore" parameterType="java.util.HashMap" resultType="store">
 		select * from stores where sname like '${keyword}%'

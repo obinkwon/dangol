@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import model.Admin;
 import model.Event;
 import model.Store;
 import service.CategoryService;
@@ -38,12 +39,11 @@ public class MainController {
 	@RequestMapping("main.do")
 	public ModelAndView main() {
 		ModelAndView mav = new ModelAndView();
-		HashMap<String, Object>	params = cservice.selectNewStoreList(1,3);
 //		List<Store> sList = (List<Store>)params.get("sList");
 		List<Store> sList = new ArrayList<Store>();
 		List<HashMap<String, Object>> storeMapList = new ArrayList<HashMap<String, Object>>();
-		int[] gradeCount = cservice.gradeCount(sList);
-		double[] commentCount = cservice.commentCount(sList);
+//		int[] gradeCount = cservice.gradeCount(sList);
+//		double[] commentCount = cservice.commentCount(sList);
 		List<String[]> stagList = cservice.selectStagList(sList);
 		for(int i=0; i<sList.size();i++) {
 			HashMap<String, Object> storeMap = new HashMap<String, Object>();
@@ -53,8 +53,8 @@ public class MainController {
 			String address=string[0]+" "+string[1];
 			storeMap.put("saddress", address);
 			storeMap.put("simage", sList.get(i).getSimage());
-			storeMap.put("userCount", gradeCount[i]);
-			storeMap.put("commentCount", commentCount[i]);
+			storeMap.put("userCount", 0);
+			storeMap.put("commentCount", 0);
 			String[] stag = stagList.get(i);
 			for(int j=0;j<3;j++) {
 				storeMap.put("stag"+(j+1), stag[j]);
@@ -68,9 +68,7 @@ public class MainController {
 //		if(mainTagMap.get("main1") != null) {
 //			params = cservice.selectThemeStoreList(1, 3, mainTagMap.get("main1"));
 //		}
-		sList = (List<Store>)params.get("sList");
-		gradeCount = cservice.gradeCount(sList);
-		commentCount = cservice.commentCount(sList);
+//		sList = (List<Store>)params.get("sList");
 		stagList = cservice.selectStagList(sList);
 		for(int i=0; i<sList.size();i++) {
 			HashMap<String, Object> storeMap = new HashMap<String, Object>();
@@ -80,8 +78,8 @@ public class MainController {
 			String address=string[0]+" "+string[1];
 			storeMap.put("saddress", address);
 			storeMap.put("simage", sList.get(i).getSimage());
-			storeMap.put("userCount", gradeCount[i]);
-			storeMap.put("commentCount", commentCount[i]);
+			storeMap.put("userCount", 0);
+			storeMap.put("commentCount", 0);
 			String[] stag = stagList.get(i);
 			for(int j=0;j<3;j++) {
 				storeMap.put("stag"+(j+1), stag[j]);
@@ -102,8 +100,6 @@ public class MainController {
 //			params = cservice.selectThemeStoreList(1, 3, maService.selectMainTagNum().get("main2"));
 //			sList = (List<Store>)params.get("sList");
 //		}
-		gradeCount = cservice.gradeCount(sList);
-		commentCount = cservice.commentCount(sList);
 		stagList = cservice.selectStagList(sList);
 		for(int i=0; i<sList.size();i++) {
 			HashMap<String, Object> storeMap = new HashMap<String, Object>();
@@ -113,8 +109,8 @@ public class MainController {
 			String address=string[0]+" "+string[1];
 			storeMap.put("saddress", address);
 			storeMap.put("simage", sList.get(i).getSimage());
-			storeMap.put("userCount", gradeCount[i]);
-			storeMap.put("commentCount", commentCount[i]);
+			storeMap.put("userCount", 0);
+			storeMap.put("commentCount", 0);
 			String[] stag = stagList.get(i);
 			for(int j=0;j<3;j++) {
 				storeMap.put("stag"+(j+1), stag[j]);
@@ -174,8 +170,7 @@ public class MainController {
 		HashMap<String, Object>	params = maService.searchMain(keyword, page, 12);
 		List<Store> sList = (List<Store>)params.get("sList");
 		List<HashMap<String, Object>> storeMapList = new ArrayList<HashMap<String, Object>>();
-		int[] gradeCount = cservice.gradeCount(sList);
-		double[] commentCount = cservice.commentCount(sList);
+//		int[] gradeCount = cservice.gradeCount(sList);
 		List<String[]> stagList = cservice.selectStagList(sList);
 		cservice.selectStagList(sList);
 		for(int i=0; i<sList.size();i++) {
@@ -186,8 +181,8 @@ public class MainController {
 			String address=string[0]+" "+string[1];
 			storeMap.put("saddress", address);
 			storeMap.put("simage", sList.get(i).getSimage());
-			storeMap.put("userCount", gradeCount[i]);
-			storeMap.put("commentCount", commentCount[i]);
+			storeMap.put("userCount", 0);
+			storeMap.put("commentCount", 0);
 			String[] stag = stagList.get(i);
 			for(int j=0;j<3;j++) {
 				storeMap.put("stag"+(j+1), stag[j]);

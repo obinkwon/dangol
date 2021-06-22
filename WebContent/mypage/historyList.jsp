@@ -10,8 +10,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="/css/template.css" />
  <script type="text/javascript">
- 	function commentWrite(dnum){// 리뷰 작성하기
- 		alert(dnum + ' 리뷰 작성 완료');
+ 	function commentWrite(dnum,snum,type){// 리뷰 작성하기
+ 		if(type == 'ADD'){
+	 		location.href='createCommentForm.do?dnum='+dnum+'&snum='+snum;
+ 		}else{
+ 			location.href='modifyCommentForm.do?dnum='+dnum;
+ 		}
  	}
  	function storeView(snum){// 상세보기
 		location.href='storeView.do?snum='+snum;
@@ -64,7 +68,7 @@
 					<li>
 						<div class="btn-wrap" style="margin-bottom:0px;">
 							<button class="btn-view w100 mt20" type="button" onClick="storeView('${history.snum}')">상세보기</button>
-							<button class="btn-view w100 mt20" type="button" onClick="commentWrite('${history.dnum}}')">리뷰작성</button>
+							<button class="btn-view w100 mt20" type="button" onClick="commentWrite('${history.dnum}','${history.snum}')">리뷰작성</button>
 						</div>
 					</li>
 				</ul>

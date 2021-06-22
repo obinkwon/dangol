@@ -156,10 +156,9 @@ public class CategoryController {
 	
 	//카테고리 - 추천별
 	@RequestMapping("recommendSort.do")
-	public ModelAndView recommendSort(HttpSession session
-			, Admin admin
+	public ModelAndView recommendSort(Admin admin , ModelAndView mav
+			, HttpSession session
 			, Member member
-			, ModelAndView mav
 			, HttpServletResponse resp
 			, @RequestParam(defaultValue="1") int page) throws Exception {
 		resp.setContentType("text/html; charset=UTF-8");
@@ -183,7 +182,7 @@ public class CategoryController {
 				int resultSize = cService.getStoreListCountRecommend(admin);
 				admin = maService.getPaging(admin,resultSize);
 				
-				List<Store> sList = cService.getStoreListRecommend(admin);
+				List<Store> sList = cService.getStoreListRecommend(admin);//추천별 가게 리스트 가져오기
 				sList = cService.stagSetting(sList);//가게 태그 세팅
 				
 				mav.addObject("viewInfo", admin); //조회 정보
@@ -210,43 +209,24 @@ public class CategoryController {
 		}
 	}
 	
-	@RequestMapping("newStoreAll.do")//신규매장 요청 부분
-	public ModelAndView newStoreAll(@RequestParam(defaultValue="new") String type,@RequestParam(defaultValue="1") int page) {
-		ModelAndView mav = new ModelAndView();
-		HashMap<String, Object> params = cService.selectNewStoreList(page, 12);
-		List<Store> sList = (List<Store>)params.get("sList");
-		List<HashMap<String, Object>> storeMapList = new ArrayList<HashMap<String, Object>>();
-		int[] gradeCount = cService.gradeCount(sList);
-		double[] commentCount = cService.commentCount(sList);
-		List<String[]> stagList = cService.selectStagList(sList);
-		for(int i=0; i<sList.size();i++) {
-			HashMap<String, Object> storeMap = new HashMap<String, Object>();
-			storeMap.put("snum", sList.get(i).getSnum()+"");
-			storeMap.put("sname", sList.get(i).getSname());
-			String[] string = sList.get(i).getSaddress().split(" ");
-			String address=string[0]+" "+string[1];
-			storeMap.put("saddress", address);
-			storeMap.put("simage", sList.get(i).getSimage());
-			storeMap.put("userCount", gradeCount[i]);
-			storeMap.put("commentCount", commentCount[i]);
-			String[] stag = stagList.get(i);
-			for(int j=0;j<3;j++) {
-				storeMap.put("stag"+(j+1), stag[j]);
-			}
-			storeMapList.add(storeMap);
+	//카테고리 - 신규매장
+	@RequestMapping("newStoreAll.do")
+	public ModelAndView newStoreAll(Admin admin, ModelAndView mav 
+			, @RequestParam(defaultValue="1") int page) {
+		if(admin.getType() == null){
+			admin.setType("new");
 		}
-		System.out.println("---------------------------------------------");
-		if(type.equals("star")) {
-			MapComparatorDouble comp = new MapComparatorDouble("commentCount");
-			Collections.sort(storeMapList, comp);
-			Collections.reverse(storeMapList);
-		}else if(type.equals("dan")){
-			MapComparatorInt comp = new MapComparatorInt("userCount");
-			Collections.sort(storeMapList, comp);
-			Collections.reverse(storeMapList);
-		}
-		mav.addObject("viewInfo", params);
-		mav.addObject("storeMapList", storeMapList);
+		
+		admin.setStoresPerPage(12);
+		admin.setPage(page);
+		int resultSize = cService.getStoreListCountNew(admin);
+		admin = maService.getPaging(admin,resultSize);
+		
+		List<Store> sList = cService.getStoreListNew(admin);//신규 가게 리스트 가져오기
+		sList = cService.stagSetting(sList);//가게 태그 세팅
+		
+		mav.addObject("viewInfo", admin);
+		mav.addObject("storeList", sList);
 		mav.setViewName("category/newStoreAll");
 		return mav;
 	}
@@ -266,34 +246,8 @@ public class CategoryController {
 		}
 		store = oService.selectStoreOne(store);//가게 정보
 		
-		//휴무일 쪼개서 보내기(ing)
-		List<String> hoList = new ArrayList<String>();
+		//휴무일 쪼개서 보내기
 		String[] holiday = store.getSholiday().split(",");
-		for(String h : holiday) {
-			switch (h) {
-			case "mon":
-				hoList.add("월요일");
-				break;
-			case "tue":
-				hoList.add("화요일");
-				break;
-			case "wed":
-				hoList.add("수요일");
-				break;
-			case "thu":
-				hoList.add("목요일");
-				break;
-			case "fri":
-				hoList.add("금요일");
-				break;
-			case "sat":
-				hoList.add("토요일");
-				break;
-			default:
-				hoList.add("일요일");
-				break;
-			}
-		}
 		
 		//메뉴 가져오기
 		List<Order> menuList = cService.selectOrderList(store);
@@ -317,7 +271,7 @@ public class CategoryController {
 		mav.addObject("dangolMap",dangolMap);//단골 정보
 		mav.addObject("grade",grade);//등급 정보
 		mav.addObject("store",store);//가게 정보
-		mav.addObject("hoList",hoList);//휴일 정보
+		mav.addObject("hoList",holiday);//휴일 정보
 		mav.addObject("menuList",menuList);//메뉴 리스트 가져오기
 		mav.addObject("tagList",tagList);//가게 태그 리스트 가져오기
 		mav.addObject("currentDate",currentDate);//현재 날짜
