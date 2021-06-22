@@ -119,6 +119,7 @@ div.infoBox{margin : auto;
 .imgInfo{width : 33%;height : 10%;}
 .imgInfoBig{width : 80%;height : 30%}
 .imgInfo60{width : 60%;height : 60%}
+.imgRound{border: 1.5px solid;border-radius: 50%;}
 
 .foodImg{
 	width : 99px;

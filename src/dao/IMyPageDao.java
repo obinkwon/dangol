@@ -18,8 +18,6 @@ public interface IMyPageDao {
 	public int deleteMtag(Member member);
 	//회원 삭제
 	public int deleteMemberOne (Member member);
-	//즐겨찾기 리스트
-	public List<Grade> selectGlikeList(Member member);
 	//방문내역 리스트
 	public List<Details> selectHistoryList(Member member);
 	//즐겨찾기 리스트
@@ -38,11 +36,16 @@ public interface IMyPageDao {
 	public List<Details> selectReserveState (Member member);
 	
 	
-	public Store selectStoreBySnum(int snum);
+	
+	
+	
+	
+	
+	
+	
+	
 	public List<Details> recentlyVisited(int gnum);
 	public Comment selectcomments (int dnum);
-	public Grade selectgradeByGnum (int gnum);
-	public Details selectDetailsByDnum (int dnum);
 	public void insertComment(Comment comment);
 	public List<Details> selectdetailslist(HashMap<String, Object> param);
 	public void updateDcount(HashMap<String, Object> param1);

@@ -3,9 +3,8 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-    <mapper namespace="dao.IMyPageDao">
-
-    <sql id="mjob">
+<mapper namespace="dao.IMyPageDao">
+	<sql id="mjob">
 		<choose>
 			<when test="mjob !=null">
 				#{mjob}
@@ -45,7 +44,7 @@
 			</otherwise>
 		</choose>
 	</sql>
-    
+    <!-- 회원 수정 -->
 	<update id="updateMemberOne" parameterType="member">
 		UPDATE 
 			MEMBERS 
@@ -61,31 +60,17 @@
 			, MIMAGE = <include refid="mimage"/> 
 		WHERE 
 			MID = #{mid}
-	</update> 
-	
+	</update>
+	 
+	<!-- 회원 태그 삭제 -->
 	<delete id="deleteMtag" parameterType="member">
 		DELETE FROM MTAG WHERE MID = #{mid}
 	</delete>
 	
+	<!-- 회원 삭제 -->
 	<delete id="deleteMemberOne" parameterType="member">
 		DELETE FROM MEMBERS WHERE MID = #{mid}
 	</delete>
-	<!-- 좋아요리스트 -->
-	<select id="selectGlikeList" parameterType="member" resultType="grade">
-		SELECT 
-			GNUM AS gnum
-			,MID AS mid
-			,SNUM AS snum
-			,GLEVEL AS glevel
-			,GCURRENT AS gcurrent
-			,GLIKE AS glike
-		FROM 
-			GRADES 
-		WHERE 
-				MID = #{mid} 
-			AND GCURRENT = 'Y' 
-			AND GLIKE = 1
-	</select>
 	
 	<!-- 방문내역 -->
 	<select id="selectHistoryList" parameterType="member" resultType="details">
@@ -145,6 +130,7 @@
         ) T ON S.SNUM = T.SNUM
         ORDER BY S.SNAME ASC
 	</select>
+	
 	<!-- 나의 등급 정보 리스트 -->
 	<select id="selectGradeList" parameterType="member" resultType="grade">
 		SELECT 
@@ -161,6 +147,7 @@
 			MID = #{mid} 
 			<!-- AND GCURRENT = 'Y' -->
 	</select>
+	
 	<!-- 등급 강등 -->
 	<update id="updateGrade" parameterType="grade">
 		UPDATE
@@ -176,6 +163,7 @@
 			GNUM = #{gnum} 
 			<!-- AND GCURRENT = 'Y' -->
 	</update>
+	
 	<!-- 예약 리스트 -->
 	<select id="selectReserveState" parameterType="member" resultType="details">
 		SELECT 
@@ -199,6 +187,7 @@
 	    ORDER BY D.DDATE ASC
 	</select>
 	
+	<!-- 예약 날짜 조회 -->
 	<select id="selectddate" parameterType="details" resultType="details">
 		SELECT
 			DNUM
@@ -219,9 +208,11 @@
 			AND DNUM = #{dnum}
 	</select>
 	
+	<!-- 예약 삭제 -->
 	<delete id="deleteReserve" parameterType="details">
 		DELETE FROM DETAILS WHERE DNUM = #{dnum}
 	</delete>
+	
 	<!-- 즐겨찾기 변경 -->
 	<update id="updateLike" parameterType="member">
 		UPDATE 
@@ -234,9 +225,20 @@
 			AND GCURRENT = 'Y'
 	</update>
 	
-	<select id="selectStoreBySnum" parameterType="int" resultType="store">
-	select * from stores where snum = #{snum}
-	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<select id="recentlyVisited" parameterType="int" resultType="details">
 	select * from details where gnum = #{gnum} and dcheck ='yes' order by ddate desc
 	</select>
@@ -246,14 +248,9 @@
 	<select id="selectcomments" parameterType="int" resultType="comment">
 	select * from comments  where dnum=#{dnum}
 	</select>
+
 	
-	<select id="selectgradeByGnum" parameterType="int" resultType="grade">
-	select* from grades where gnum=#{gnum}
-	</select>
-	
-	<select id="selectDetailsByDnum" parameterType="int" resultType="details">
-	select*from details where dnum =#{dnum}
-	</select>
+
 	<insert id="insertComment" parameterType="comment">
 	insert into comments values(comments_seq.nextval,#{dnum},#{ctotal},#{ctaste},#{cservice},#{cprice},sysdate,#{creview})
 	</insert>
@@ -281,4 +278,4 @@
 	</update>
 	
 	
-    </mapper> 
+</mapper> 

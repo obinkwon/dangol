@@ -94,12 +94,6 @@ public class MyPageService {
 		return details;
 	}
 	
-
-	public Store selectStoreBySnum(int snum) {
-		Store store = mypagedao.selectStoreBySnum(snum);
-		return store;
-	}
-
 	public List<Details> selectHistoryList(String mid, int snum) {
 //		Details det = new Details();
 //		det.setMid(mid);
@@ -119,9 +113,7 @@ public class MyPageService {
 		return mypagedao.selectReserveState(member);
 	}
 
-	public Grade selectgradeByGnum(int gnum) {
-		return mypagedao.selectgradeByGnum(gnum);
-	}
+	
 
 	// 파일 경로 생성
 	public File getAttachedFile(Store vo) {
@@ -204,19 +196,34 @@ public class MyPageService {
 		return result;
 	}
 
-	public Details selectDetailsByDnum(int dnum) {
-		Details details = mypagedao.selectDetailsByDnum(dnum);
-		return details;
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public int insertComment(int dnum, Comment comment, String[] tag) {
 		comment.setDnum(dnum);
 		String ctaste = "#" + tag[0] + "," + "#" + tag[1];
 		comment.setCtaste(ctaste);
 		mypagedao.insertComment(comment);
-		
-		Details details=mypagedao.selectDetailsByDnum(comment.getDnum());
-		Grade grade=mypagedao.selectgradeByGnum(details.getGnum());
+		Details details = new Details();
+		details.setDnum(dnum);
+		details = cDao.selectDetail(details);
+		Grade grade=cDao.selectGradeByDnum(dnum);
 		HashMap<String,Object> param= new HashMap<String, Object>();
 		param.put("mid",grade.getMid());
 		param.put("snum",grade.getSnum());
@@ -227,11 +234,10 @@ public class MyPageService {
 		param1.put("dnum", dnum);
 		mypagedao.updateDcount(param1);
 		
-		Details detail = mypagedao.selectDetailsByDnum(dnum);
-		if(detail.getDcount()==12 || detail.getDcount()==24 ||detail.getDcount()==48)
+		if(details.getDcount()==12 || details.getDcount()==24 ||details.getDcount()==48)
 		{
-			mypagedao.updategrade(detail.getGnum()); // 기존의 등급 gcurrent 'no'로 바꾸기
-			Grade g =mypagedao.selectgradeByGnum(detail.getGnum());
+			mypagedao.updategrade(details.getGnum()); // 기존의 등급 gcurrent 'no'로 바꾸기
+			Grade g = cDao.selectGradeByDnum(dnum);
 			Grade newgrade = new Grade();
 			newgrade.setMid(g.getMid());
 			newgrade.setSnum(g.getSnum());

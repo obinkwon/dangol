@@ -29,6 +29,7 @@ import service.AdminService;
 import service.CategoryService;
 import service.MemberService;
 import service.MyPageService;
+import service.OwnerService;
 
 @Controller
 public class MyPageController {
@@ -41,6 +42,8 @@ public class MyPageController {
 	private AdminService aService;
 	@Autowired
 	private CategoryService cService;
+	@Autowired
+	private OwnerService oService;
 
 	//마이페이지
 	@RequestMapping("myPage.do")
@@ -165,13 +168,15 @@ public class MyPageController {
 			}
 		}
 
+		Store store = new Store();
 		List<String> level = new ArrayList<String>();
 		List<Integer> sratelv = new ArrayList<Integer>();
 		List<Integer> snumlist = new ArrayList<Integer>();
 		int count = 0;
 		for (int i = 0; i < detailslist.size(); i++) {
 			count = detailslist.get(i).getDcount();
-			Store store = mypageService.selectStoreBySnum(snum);
+			store.setSnum(snum);
+			store = oService.selectStoreOne(store);
 			snumlist.add(store.getSnum());
 			if (count < 12) {
 				sratelv.add(store.getSratelv0());
@@ -204,7 +209,7 @@ public class MyPageController {
 			historyview.add(params);
 		}
 
-		mav.addObject("sname", mypageService.selectStoreBySnum(snum).getSname());
+		mav.addObject("sname", store.getSname());
 		mav.addObject("historyview", historyview);
 		mav.setViewName("mypage/historyView");
 
@@ -281,29 +286,42 @@ public class MyPageController {
 		return null;
 	}
 
+	//후기 작성 폼 이동
 	@RequestMapping("createCommentForm.do")
-	public ModelAndView createCommentForm(HttpSession session, int dnum, int snum) throws Exception{
+	public ModelAndView createCommentForm(HttpSession session
+			, HttpServletResponse resp
+			, Details details
+			, Member member
+			, Store store
+			, ModelAndView mav) throws Exception{
 		String mid = (String) session.getAttribute("mid");
-		Member member = new Member();
 		member.setMid(mid);
-		ModelAndView mav = new ModelAndView();
 		member = mService.selectMember(member);
-		Store store = mypageService.selectStoreBySnum(snum);
-		Details details = mypageService.selectDetailsByDnum(dnum);
-		String str = details.getDmenu();
-		if (str != null) {
-			String[] menu = str.split(",");
-			mav.addObject("menulist", menu);
+		if(member != null) {
+			
+			store = oService.selectStoreOne(store);//가게 정보
+			details = cService.selectDetail(details);//방문 이력
+			
+			String menu = details.getDmenu();
+			if (menu != null) {
+				String[] menuList = menu.split(",");
+				mav.addObject("menulist", menuList);
+			}
+			
+			Admin admin = new Admin();
+			admin.setAtype("taste");
+			mav.addObject("tasteTag", aService.selectAdminTypeList(admin));
+			
+			Grade grade = cService.commentMid(details.getDnum());
+			mav.addObject("mimage", member.getMimage());
+			mav.addObject("store", store);
+			System.out.println("glevel ::: "+grade.getGlevel());
+			mav.addObject("glevel", grade.getGlevel());
+			mav.addObject("details", details);
+			mav.setViewName("mypage/createCommentForm");
+		}else {
+			mav.setViewName("jsp/loginForm");
 		}
-		Grade grade = mypageService.selectgradeByGnum(details.getGnum());
-		Admin admin = new Admin();
-		admin.setAtype("taste");
-		mav.addObject("mimage", member.getMimage());
-		mav.addObject("tasteTag", aService.selectAdminTypeList(admin));
-		mav.addObject("store", store);
-		mav.addObject("glevel", grade.getGlevel());
-		mav.addObject("details", mypageService.selectDetailsByDnum(dnum));
-		mav.setViewName("mypage/createCommentForm");
 		return mav;
 
 	}

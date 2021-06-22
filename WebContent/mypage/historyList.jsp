@@ -68,7 +68,7 @@
 					<li>
 						<div class="btn-wrap" style="margin-bottom:0px;">
 							<button class="btn-view w100 mt20" type="button" onClick="storeView('${history.snum}')">상세보기</button>
-							<button class="btn-view w100 mt20" type="button" onClick="commentWrite('${history.dnum}','${history.snum}')">리뷰작성</button>
+							<button class="btn-view w100 mt20" type="button" onClick="commentWrite('${history.dnum}','${history.snum}','ADD')">리뷰작성</button>
 						</div>
 					</li>
 				</ul>

@@ -274,7 +274,9 @@ public class CategoryService {
 	}
 	
 	public File getAttachedFile(int snum) {
-		Store s = mydao.selectStoreBySnum(snum);
+		Store store = new Store();
+		store.setSnum(snum);
+		Store s = oDao.selectStoreOne(store);
 		String fileName = "";
 		File file = null;
 		if(s != null) {
