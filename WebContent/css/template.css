@@ -285,6 +285,7 @@ div.infoBox{margin : auto;
 /* ul,li css */
 li.navTitle {background-color: #d9d9d9;}
 li.active {background-color: #66ccff;}
+li.star{display: inline;cursor:pointer;}
 
 /* a css */
 a.navTitle {
@@ -303,6 +304,16 @@ a.nav {
 	margin-top : 10px;
 	font-size : 15px;
 }
+
+
+/* textarea css */
+.textarea {
+	width: 540px;
+	height: 80px;
+	resize:none;
+}
+
+
 
 /* margin css */
 .m0{margin : 0px;}

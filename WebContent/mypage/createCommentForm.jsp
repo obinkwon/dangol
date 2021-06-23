@@ -10,136 +10,67 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="/css/template.css" />
 <style type="text/css">
-
-p.name {
-	margin-top: 20px;
-	margin-left: 50px;
-	font-size: 15px;
-	font-weight: bold;
-}
-
-img {
-	width: 20px;
-	height: 20px;
-}
-
-li.star0,li.star1,li.star2,li.star3,li.star4 {
-	display: inline;
-	cursor:pointer;
-}
-
 textarea {
 	width: 540px;
 	height: 80px;
 	resize:none;
 }
-
-.insertBtn {
-	float: right;
-	margin-top: 10px;
-}
-
 </style>
 <script type="text/javascript">
-	function change(image){
-		if(image.attr('src') == 'star-half.png'){
-			image.attr('src','star.png');
-		}else if(image.attr('src') == 'star-empty.png'){
-			image.attr('src','star-half.png');	
+var star_empty = '/image/star-empty.png';
+var star_full = '/image/star.png';
+var star_half = '/image/star-half.png';
+
+	//별 이미지 교체
+	function starChange(type,starNum){
+		var result = $('#'+type+'Res'+starNum).val();
+		var image = $('#'+type+'Img'+starNum);
+		var sum = Number(starNum);
+		if(result == 'H'){
+			image.attr('src',star_full);
+			$('#'+type+'Res'+starNum).val('F');
+			sum += 1;
+		}else if(result == 'E'){
+			image.attr('src',star_half);	
+			$('#'+type+'Res'+starNum).val('H');
+			sum += 0.5;
 		}else{
-			image.attr('src','star-empty.png');	
+			image.attr('src',star_empty);	
+			$('#'+type+'Res'+starNum).val('E');
 		}
+		$('#'+type+'Sum').val(sum);
+	}
+	
+	//별 클릭시
+	function starBtn(type,starNum){
+		if(starNum == '0'){
+			$('#'+type+'star').children('li:gt('+starNum+')').children('img').attr('src',star_empty);
+			$('#'+type+'star').children('li:gt('+starNum+')').children('input').val('E');
+		}else{
+			$('#'+type+'star').children('li:gt('+starNum+')').children('img').attr('src',star_empty);
+			$('#'+type+'star').children('li:gt('+starNum+')').children('input').val('E');
+			$('#'+type+'star').children('li:lt('+starNum+')').children('img').attr('src',star_full);
+			$('#'+type+'star').children('li:lt('+starNum+')').children('input').val('F');
+		}
+		starChange(type,starNum);
 	}
 	
 	//작성 완료
 	function writeComment(){
-		
+		if(confirm('이용후기를 등록하시겠습니까?')){
+			$('#comment').attr('action','createComment.do');
+			$('#comment').submit();
+		}
 	}
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
-
-		var originSelect2= $('#selectTaste2').html();
-		
-		$("#selectTaste2").hide();
-	 $('#selectTaste1').change(function(){
-		 $("#selectTaste2").show();
- 		$('#selectTaste2').html(originSelect2);
-	 	var selectTag=	$("#selectTaste1 option:selected").val(); 		
-		 $("#selectTaste2 option[value='"+selectTag+"']").remove();	
-		 
-	 });
-	 
-
-	 
-	$('.star0').click(function(){
-		$(this).parents().children('li:gt(0)').children('img').attr('src','star-empty.png');
-		change($(this).children('img'));
-	});
-	$('.star1').click(function(){
-		$(this).parents().children('li:gt(1)').children('img').attr('src','star-empty.png');
-		$(this).parents().children('li:lt(1)').children('img').attr('src','star.png');
-		change($(this).children('img'));
-	});
-	$('.star2').click(function(){
-		$(this).parents().children('li:gt(2)').children('img').attr('src','star-empty.png');
-		$(this).parents().children('li:lt(2)').children('img').attr('src','star.png');
-		change($(this).children('img'));
-	});
-	$('.star3').click(function(){
-		$(this).parents().children('li:gt(3)').children('img').attr('src','star-empty.png');
-		$(this).parents().children('li:lt(3)').children('img').attr('src','star.png');
-		change($(this).children('img'));
-	});
-	$('.star4').click(function(){
-		$(this).parents().children('li:gt(4)').children('img').attr('src','star-empty.png');
-		$(this).parents().children('li:lt(4)').children('img').attr('src','star.png');
-		change($(this).children('img'));
-	});
-	
-	
-	$('.insertBtn').click(function(){
-		var star;
-		var sum = 0;
-		for(var i=0;i<5;i++){
-			star = $('#totalstar').children('li:eq('+i+')').children('img').attr('src');
-			if(star == 'star.png'){
-				sum++;
-			}else if(star == 'star-half.png'){
-				sum += 0.5;
-			}
-		}
-		$('#result1').val(sum);
-		
-		sum = 0;
-		for(var i=0;i<5;i++){
-			star = $('#servicestar').children('li:eq('+i+')').children('img').attr('src');
-			if(star == 'star.png'){
-				sum++;
-			}else if(star == 'star-half.png'){
-				sum += 0.5;
-			}
-		}
-		$('#result2').val(sum);
-		
-		sum = 0;
-		for(var i=0;i<5;i++){
-			star = $('#pricestar').children('li:eq('+i+')').children('img').attr('src');
-			if(star == 'star.png'){
-				sum++;
-			}else if(star == 'star-half.png'){
-				sum += 0.5;
-			}
-		}
-		$('#result3').val(sum);
-		
-		var result = confirm('이용후기를 등록하시겠습니까?');
-		if(result &&$('#selectTaste1').val()!=null) { 
-			$('form#comment').attr("onsubmit","return true;");
-		} else {
-			alert("후기를 입력해주세요");
-			$('form#comment').attr("onsubmit","return false;");
-		}
+	var selHtml= $('#selectTaste2').html();
+ 	$('#selectTaste1').change(function(){
+		var selectTag=	$("#selectTaste1 option:selected").val(); 		
+		$("#selectTaste2").show();
+		$('#selectTaste2').html(selHtml);
+		$("#selectTaste2 option[value='"+selectTag+"']").remove();	
 	});
 })
 
@@ -162,7 +93,7 @@ $(document).ready(function(){
 				<h2 class="contentTit" style="opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">단골님의 이용후기</h2>
 			</div>
 			<div class="w80Form" style="margin:auto;text-align:center;">
-				<form action="createComment.do" id="comment" onsubmit="return true;">
+				<form action="" id="comment">
 					<!-- top -->
 					<div class="storeViewTop" style="height:130px;margin-top:50px;border-bottom:1px solid #000000;">
 						<div class="storeLeft" style="width:30%;margin-left:200px;">
@@ -183,78 +114,65 @@ $(document).ready(function(){
 					</div>
 					<!-- tbottom -->
 					<div class="storeViewBottom">
-						<div class="storeLeft">
-							<div>
-								총점 
-								<ul id="totalstar">
-									<li class="star0"><img src="star-empty.png"></li>
-									<li class="star1"><img src="star-empty.png"></li>
-									<li class="star2"><img src="star-empty.png"></li>
-									<li class="star3"><img src="star-empty.png"></li>
-									<li class="star4"><img src="star-empty.png"></li>
+						<div class="storeLeft" style="width:40%;margin-left:200px;">
+							<div style="text-align:left;">
+								<span class="storeSpan" style="margin-right:15px;">총점</span>
+								<ul id="totalstar" style="display:inline-block;">
+									<li class="star" onclick="starBtn('total',0)"><img id="totalImg0" class="img20" src="/image/star-empty.png"><input id="totalRes0" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('total',1)"><img id="totalImg1" class="img20" src="/image/star-empty.png"><input id="totalRes1" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('total',2)"><img id="totalImg2" class="img20" src="/image/star-empty.png"><input id="totalRes2" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('total',3)"><img id="totalImg3" class="img20" src="/image/star-empty.png"><input id="totalRes3" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('total',4)"><img id="totalImg4" class="img20" src="/image/star-empty.png"><input id="totalRes4" type="hidden" value="E"></li>
 								</ul>
-								<input type="hidden" name="ctotal" id="result1">
+								<input type="hidden" name="ctotal" id="totalSum">
 							</div>
-							<div>
+							<div style="text-align:left;">
+								<span class="storeSpan">서비스</span>
+								<ul id="servicestar" style="display:inline-block;">
+									<li class="star" onclick="starBtn('service',0)"><img id="serviceImg0" class="img20" src="/image/star-empty.png"><input id="serviceRes0" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('service',1)"><img id="serviceImg1" class="img20" src="/image/star-empty.png"><input id="serviceRes1" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('service',2)"><img id="serviceImg2" class="img20" src="/image/star-empty.png"><input id="serviceRes2" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('service',3)"><img id="serviceImg3" class="img20" src="/image/star-empty.png"><input id="serviceRes3" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('service',4)"><img id="serviceImg4" class="img20" src="/image/star-empty.png"><input id="serviceRes4" type="hidden" value="E"></li>
+								</ul>
+								<input type="hidden" name="cservice" id="serviceSum">
+							</div>
+							<div style="text-align:left;">
+								<span class="storeSpan" style="margin-right:15px;">가격 </span>
+								<ul id="pricestar" style="display:inline-block;">
+									<li class="star" onclick="starBtn('price',0)"><img id="priceImg0" class="img20" src="/image/star-empty.png"><input id="priceRes0" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('price',1)"><img id="priceImg1" class="img20" src="/image/star-empty.png"><input id="priceRes1" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('price',2)"><img id="priceImg2" class="img20" src="/image/star-empty.png"><input id="priceRes2" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('price',3)"><img id="priceImg3" class="img20" src="/image/star-empty.png"><input id="priceRes3" type="hidden" value="E"></li>
+									<li class="star" onclick="starBtn('price',4)"><img id="priceImg4" class="img20" src="/image/star-empty.png"><input id="priceRes4" type="hidden" value="E"></li>
+								</ul>
+								<input type="hidden" name="cprice" id="priceSum">
 							</div>
 						</div>
-						<div class="storeLeft">
-							<div>
-								맛
-								<select class="inputText w100" id="selectTaste1" name="tag">
-								<c:forEach var="tasteTag" items="${tasteTag}">
-									<option selected disabled hidden >#맛태그</option>
+						<div class="storeLeft" style="width:40%;text-align:left;">
+							<span class="storeSpan" style="float:left;margin-right:50px;">맛</span>
+							<select class="inputText w100" id="selectTaste1" name="ctaste">
+								<option selected disabled>맛 선택</option>
+								<c:forEach var="tasteTag" items="${tasteList}">
 									<option value="${tasteTag.avalue}">${tasteTag.avalue}</option>
 								</c:forEach>
-								</select>
-								<select class="inputText w100" name="tag" id="selectTaste2">
-								<c:forEach var="tasteTag" items="${tasteTag}">
+							</select>
+							<select class="inputText w100" id="selectTaste2" name="ctaste" style="display:none;margin-left:20px;">
+								<c:forEach var="tasteTag" items="${tasteList}">
 									<option  value="${tasteTag.avalue}">${tasteTag.avalue}</option>
 								</c:forEach>
-								</select>
-							</div>
+							</select>
 						</div>						
 					</div>
-					
-					
-					
-					
-					<table>
-	
-						<tr>
-							<td><p>서비스</p></td>
-							<td>
-								<ul id="servicestar">
-									<li class="star0"><img src="star-empty.png"></li>
-									<li class="star1"><img src="star-empty.png"></li>
-									<li class="star2"><img src="star-empty.png"></li>
-									<li class="star3"><img src="star-empty.png"></li>
-									<li class="star4"><img src="star-empty.png"></li>
-								</ul>
-								<input type="hidden" name="cservice" id="result2">
-							</td>
-							<td colspan="2"></td>
-						</tr>
-						<tr>
-							<td><p>가격</p></td>
-							<td>
-								<ul id="pricestar">
-									<li class="star0"><img src="star-empty.png"></li>
-									<li class="star1"><img src="star-empty.png"></li>
-									<li class="star2"><img src="star-empty.png"></li>
-									<li class="star3"><img src="star-empty.png"></li>
-									<li class="star4"><img src="star-empty.png"></li>
-								</ul>
-								<input type="hidden" name="cprice" id="result3">
-							</td>
-							<td colspan="2"></td>
-						</tr>
-						<tr>
-							<td>후기</td>
-							<td colspan="3"><textarea name="creview"></textarea></td>
-						</tr>
-					</table>
-					<button type="button" class="inputText w100" onclick="writeComment()">작성완료</button>
+					<div class="storeViewBottom">	
+						<div class="storeLeft" style="width:40%;margin-left:200px;">
+							<span class="storeSpan" style="float:left;">후기</span>
+							<textarea class="textarea" name="creview"></textarea>
+						</div>
+					</div>
+					<div class="btn-wrap">
+						<button type="button" class="btn-view w100" onclick="writeComment()">작성완료</button>
+					</div>	
 				</form>
 			</div>
 		</div>

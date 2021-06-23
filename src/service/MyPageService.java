@@ -196,25 +196,7 @@ public class MyPageService {
 		return result;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
+	//후기 작성
 	public int insertComment(int dnum, Comment comment, String[] tag) {
 		comment.setDnum(dnum);
 		String ctaste = "#" + tag[0] + "," + "#" + tag[1];
