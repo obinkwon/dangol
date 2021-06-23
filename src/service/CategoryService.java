@@ -140,6 +140,11 @@ public class CategoryService {
 		return icdao.selectGradeAtStore(grade);
 	}
 	
+	//후기 작성 정보 가져오기
+	public Details getCommentInfo(Details details) {
+		return icdao.selectCommentInfo(details);
+	}
+	
 	
 	
 	

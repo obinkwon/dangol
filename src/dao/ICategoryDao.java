@@ -54,6 +54,12 @@ public interface ICategoryDao {
 	public int selectCommentTotal(Store store);
 	//가게별 리뷰 갯수
 	public int selectCommentTotalCnt(Store store);
+	//후기 작성 정보
+	public Details selectCommentInfo(Details details);
+	
+	
+	
+	
 	
 	
 	

@@ -11,25 +11,11 @@
 <link rel="stylesheet" href="/css/template.css" />
 <style type="text/css">
 
-img.memberImg {
-	margin-top: 20px;
-	margin-left: 50px;
-	width: 100px;
-	height: 100px;
-	border: 1.5px solid;
-	border-radius: 50%;
-}
-
 p.name {
 	margin-top: 20px;
 	margin-left: 50px;
 	font-size: 15px;
 	font-weight: bold;
-}
-
-hr.line {
-	border: solid #000000;
-	border-width: 1px;
 }
 
 img {
@@ -63,6 +49,11 @@ textarea {
 		}else{
 			image.attr('src','star-empty.png');	
 		}
+	}
+	
+	//작성 완료
+	function writeComment(){
+		
 	}
 </script>
 <script type="text/javascript">
@@ -119,12 +110,8 @@ $(document).ready(function(){
 			}
 		}
 		$('#result1').val(sum);
-		//alert(sum);
-	});
-	
-	$('.insertBtn').click(function(){
-		var star;
-		var sum = 0;
+		
+		sum = 0;
 		for(var i=0;i<5;i++){
 			star = $('#servicestar').children('li:eq('+i+')').children('img').attr('src');
 			if(star == 'star.png'){
@@ -134,11 +121,8 @@ $(document).ready(function(){
 			}
 		}
 		$('#result2').val(sum);
-		//alert(sum);
-	});
-	$('.insertBtn').click(function(){
-		var star;
-		var sum = 0;
+		
+		sum = 0;
 		for(var i=0;i<5;i++){
 			star = $('#pricestar').children('li:eq('+i+')').children('img').attr('src');
 			if(star == 'star.png'){
@@ -147,24 +131,16 @@ $(document).ready(function(){
 				sum += 0.5;
 			}
 		}
-	$('#result3').val(sum);
-	
-	});
-	
-	
-  	$('.insertBtn').click(function() { 
+		$('#result3').val(sum);
+		
 		var result = confirm('이용후기를 등록하시겠습니까?');
 		if(result &&$('#selectTaste1').val()!=null) { 
 			$('form#comment').attr("onsubmit","return true;");
-			} else {
-				alert("후기를 입력해주세요");
-				$('form#comment').attr("onsubmit","return false;");
-			}
-		}); 
- 	
- 
-
-
+		} else {
+			alert("후기를 입력해주세요");
+			$('form#comment').attr("onsubmit","return false;");
+		}
+	});
 })
 
 </script>
@@ -187,59 +163,29 @@ $(document).ready(function(){
 			</div>
 			<div class="w80Form" style="margin:auto;text-align:center;">
 				<form action="createComment.do" id="comment" onsubmit="return true;">
-					<table>
-						<tr>
-							<td width="45%" rowspan="3" colspan="2">
-								<input type="hidden" name="dnum" value="${details.dnum}">
-								<c:if test="${mimage ne null}">
-									<img class="img100 imgRound" src="downloadMImage.do?mid=${mid}"><br>
-								</c:if>
-								<c:if test="${mimage eq null}">
-									<img  class="img100 imgRound" src="/image/myPage.png">
-								</c:if>
-								<p class="name">${mid}&nbsp;
-									<c:if test="${glevel==0}">범골</c:if>
-									<c:if test="${glevel==1}">진골</c:if>
-									<c:if test="${glevel==2}">성골</c:if>
-									<c:if test="${glevel==3}">단골</c:if>
-								</p></td>
-							<td width="17%"><p>날짜</p></td>
-							<td width="38%"><p>
-							<%-- <fmt:formatDate value="${details.ddate}" pattern="yyyy-MM-dd" /> --%>
-								</p></td>
-						</tr>
-						<tr>
-							<td><p>메뉴</p></td>
-							<td>
-								<table>
-										<c:forEach var="menu" items="${menulist}">
-											<tr><td>${menu}</td></tr>
-										</c:forEach>
-								</table>
-							</td>
-						</tr>
-						<%-- <tr>
-							<td><p>혜택</p></td>
-							<c:if test="${glevel==0}">
-								<td><p>${store.sratelv0}%할인</p></td>
+					<!-- top -->
+					<div class="storeViewTop" style="height:130px;margin-top:50px;border-bottom:1px solid #000000;">
+						<div class="storeLeft" style="width:30%;margin-left:200px;">
+							<c:if test="${mimage ne null}">
+								<img class="img100 imgRound" src="downloadMImage.do?mid=${mid}"><br>
 							</c:if>
-							<c:if test="${glevel==1}">
-								<td><p>${store.sratelv1}%할인</p></td>
+							<c:if test="${mimage eq null}">
+								<img  class="img100 imgRound" src="/image/myPage.png">
 							</c:if>
-							<c:if test="${glevel==2}">
-								<td><p>${store.sratelv2}%할인</p></td>
-							</c:if>
-							<c:if test="${glevel==3}">
-								<td><p>${store.sratelv3}%할인</p></td>
-							</c:if>
-						</tr> --%>
-						<tr>
-							<td colspan="4"><hr class="line"></td>
-						</tr>
-	
-						<tr>
-							<td><p>총점</p></td>
-							<td>
+							<span class="storeSpan" style="margin-left:0px;">${mid}</span>
+							<span class="storeSpan" style="margin-left:0px;">${details.gname}</span>
+						</div>
+						<div class="storeLeft" style="display:block;width:30%;text-align:left;">
+							<p>날짜 : ${details.ddate}</p>
+							<p>메뉴 : ${details.dmenu}</p>
+							<p>혜택 : ${details.gbenefit}</p>
+						</div>
+					</div>
+					<!-- tbottom -->
+					<div class="storeViewBottom">
+						<div class="storeLeft">
+							<div>
+								총점 
 								<ul id="totalstar">
 									<li class="star0"><img src="star-empty.png"></li>
 									<li class="star1"><img src="star-empty.png"></li>
@@ -248,20 +194,32 @@ $(document).ready(function(){
 									<li class="star4"><img src="star-empty.png"></li>
 								</ul>
 								<input type="hidden" name="ctotal" id="result1">
-							</td>
-							<td>맛</td>
-							<td><select class="inputText w100" id="selectTaste1" name="tag">
-							<c:forEach var="tasteTag" items="${tasteTag}">
-							<option selected disabled hidden >#맛태그</option>
-							<option value="${tasteTag.avalue}">${tasteTag.avalue}</option>
-							</c:forEach>
-							</select>&nbsp;&nbsp;&nbsp;&nbsp;
+							</div>
+							<div>
+							</div>
+						</div>
+						<div class="storeLeft">
+							<div>
+								맛
+								<select class="inputText w100" id="selectTaste1" name="tag">
+								<c:forEach var="tasteTag" items="${tasteTag}">
+									<option selected disabled hidden >#맛태그</option>
+									<option value="${tasteTag.avalue}">${tasteTag.avalue}</option>
+								</c:forEach>
+								</select>
 								<select class="inputText w100" name="tag" id="selectTaste2">
-									<c:forEach var="tasteTag" items="${tasteTag}">
-							<option  value="${tasteTag.avalue}">${tasteTag.avalue}</option>
-							</c:forEach>
-								</select></td>
-						</tr>
+								<c:forEach var="tasteTag" items="${tasteTag}">
+									<option  value="${tasteTag.avalue}">${tasteTag.avalue}</option>
+								</c:forEach>
+								</select>
+							</div>
+						</div>						
+					</div>
+					
+					
+					
+					
+					<table>
 	
 						<tr>
 							<td><p>서비스</p></td>
@@ -296,7 +254,7 @@ $(document).ready(function(){
 							<td colspan="3"><textarea name="creview"></textarea></td>
 						</tr>
 					</table>
-					<button type="button" class="inputText w100">작성완료</button>
+					<button type="button" class="inputText w100" onclick="writeComment()">작성완료</button>
 				</form>
 			</div>
 		</div>

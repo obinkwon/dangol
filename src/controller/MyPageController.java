@@ -299,24 +299,13 @@ public class MyPageController {
 		member = mService.selectMember(member);
 		if(member != null) {
 			
-			store = oService.selectStoreOne(store);//가게 정보
-			details = cService.selectDetail(details);//방문 이력
-			
-			String menu = details.getDmenu();
-			if (menu != null) {
-				String[] menuList = menu.split(",");
-				mav.addObject("menulist", menuList);
-			}
+			details = cService.getCommentInfo(details);
 			
 			Admin admin = new Admin();
 			admin.setAtype("taste");
 			mav.addObject("tasteTag", aService.selectAdminTypeList(admin));
 			
-			Grade grade = cService.commentMid(details.getDnum());
 			mav.addObject("mimage", member.getMimage());
-			mav.addObject("store", store);
-			System.out.println("glevel ::: "+grade.getGlevel());
-			mav.addObject("glevel", grade.getGlevel());
 			mav.addObject("details", details);
 			mav.setViewName("mypage/createCommentForm");
 		}else {

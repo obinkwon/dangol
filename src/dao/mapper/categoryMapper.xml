@@ -528,6 +528,38 @@
 		WHERE 
 			SDATE BETWEEN (SYSDATE - 10) AND SYSDATE
 	</select>
+	<!-- 후기 작성 정보 -->
+	<select id="selectCommentInfo" parameterType="details" resultType="details">
+		SELECT
+			D.DNUM AS dnum
+			,D.GNUM AS gnum
+			,TO_CHAR(D.DDATE,'YYYY-MM-DD') AS ddate
+			,D.DPERSON AS dperson
+			,D.DMENU AS dmenu
+			,D.DTYPE AS dtype
+			,D.DASK AS dask
+			,D.DCHECK AS dcheck
+			,D.DTIME AS dtime
+			,D.DCOUNT AS dcount
+			,D.DLIMIT AS dlimit
+			,G.GLEVEL AS glevel
+			,CASE WHEN G.GLEVEL = 0 THEN '범골'
+			     WHEN G.GLEVEL = 1 THEN '진골'
+			     WHEN G.GLEVEL = 2 THEN '성골'
+			     ELSE '단골'
+			END AS gname
+			,CASE WHEN G.GLEVEL = 0 THEN S.SRATELV0 || '% 할인'
+			     WHEN G.GLEVEL = 1 THEN S.SRATELV1 || '% 할인'
+			     WHEN G.GLEVEL = 2 THEN S.SRATELV2 || '% 할인'
+			     ELSE S.SRATELV3 || '% 할인'
+			END AS gbenefit
+		FROM
+			DETAILS D
+			INNER JOIN GRADES G ON D.GNUM = G.GNUM 
+			INNER JOIN STORES S ON G.SNUM = S.SNUM
+		WHERE
+			D.DNUM = #{dnum}
+	</select>
 	
 	
 	

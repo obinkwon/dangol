@@ -10,27 +10,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <link rel="stylesheet" href="/css/template.css" />
 <style type="text/css">
-	div.storeViewTop{
-		width: 100%;
-		height : 350px;
-		text-align: center;
-	}
-	div.storeViewBottom{
-		width: 100%;
-		display : inline-block;
-		margin-top : 15px;
-	}
-	div.storeLeft{
-		float : left;
-		width : 50%;
-	}
 	div.storeViewMain{
 		width : 80%;
 		margin : auto;
-	}
-	div.storeRight{
-		float : right;
-		width : 50%;
 	}
 	div.storeCommentOne{
 		border-bottom : 2px solid #d9d9d9;

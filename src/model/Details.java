@@ -22,6 +22,8 @@ public class Details {
 	private String sdetailaddr;
 	private int glevel;
 	private int glike;
+	private String gname;
+	private String gbenefit;
 	public int getDnum() {
 		return dnum;
 	}
@@ -148,26 +150,16 @@ public class Details {
 	public void setMphone(String mphone) {
 		this.mphone = mphone;
 	}
-	public Details() {}
-	public Details(int dnum, int gnum, String ddate, int dperson, String dmenu, String dtype, String dask, String dcheck,
-			String dtime, int dcount, int dlimit, String dpermit) {
-		this.dnum = dnum;
-		this.gnum = gnum;
-		this.ddate = ddate;
-		this.dperson = dperson;
-		this.dmenu = dmenu;
-		this.dtype = dtype;
-		this.dask = dask;
-		this.dcheck = dcheck;
-		this.dtime = dtime;
-		this.dcount = dcount;
-		this.dlimit = dlimit;
-		this.dpermit = dpermit;
+	public String getGname() {
+		return gname;
 	}
-	@Override
-	public String toString() {
-		return "Details [dnum=" + dnum + ", gnum=" + gnum + ", ddate=" + ddate + ", dperson=" + dperson + ", dmenu="
-				+ dmenu + ", dtype=" + dtype + ", dask=" + dask + ", dcheck=" + dcheck + ", dtime=" + dtime
-				+ ", dcount=" + dcount + ", dlimit=" + dlimit + ", dpermit=" + dpermit + "]";
+	public void setGname(String gname) {
+		this.gname = gname;
+	}
+	public String getGbenefit() {
+		return gbenefit;
+	}
+	public void setGbenefit(String gbenefit) {
+		this.gbenefit = gbenefit;
 	}
 }
