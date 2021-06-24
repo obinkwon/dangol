@@ -94,6 +94,7 @@ $(document).ready(function(){
 			</div>
 			<div class="w80Form" style="margin:auto;text-align:center;">
 				<form action="" id="comment">
+					<input type="hidden" name="dnum" value="${details.dnum}">
 					<!-- top -->
 					<div class="storeViewTop" style="height:130px;margin-top:50px;border-bottom:1px solid #000000;">
 						<div class="storeLeft" style="width:30%;margin-left:200px;">

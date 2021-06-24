@@ -361,10 +361,10 @@ public class CategoryController {
 		Comment c = cService.selectComment(cnum,dnum);
 		Details detail = new Details();
 		detail.setDnum(c.getDnum());
-		Details d = cService.selectDetail(detail);
+		Details d = cService.getDetailOne(detail);
 		String[] menuList = null;
 		if(d.getDmenu()!=null) menuList = d.getDmenu().split(",");
-		Grade g = cService.commentMid(d.getDnum());
+		Grade g = cService.getGradeComment(d);
 		Store store = new Store();
 		store.setSnum(g.getSnum());
 		Store s = oService.selectStoreOne(store);

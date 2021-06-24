@@ -34,25 +34,13 @@ public interface IMyPageDao {
 	public int updateGrade(Grade grade);
 	//예약 리스트
 	public List<Details> selectReserveState (Member member);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public List<Details> recentlyVisited(int gnum);
-	public Comment selectcomments (int dnum);
-	public void insertComment(Comment comment);
-	public List<Details> selectdetailslist(HashMap<String, Object> param);
-	public void updateDcount(HashMap<String, Object> param1);
-	public void updategrade(int gnum);
-	public void updateNewGrade(Grade grade);
-	public List<Details>selectdcount(HashMap<String, Object> param);
-	public Grade selectgrade(HashMap<String, Object> param);
-	public void updatedetails(Details details);
+	//후기 작성 여부 수정
+	public int updatedetailsComment(Details details);
+	//후기 작성
+	public int insertComment(Comment comment);
+	//등급 업데이트
+	public int updateGradeInfo(Grade grade);
+	//후기 카운트 업데이트
+	public void updateGradeCount(Grade grade);
 	
 }

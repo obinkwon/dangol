@@ -29,9 +29,9 @@ import model.Store;
 public class MyPageService {
 
 	@Autowired
-	private IMyPageDao mypagedao;
+	private IMyPageDao myDao;
 	@Autowired
-	private IMemberDao mdao;
+	private IMemberDao mDao;
 	@Autowired
 	private IOwnerDao oDao;
 	@Autowired
@@ -50,7 +50,7 @@ public class MyPageService {
 			mfile.transferTo(attachFile); // 웹으로 받아온 파일을 복사
 			member.setMimage(mimage);
 		}
-		return mypagedao.updateMemberOne(member);
+		return myDao.updateMemberOne(member);
 	}
 	
 	public int updateMtag(Member member) {//회원 태그 수정
@@ -59,39 +59,31 @@ public class MyPageService {
 		String mid = member.getMid();
 		String[] mtagArr = mtag.split(",");
 		//회원 태그 초기화
-		mypagedao.deleteMtag(member);
+		myDao.deleteMtag(member);
 		for(String mt : mtagArr) {
 			Member mem = new Member();
 			mem.setMid(mid);
 			mem.setAnum(mt);
-			result += mdao.insertMtag(mem);
+			result += mDao.insertMtag(mem);
 		}
 		return result;
 	}
 	
 	public int updateLike(Member member) {//즐겨찾기 수정
-		return mypagedao.updateLike(member);
+		return myDao.updateLike(member);
 	}
 
 	public int deleteMemberOne(Member member) {//회원 탈퇴
-		return mypagedao.deleteMemberOne(member);
+		return myDao.deleteMemberOne(member);
 	}
 	
 	public List<Details> selectBookmarkList(Member member){
-		return mypagedao.selectBookmarkList(member);
+		return myDao.selectBookmarkList(member);
 	}
 	
 	//방문 내역 리스트
 	public List<Details> selectHistoryListMid(Member member) {
-		return mypagedao.selectHistoryList(member);
-	}
-	
-	public List<Details> selectdcount(String mid, int snum){
-		HashMap<String, Object> param= new HashMap<String, Object>();
-		param.put("mid", mid);
-		param.put("snum", snum);
-		List<Details> details=mypagedao.selectdcount(param);
-		return details;
+		return myDao.selectHistoryList(member);
 	}
 	
 	public List<Details> selectHistoryList(String mid, int snum) {
@@ -100,17 +92,13 @@ public class MyPageService {
 //		det.setSnum(snum);
 		Member member = new Member();
 		member.setMid(mid);
-		List<Details> d = mypagedao.selectHistoryList(member);
+		List<Details> d = myDao.selectHistoryList(member);
 		return d;
-	}
-
-	public Comment selectcomments(int dnum) {
-		return mypagedao.selectcomments(dnum);
 	}
 
 	//예약 리스트
 	public List<Details> selectReserveState(Member member) {
-		return mypagedao.selectReserveState(member);
+		return myDao.selectReserveState(member);
 	}
 
 	
@@ -172,69 +160,54 @@ public class MyPageService {
 	
 	//예약 취소
 	public int deleteReserve(Details details) {
-		return mypagedao.deleteReserve(details);
+		return myDao.deleteReserve(details);
 	}
 	
 	//패널티 추가
 	public int updatePenalty(Details details) throws Exception{
 		Member member = new Member();
 		member.setMid(details.getMid());
-		return mdao.updateMpenalty(member);// penalty+1
+		return mDao.updateMpenalty(member);// penalty+1
 	}
 	
 	//등급 강등 및 포인트 절감
 	public int updateGrade(Member member) throws Exception{
 		int result = 0;
-		List<Grade> gradeList = mypagedao.selectGradeList(member); //현재등급리스트
+		List<Grade> gradeList = myDao.selectGradeList(member); //현재등급리스트
 		for(Grade grade : gradeList) {
 			if(grade.getGlevel() > 0) {
 				grade.setGlevel(grade.getGlevel()-1);
 			}
 			grade.setGcount(grade.getGcount()/2);
-			result += mypagedao.updateGrade(grade);
+			result += myDao.updateGrade(grade);
 		}
 		return result;
 	}
 
 	//후기 작성
-	public int insertComment(int dnum, Comment comment, String[] tag) {
-		comment.setDnum(dnum);
-		String ctaste = "#" + tag[0] + "," + "#" + tag[1];
-		comment.setCtaste(ctaste);
-		mypagedao.insertComment(comment);
+	public int insertComment(Comment comment) {
 		Details details = new Details();
-		details.setDnum(dnum);
-		details = cDao.selectDetail(details);
-		Grade grade=cDao.selectGradeByDnum(dnum);
-		HashMap<String,Object> param= new HashMap<String, Object>();
-		param.put("mid",grade.getMid());
-		param.put("snum",grade.getSnum());
-		
-		List<Details> dlist=mypagedao.selectdcount(param);
-		HashMap<String, Object> param1= new HashMap<String, Object>();
-		param1.put("dcount", dlist.get(0).getDcount());
-		param1.put("dnum", dnum);
-		mypagedao.updateDcount(param1);
-		
-		if(details.getDcount()==12 || details.getDcount()==24 ||details.getDcount()==48)
-		{
-			mypagedao.updategrade(details.getGnum()); // 기존의 등급 gcurrent 'no'로 바꾸기
-			Grade g = cDao.selectGradeByDnum(dnum);
-			Grade newgrade = new Grade();
-			newgrade.setMid(g.getMid());
-			newgrade.setSnum(g.getSnum());
-			newgrade.setGlevel(g.getGlevel());
-			newgrade.setGlike(g.getGlike());
-			mypagedao.updateNewGrade(newgrade);
+		details.setDnum(comment.getDnum());
+		Grade grade = cDao.selectGradeComment(details);//후기 작성자 등급 정보
+		int result = myDao.insertComment(comment);//후기 작성
+		if(grade != null) {
+			int cnt = grade.getGcount();
+			if(result > 0) {
+				details.setDnum(comment.getDnum());
+				details.setDcount(1);
+				myDao.updatedetailsComment(details);//후기 작성 여부 수정
+				cnt++;
+			}
+			
+			grade.setGcount(cnt);
+			myDao.updateGradeCount(grade);//후기 카운트 증가
+			if(grade.getGcount() > 0 && grade.getGcount()%12 == 0){//등급 업 기준 달성시
+				grade.setGlevel(grade.getGcount()/12);
+				myDao.updateGradeInfo(grade);//등급 업데이트
+			}
 		}
 	
-		return grade.getSnum();
-	}
-	public Grade selectgrade(String mid, int snum) {
-		HashMap<String, Object> param= new HashMap<String, Object>();
-		param.put("mid", mid);
-		param.put("snum", snum);
-		return mypagedao.selectgrade(param);
+		return result;
 	}
 	
 }

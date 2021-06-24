@@ -451,7 +451,7 @@
 		)
 	</insert>
 	<!-- 예약 정보 가져오기 -->
-	<select id="selectDetail" parameterType="details" resultType="details">
+	<select id="selectDetailOne" parameterType="details" resultType="details">
 		SELECT
 			DNUM AS dnum
 			,GNUM AS gnum
@@ -560,6 +560,24 @@
 		WHERE
 			D.DNUM = #{dnum}
 	</select>
+	<!-- 후기 작성자 등급 정보 -->
+	<select id="selectGradeComment" parameterType="int" resultType="grade">
+		SELECT
+			G.GNUM AS gnum
+			,G.MID AS mid
+			,G.SNUM AS snum
+			,G.GLEVEL AS glevel
+			,G.GCURRENT AS gcurrent
+			,G.GLIKE AS glike
+			,G.GCOUNT AS gcount
+		FROM
+			GRADES G
+			INNER JOIN DETAILS D ON G.GNUM = D.GNUM
+		WHERE
+			D.DNUM = #{dnum}
+	</select>
+	
+	
 	
 	
 	

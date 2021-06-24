@@ -225,57 +225,56 @@
 			AND GCURRENT = 'Y'
 	</update>
 	
+	<!-- 후기 작성 여부 수정 -->
+	<update id="updatedetailsComment" parameterType="details">
+		UPDATE
+			DETAILS
+		SET
+			DCOUNT = #{dcount} 
+		WHERE 
+			DNUM = #{dnum}
+	</update>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<select id="recentlyVisited" parameterType="int" resultType="details">
-	select * from details where gnum = #{gnum} and dcheck ='yes' order by ddate desc
-	</select>
-	
-	
-	
-	<select id="selectcomments" parameterType="int" resultType="comment">
-	select * from comments  where dnum=#{dnum}
-	</select>
-
-	
-
+	<!-- 후기 작성 -->
 	<insert id="insertComment" parameterType="comment">
-	insert into comments values(comments_seq.nextval,#{dnum},#{ctotal},#{ctaste},#{cservice},#{cprice},sysdate,#{creview})
+		INSERT INTO COMMENTS(
+			CNUM
+			,DNUM
+			,CTOTAL
+			,CTASTE
+			,CSERVICE
+			,CPRICE
+			,CDATE
+			,CREVIEW
+		)VALUES(	
+			COMMENTS_SEQ.NEXTVAL
+			,#{dnum}
+			,#{ctotal}
+			,#{ctaste}
+			,#{cservice}
+			,#{cprice}
+			,SYSDATE
+			,#{creview}
+		)
 	</insert>
-	<select id="selectdetailslist" parameterType="java.util.HashMap" resultType="details">
-	select * from details where gnum in (select gnum from grades where mid = #{mid} and snum=#{snum} and gcurrent='yes') order by dcount desc
-	</select>
-	<update id="updateDcount" parameterType="java.util.HashMap">
-	update details set dcount =#{dcount}+1  where dnum=#{dnum}
-	</update>
-	<update id="updategrade" parameterType="int">
-	update grades set gcurrent ='no' where gnum=#{gnum}
-	</update>
-	<insert id="updateNewGrade" parameterType="grade">
-	insert into grades values(grades_seq.nextval, #{mid},#{snum},#{glevel}+1,'yes',#{glike})
-	</insert>
-	<select id="selectdcount" parameterType="java.util.HashMap" resultType="details">
-	select * from details where gnum in (select gnum from grades where mid = #{mid} and snum=#{snum}) and dcheck='yes' order by dcount desc
-	</select>
-	<select id="selectgrade" parameterType="java.util.HashMap" resultType="grade">
-	select * from grades where mid=#{mid} and snum=#{snum} and gcurrent='yes'
-	</select>
 	
-	<update id="updatedetails" parameterType="details">
-	update details set dcount=#{dcount} where dnum=#{dnum}
+	<!-- 등급 업데이트 -->
+	<update id="updateGradeInfo" parameterType="grade">
+		UPDATE 
+			GRADES
+		SET
+			GLEVEL = #{glevel}
+		WHERE
+			GNUM = #{gnum}
 	</update>
 	
-	
+	<!-- 후기 카운트 업데이트 -->
+	<update id="updateGradeCount" parameterType="grade">
+		UPDATE
+			GRADES
+		SET
+			GCOUNT = #{gcount} 
+		WHERE
+			GNUM = #{gnum}
+	</update>
 </mapper> 

@@ -206,7 +206,9 @@ public class CategoryService {
 		return stagList;
 	}
 	
-	
+	public Grade getGradeComment(Details details) {
+		return icdao.selectGradeComment(details);
+	}
 	
 	public List<Comment> storeCommentList(Store store) {
 		return icdao.selectCommentListBySnum(store);
@@ -216,9 +218,6 @@ public class CategoryService {
 		return icdao.selectMyCommentListByGrade(grade);
 	}
 	
-	public Grade commentMid(int dnum) {
-		return icdao.selectGradeByDnum(dnum);
-	}
 	
 	public List<Details> todayReserve(Details detail){//예약 리스트 가져오기
 		return icdao.selectDetailReserveByDdate(detail);
@@ -226,7 +225,9 @@ public class CategoryService {
 	
 	public void deleteComment(int cnum) {//후기 삭제 기능
 		Comment c = icdao.selectCommentByCnum(cnum);
-		Grade g = icdao.selectGradeByDnum(c.getDnum());
+		Details details = new Details();
+		details.setDnum(c.getDnum());
+		Grade g = icdao.selectGradeComment(details);
 		//grade로 details 불러와서 dcount 내림차순으로 정렬
 		HashMap<String, Object> dMap = new HashMap<String, Object>();
 		dMap.put("mid", g.getMid());
@@ -247,8 +248,8 @@ public class CategoryService {
 		else return icdao.selectCommentByDnum(dnum);
 	}
 	
-	public Details selectDetail(Details details) {
-		return icdao.selectDetail(details);
+	public Details getDetailOne(Details details) {
+		return icdao.selectDetailOne(details);
 	}
 	
 	public List<Admin> selectTasteTagList() {

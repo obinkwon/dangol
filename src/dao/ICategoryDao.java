@@ -29,7 +29,7 @@ public interface ICategoryDao {
 	//예약 하기
 	public int insertDetail(Details details);
 	//예약 정보 가져오기
-	public Details selectDetail(Details details);
+	public Details selectDetailOne(Details details);
 	//음식종류별 가게 리스트 가져오기
 	public List<Store> selectStoreListFood(Admin admin);
 	//테마별 가게 리스트 가져오기
@@ -56,9 +56,8 @@ public interface ICategoryDao {
 	public int selectCommentTotalCnt(Store store);
 	//후기 작성 정보
 	public Details selectCommentInfo(Details details);
-	
-	
-	
+	//후기 작성자 등급 정보
+	public Grade selectGradeComment(Details details);
 	
 	
 	
@@ -78,7 +77,6 @@ public interface ICategoryDao {
 	public List<Comment> selectMyCommentListByGrade(Grade grade);
 	public void deleteCommentOneByCnum(int cnum);
 	public Comment selectCommentByCnum(int cnum);
-	public Grade selectGradeByDnum(int dnum);
 	public void updateDetailByDnum(int dnum);
 	public List<Details> selectDetailByMidSnum(HashMap<String, Object> dMap);
 	public void updateDcountMinusByDnum(int dnum);
